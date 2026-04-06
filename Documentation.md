@@ -65,7 +65,8 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 * **Database:** PostgreSQL (Relational data for structured HR records)
 * **Storage:** AWS S3 or Local Secure Servers (For document uploads)
 
-* ## ⚙️ Part 2: Functional Requirements
+*
+## ⚙️ Part 2: Functional Requirements
 
 This section defines the core features and technical logic of the **Sidama Mesob Unity Center (SMUC)** registration portal.
 
