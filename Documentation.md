@@ -65,6 +65,72 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 * **Database:** PostgreSQL (Relational data for structured HR records)
 * **Storage:** AWS S3 or Local Secure Servers (For document uploads)
 
+* ## ⚙️ Part 2: Functional Requirements
+
+This section defines the core features and technical logic of the **Sidama Mesob Unity Center (SMUC)** registration portal.
+
+### 👥 User Roles & Access Control
+| Role | Permissions |
+| :--- | :--- |
+| **Applicant** | View listings, create profile, fill registration form, upload documents. |
+| **HR Administrator** | Access dashboard, filter/search applicants, view files, export CSV/Excel data. |
+
+---
+
+### 📝 The Registration Pipeline
+The form is designed as a **Multi-Step Journey** to ensure high completion rates and data accuracy.
+
+#### **Step 1: Personal Profile**
+* **Identity:** Full Name (First, Middle, Last), Gender, and Date of Birth.
+* **National ID:** Integration/Input for the **Fayda (National ID)** 16-digit number.
+* **Contact:** Verified Phone Number (+251 format) and Email Address.
+
+#### **Step 2: Regional Residency**
+* **Location:** Dropdown selection for all **Woredas** within the Sidama Region.
+* **Granularity:** Specific **Kebele** and current residential address details.
+
+#### **Step 3: Academic Qualifications**
+* **Level:** (TVET/Diploma, Bachelor’s, Master’s, PhD).
+* **Details:** Institution name, Field of Study, CGPA, and Graduation Year.
+
+#### **Step 4: Language & Skills**
+* **Language Proficiency:** (Basic / Intermediate / Fluent)
+    * 🗣️ **Sidaamu Afoo** (Primary Requirement)
+    * 🇪🇹 **Amharic**
+    * 🇬🇧 **English**
+* **Skill Tags:** Input for professional certifications or technical abilities.
+
+#### **Step 5: Secure Document Vault**
+* **Supported Formats:** PDF, JPG, PNG (Max 2MB/file).
+* **Requirements:** Digital copy of Degree/Diploma and National ID.
+
+---
+
+### 🛠️ System Logic & Validation
+To prevent "garbage data," the portal implements strict validation rules:
+* **Mandatory Fields:** Real-time checking for required inputs marked with `*`.
+* **Smart Masking:** Phone numbers and IDs are restricted to specific numerical formats.
+* **Duplicate Prevention:** The system prevents multiple registrations using the same **National ID** or **Email**.
+* **Instant Feedback:** Users receive a unique **Tracking ID** via SMS/Email immediately upon successful submission.
+
+---
+
+### 📊 HR Administrative Features
+The backend dashboard provides SMUC officers with powerful management tools:
+* **🔍 Global Search:** Instantly find applicants by name, ID, or phone number.
+* **📂 Advanced Filtering:** Sort candidates by Woreda, Education Level, or Language fluency.
+* **📥 Bulk Export:** Export shortlisted candidate data to Excel for board review committees.
+* **📄 Inline Document Viewer:** View certificates directly in the browser to save time and storage.
+
+---
+
+### ⚡ Non-Functional Requirements
+* **Mobile-First Design:** Optimized for smartphones frequently used in regional Woredas.
+* **High Performance:** Lightweight assets to ensure fast loading on 3G/Low-bandwidth connections.
+* **99.9% Uptime:** Hosted on reliable infrastructure to ensure 24/7 availability for applicants.
+
+---
+
 ---
 
 ## 📞 Contact & Support
