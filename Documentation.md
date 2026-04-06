@@ -62,10 +62,10 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 ## 🏗️ Tech Stack (Proposed)
 * **Frontend:** React.js / Tailwind CSS (For a modern, responsive UI)
 * **Backend:** Node.js / Express
-* **Database:** PostgreSQL (Relational data for structured HR records)
+* **Database:** MongoDB (For simple and ease file settlement)
 * **Storage:** AWS S3 or Local Secure Servers (For document uploads)
 
-*
+
 ## ⚙️ Part 2: Functional Requirements
 
 This section defines the core features and technical logic of the **Sidama Mesob Unity Center (SMUC)** registration portal.
