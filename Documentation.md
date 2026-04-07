@@ -131,6 +131,7 @@ The backend dashboard provides SMUC officers with powerful management tools:
 * **99.9% Uptime:** Hosted on reliable infrastructure to ensure 24/7 availability for applicants.
 
 ---
+Edited
 
 ---
 
