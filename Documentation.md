@@ -143,6 +143,156 @@ For technical inquiries or contributions regarding the SMUC HR Portal, please co
 That draft is a solid foundation, but to make it truly **professional** and **ready to use** for a technical software project, we need to add specific technical standards and clear formatting. 
 
 Here is the refined, high-level version of **Part 4** and **Part 5** formatted for a formal documentation report.
+---
+📐 3. System Architecture – Sidama Mesob Unity Center (SMUC) HR Digitization Project
+
+This section describes the overall technical design of the Sidama Mesob Unity Center (SMUC) HR Digitization Project, a scalable and secure job application system built using the MERN stack.
+
+🏗️ 3.1 Architecture Overview
+
+The system follows a three-tier architecture:
+
+Frontend (Client Layer)
+Backend (Application Layer)
+Database (Data Layer)
+✅ Benefits
+Scalability
+Maintainability
+Security
+Independent development & deployment
+⚙️ 3.2 Tech Stack (MERN)
+🎨 Frontend – React.js
+Dynamic and responsive UI
+Handles user interaction and state
+Communicates via REST APIs
+🧠 Backend – Node.js + Express.js
+Business logic & API handling
+Authentication & authorization (JWT)
+Input validation and processing
+🗄️ Database – MongoDB
+NoSQL flexible schema
+Stores users, jobs, applications
+High performance & scalability
+🔄 3.3 High-Level System Flow
+1. User accesses React frontend
+2. User performs action (login/apply)
+3. Frontend sends API request
+4. Backend validates & processes request
+5. Backend interacts with MongoDB
+6. Response sent to frontend
+7. UI updates dynamically
+🧩 3.4 Component Architecture
+Frontend Components
+Authentication (Login/Register)
+Job Listings
+Application Form (Multi-step)
+Dashboards (Admin / Applicant / Reviewer)
+File Upload Interface
+Backend Modules
+Auth Module (JWT, login/register)
+User Module
+Job Module (CRUD)
+Application Module
+File Upload Module
+Database Collections
+users
+jobs
+applications
+reviews (optional)
+🗃️ 3.5 Data Model / Schema
+📌 Users Collection
+Field	Type	Description
+_id	ObjectId	Unique identifier
+name	String	Full name
+email	String	User email
+password	String	Hashed password
+role	String	Admin / Applicant / Reviewer
+createdAt	Date	Account creation time
+📌 Jobs Collection
+Field	Type	Description
+_id	ObjectId	Job ID
+title	String	Job title
+description	String	Job details
+requirements	String	Required skills
+createdBy	ObjectId	Admin reference
+createdAt	Date	Posted date
+📌 Applications Collection
+Field	Type	Description
+_id	ObjectId	Application ID
+userId	ObjectId	Applicant reference
+jobId	ObjectId	Job reference
+status	String	Pending/Approved
+resume	String	File path
+createdAt	Date	Submission date
+📌 Reviews Collection (Optional)
+Field	Type	Description
+_id	ObjectId	Review ID
+reviewerId	ObjectId	Reviewer reference
+applicationId	ObjectId	Application ref
+feedback	String	Comments
+rating	Number	Score
+🔌 3.6 API Documentation
+🔐 Authentication APIs
+POST /api/auth/register   → Register new user
+POST /api/auth/login      → Login user
+👤 User APIs
+GET  /api/users/profile   → Get user profile
+PUT  /api/users/:id       → Update user
+💼 Job APIs
+GET    /api/jobs          → Get all jobs
+POST   /api/jobs          → Create job (Admin)
+PUT    /api/jobs/:id      → Update job
+DELETE /api/jobs/:id      → Delete job
+📄 Application APIs
+POST /api/applications           → Submit application
+GET  /api/applications/my        → Get user applications
+GET  /api/admin/applications     → Get all applications (Admin)
+📎 File Upload API
+POST /api/upload → Upload CV / documents
+🔐 3.7 Authentication & Authorization
+Authentication Flow
+User logs in with credentials
+Server validates user
+JWT token is generated
+Token stored on client
+Authorization Flow
+Request includes JWT token
+Backend verifies token
+Access granted based on role
+📂 3.8 File Storage Architecture
+Files uploaded via backend
+Stored locally or cloud (future)
+Only file paths stored in DB
+Access is secured and restricted
+📈 3.9 Scalability Considerations
+Stateless backend (easy horizontal scaling)
+MongoDB supports distributed databases
+Modular architecture for feature expansion
+Future Integrations
+Mobile apps
+External systems (CRM / ATS)
+Microservices architecture
+🛡️ 3.10 Security Architecture
+HTTPS communication
+JWT authentication
+Password hashing (bcrypt)
+Input validation (frontend + backend)
+Role-Based Access Control (RBAC)
+Secure file handling
+🚀 3.11 Deployment Architecture
+Layer	Technology
+Frontend	Vercel / Netlify
+Backend	Node.js Cloud Server
+Database	MongoDB Atlas
+🔗 External API / ATS Integration (Optional)
+
+If integrated with external systems:
+
+Example:
+
+POST /api/external/ats-sync → Send applicant data to ATS
+GET  /api/external/status   → Check sync status
+---
 
 ---
 
