@@ -195,5 +195,105 @@ To ensure the platform is inclusive, it adheres to **WCAG 2.1 (Level AA)** stand
 * **Error Handling:** Real-time validation provides clear, text-based feedback (e.g., "Please enter a valid email address") rather than relying on color-coding alone.
 
 ---
+Eyob's part
+6. Maintenance & Troubleshooting
+
+This section ensures the system runs smoothly, issues are resolved quickly, and updates are handled safely without affecting users.
+
+Deployment & Release Management
+
+All changes must be tested in a staging environment before production release.
+Use version control (e.g., Git) with proper commit messages and version tagging.
+Follow a structured deployment process:
+
+  1. Code review and approval
+  2. Run automated and manual tests
+  3. Build and validate the application
+  4. Deploy to production environment
+
+Maintain rollback procedures to quickly restore the previous stable version if needed.
+Schedule deployments during low-traffic periods to reduce user impact.
+
+ Monitoring, Logging & Alerts
+
+Implement continuous system monitoring for uptime, performance, and errors.
+Maintain centralized logs capturing:
+
+ Timestamps
+Error details and codes
+User actions (when relevant)
+
+Use monitoring tools or dashboards for real-time visibility.
+Configure alerts for critical failures such as:
+
+Form submission errors
+Server downtime
+Database connectivity issues
+
+Regularly review logs to identify recurring problems and optimize performance.
+
+ Troubleshooting & Issue Resolution
+
+Establish a standard process: Identify → Diagnose → Fix → Test → Document.
+
+Common issues and actions:
+
+Form submission failure:
+
+Check required fields and validation rules
+Verify API/server response
+Review error logs
+
+File upload issues:
+
+Confirm file size and format compliance
+Check server storage and permissions
+
+Login/authentication problems:
+
+Validate user credentials
+Check authentication service
+Provide password reset option
+
+Performance issues:
+
+Monitor server load and database queries
+Optimize slow processes
+
+ Support & Escalation
+
+Provide a clear support channel (email, ticket system, or helpdesk).
+When reporting an issue, users should include:
+
+Clear description of the problem
+Steps to reproduce
+Screenshots or error messages
+Time of occurrence
+
+Define escalation levels:
+
+Level 1: Basic support (common issues)
+Level 2: Technical team intervention
+Level 3: Critical system-level issues requiring immediate action
+
+ Maintenance & Continuous Improvement
+
+Perform regular system updates, patches, and security checks.
+Schedule routine maintenance (weekly/monthly).
+Back up data frequently and test recovery procedures.
+Clean and archive logs to maintain system efficiency.
+Continuously gather user feedback to improve system usability and performance.
+
+ Summary
+A strong maintenance and troubleshooting strategy ensures system reliability, quick issue resolution, data safety, and a smooth experience for all users.
+
+
+
+
+
+
+
+
+
 
 
