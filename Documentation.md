@@ -148,154 +148,131 @@ Here is the refined, high-level version of **Part 4** and **Part 5** formatted f
 
 This section describes the overall technical design of the Sidama Mesob Unity Center (SMUC) HR Digitization Project, a scalable and secure job application system built using the MERN stack.
 
-🏗️ 3.1 Architecture Overview
+## 3. System Architecture
 
-The system follows a three-tier architecture:
+This section provides a comprehensive overview of the technical architecture for the Sidama Mesob Unity Center (SMUC) HR Digitization Project—a secure, modular, and scalable job application system built using the MERN stack (MongoDB, Express, React, Node.js).
 
-Frontend (Client Layer)
-Backend (Application Layer)
-Database (Data Layer)
-✅ Benefits
-Scalability
-Maintainability
-Security
-Independent development & deployment
-⚙️ 3.2 Tech Stack (MERN)
-🎨 Frontend – React.js
-Dynamic and responsive UI
-Handles user interaction and state
-Communicates via REST APIs
-🧠 Backend – Node.js + Express.js
-Business logic & API handling
-Authentication & authorization (JWT)
-Input validation and processing
-🗄️ Database – MongoDB
-NoSQL flexible schema
-Stores users, jobs, applications
-High performance & scalability
-🔄 3.3 High-Level System Flow
-1. User accesses React frontend
-2. User performs action (login/apply)
-3. Frontend sends API request
-4. Backend validates & processes request
-5. Backend interacts with MongoDB
-6. Response sent to frontend
-7. UI updates dynamically
-🧩 3.4 Component Architecture
-Frontend Components
-Authentication (Login/Register)
-Job Listings
-Application Form (Multi-step)
-Dashboards (Admin / Applicant / Reviewer)
-File Upload Interface
-Backend Modules
-Auth Module (JWT, login/register)
-User Module
-Job Module (CRUD)
-Application Module
-File Upload Module
-Database Collections
-users
-jobs
-applications
-reviews (optional)
-🗃️ 3.5 Data Model / Schema
-📌 Users Collection
-Field	Type	Description
-_id	ObjectId	Unique identifier
-name	String	Full name
-email	String	User email
-password	String	Hashed password
-role	String	Admin / Applicant / Reviewer
-createdAt	Date	Account creation time
-📌 Jobs Collection
-Field	Type	Description
-_id	ObjectId	Job ID
-title	String	Job title
-description	String	Job details
-requirements	String	Required skills
-createdBy	ObjectId	Admin reference
-createdAt	Date	Posted date
-📌 Applications Collection
-Field	Type	Description
-_id	ObjectId	Application ID
-userId	ObjectId	Applicant reference
-jobId	ObjectId	Job reference
-status	String	Pending/Approved
-resume	String	File path
-createdAt	Date	Submission date
-📌 Reviews Collection (Optional)
-Field	Type	Description
-_id	ObjectId	Review ID
-reviewerId	ObjectId	Reviewer reference
-applicationId	ObjectId	Application ref
-feedback	String	Comments
-rating	Number	Score
-🔌 3.6 API Documentation
-🔐 Authentication APIs
-POST /api/auth/register   → Register new user
-POST /api/auth/login      → Login user
-👤 User APIs
-GET  /api/users/profile   → Get user profile
-PUT  /api/users/:id       → Update user
-💼 Job APIs
-GET    /api/jobs          → Get all jobs
-POST   /api/jobs          → Create job (Admin)
-PUT    /api/jobs/:id      → Update job
-DELETE /api/jobs/:id      → Delete job
-📄 Application APIs
-POST /api/applications           → Submit application
-GET  /api/applications/my        → Get user applications
-GET  /api/admin/applications     → Get all applications (Admin)
-📎 File Upload API
-POST /api/upload → Upload CV / documents
-🔐 3.7 Authentication & Authorization
-Authentication Flow
-User logs in with credentials
-Server validates user
-JWT token is generated
-Token stored on client
-Authorization Flow
-Request includes JWT token
-Backend verifies token
-Access granted based on role
-📂 3.8 File Storage Architecture
-Files uploaded via backend
-Stored locally or cloud (future)
-Only file paths stored in DB
-Access is secured and restricted
-📈 3.9 Scalability Considerations
-Stateless backend (easy horizontal scaling)
-MongoDB supports distributed databases
-Modular architecture for feature expansion
-Future Integrations
-Mobile apps
-External systems (CRM / ATS)
-Microservices architecture
-🛡️ 3.10 Security Architecture
-HTTPS communication
-JWT authentication
-Password hashing (bcrypt)
-Input validation (frontend + backend)
-Role-Based Access Control (RBAC)
-Secure file handling
-🚀 3.11 Deployment Architecture
-Layer	Technology
-Frontend	Vercel / Netlify
-Backend	Node.js Cloud Server
-Database	MongoDB Atlas
-🔗 External API / ATS Integration (Optional)
+### 3.1 Architectural Overview
 
-If integrated with external systems:
+- **Three-Tier (Layered) Architecture:**
+  - **Presentation Layer (Frontend):** User interfaces and interaction logic
+  - **Application Layer (Backend):** Business logic, data processing, and API endpoints
+  - **Data Layer (Database):** Persistent storage for all application data
 
-Example:
-
-POST /api/external/ats-sync → Send applicant data to ATS
-GET  /api/external/status   → Check sync status
----
+- **Key Benefits:**
+  - **Scalability:** Each layer can be independently scaled and updated
+  - **Maintainability:** Modular structure enables easier upgrades and debugging
+  - **Security:** Encapsulation of business logic and strict API access
+  - **Extensibility:** Ready for integration with mobile platforms and third-party systems
 
 ---
-kkk
+
+### 3.2 Technology Stack
+
+| Layer      | Technology              | Purpose                                           |
+|------------|------------------------|---------------------------------------------------|
+| Frontend   | React.js, Tailwind CSS | Modern, responsive user interfaces                |
+| Backend    | Node.js, Express       | API, authentication, business logic               |
+| Database   | MongoDB                | Flexible NoSQL storage for structured documents   |
+| File Store | Local / AWS S3         | Secure document uploads (e.g., CVs, Certificates) |
+
+---
+
+### 3.3 Component Diagram
+
+```
+[User Device]
+    │
+    ▼
+[React Frontend]  ⇄  [API Gateway (Express/Node.js)]  ⇄  [MongoDB Database]
+                                            │
+                                         [File Storage]
+```
+- **Frontend**: Handles user session, validations, and API communication
+- **Backend**: Manages authentication, application workflow, admin tools
+- **Database**: Stores user profiles, job postings, application records
+- **File Storage**: Manages uploads and protects sensitive documents
+
+---
+
+### 3.4 Key Modules & Responsibilities
+
+**Frontend Components**  
+- **Authentication** (Login/Register, JWT handling)  
+- **Job Listings** (Browse, filter, search)
+- **Application Form** (Multi-step, validation, progress bar)
+- **Dashboards** (Role-based for Admin, Applicant, Reviewer)
+- **File Upload** (Drag-and-drop, validation)
+
+**Backend Services**  
+- **Auth Module:** Registration, login, token issuance (JWT)
+- **User Management:** CRUD operations for users
+- **Job Management:** Create, update, list job offers (Admin only)
+- **Application Workflow:** Submit, track, and review applications
+- **File Upload:** Secure document handling, path management
+
+---
+
+### 3.5 Data Models (Schemas)
+
+**Users**
+- `_id` (ObjectId): Unique user ID
+- `name` (String)
+- `email` (String, unique)
+- `password` (String, hashed)
+- `role` (String: Admin / Applicant / Reviewer)
+- `createdAt` (Date)
+
+**Jobs**
+- `_id` (ObjectId)
+- `title` (String)
+- `description` (String)
+- `requirements` (String)
+- `createdBy` (ObjectId, Admin)
+- `createdAt` (Date)
+
+**Applications**
+- `_id` (ObjectId)
+- `userId` (ObjectId, reference)
+- `jobId` (ObjectId, reference)
+- `status` (String: Pending/Approved)
+- `resume` (String, file path)
+- `createdAt` (Date)
+
+_Additional collections_: `reviews` (optional), activity logs, etc.
+
+---
+
+### 3.6 API Endpoints (Summary)
+
+- **Auth APIs**
+  - `POST /api/auth/register` – Register a new user
+  - `POST /api/auth/login` – Authenticate user, issue JWT
+
+- **User APIs**
+  - `GET /api/users/profile` – View profile
+  - `PUT /api/users/:id` – Update profile
+
+- **Job APIs**
+  - `GET /api/jobs` – List/filter jobs
+  - `POST /api/jobs` – Create job (Admin only)
+  - `PUT /api/jobs/:id` – Update job
+  - `DELETE /api/jobs/:id` – Remove job
+
+- **Application APIs**
+  - `POST /api/applications` – Submit application
+  - `GET /api/applications/my` – List user applications
+  - `GET /api/admin/applications` – All applications (Admin only)
+
+- **File Upload API**
+  - `POST /api/upload` – Upload document (CV, certificates)
+
+- **External Integration (Optional/Planned)**
+  - `POST /api/external/ats-sync` – Send applicant data to a third-party ATS
+  - `GET /api/external/status` – Check sync status
+
+---
+
 ## 4. Security & Compliance
 *This section outlines the protocols and standards implemented to safeguard sensitive Human Resources data and ensure legal adherence to privacy regulations.*
 
