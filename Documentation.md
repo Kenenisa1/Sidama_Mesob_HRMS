@@ -145,7 +145,7 @@ That draft is a solid foundation, but to make it truly **professional** and **re
 Here is the refined, high-level version of **Part 4** and **Part 5** formatted for a formal documentation report.
 
 ---
-
+kkk
 ## 4. Security & Compliance
 *This section outlines the protocols and standards implemented to safeguard sensitive Human Resources data and ensure legal adherence to privacy regulations.*
 
