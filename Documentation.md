@@ -322,98 +322,68 @@ To ensure the platform is inclusive, it adheres to **WCAG 2.1 (Level AA)** stand
 * **Error Handling:** Real-time validation provides clear, text-based feedback (e.g., "Please enter a valid email address") rather than relying on color-coding alone.
 
 ---
-Eyob's part
-6. Maintenance & Troubleshooting
+## 🛠️ Part 6: Maintenance & Troubleshooting
 
-This section ensures the system runs smoothly, issues are resolved quickly, and updates are handled safely without affecting users.
+A robust system is only as good as its uptime. This section outlines the protocols for keeping the **SMUC HR Portal** stable, secure, and performant.
 
-Deployment & Release Management
+---
 
-All changes must be tested in a staging environment before production release.
-Use version control (e.g., Git) with proper commit messages and version tagging.
-Follow a structured deployment process:
+### 🚀 Deployment & Release Strategy
+To ensure zero-disruption for job seekers in the Sidama Region, we follow a strict CI/CD (Continuous Integration/Continuous Deployment) pipeline:
 
-  1. Code review and approval
-  2. Run automated and manual tests
-  3. Build and validate the application
-  4. Deploy to production environment
+1.  **Staging First:** All features are tested in a "Sandbox" environment that mirrors production.
+2.  **Version Control:** Every change is tracked via **Git** with descriptive commit messages and Semantic Versioning (e.g., `v1.0.1`).
+3.  **Deployment Workflow:**
+    * `Code Review` ⮕ `Automated Testing` ⮕ `Build Validation` ⮕ `Production Push`.
+4.  **Rollback Protocol:** A one-click rollback procedure is maintained to restore the previous stable version instantly if a critical bug is detected.
+5.  **Scheduled Windows:** Updates are pushed during low-traffic periods (typically late Saturday evenings).
 
-Maintain rollback procedures to quickly restore the previous stable version if needed.
-Schedule deployments during low-traffic periods to reduce user impact.
+---
 
- Monitoring, Logging & Alerts
+### 📈 Monitoring & Real-time Alerts
+We don't wait for users to report problems; we monitor the system 24/7.
 
-Implement continuous system monitoring for uptime, performance, and errors.
-Maintain centralized logs capturing:
+* **Centralized Logging:** Every action generates a log entry containing:
+    * 🕒 **Timestamp** (EAT - East Africa Time)
+    * ⚠️ **Error Codes** (e.g., 404, 500)
+    * 👤 **Action Trace** (To see where a user got stuck)
+* **Critical Alerts:** The IT team receives instant notifications for:
+    * ❌ Database connection failures.
+    * ❌ Mass form submission errors.
+    * ❌ Server downtime.
 
- Timestamps
-Error details and codes
-User actions (when relevant)
+---
 
-Use monitoring tools or dashboards for real-time visibility.
-Configure alerts for critical failures such as:
+### 🏥 Troubleshooting & Quick-Fix Guide
+We follow a standardized resolution loop: **Identify ⮕ Diagnose ⮕ Fix ⮕ Test ⮕ Document.**
 
-Form submission errors
-Server downtime
-Database connectivity issues
+| Issue | Potential Cause | Immediate Action |
+| :--- | :--- | :--- |
+| **Form Submission Failure** | Validation Error / API Timeout | Verify server logs & check if mandatory fields are bypassed. |
+| **File Upload Error** | Size (>2MB) or Extension mismatch | Ensure candidate is not uploading high-res RAW photos. |
+| **Login Issues** | Auth Service / Credential mismatch | Reset user session & verify database auth tokens. |
+| **Slow Performance** | Heavy Database Queries | Run query optimization & check server CPU load. |
 
-Regularly review logs to identify recurring problems and optimize performance.
+---
 
- Troubleshooting & Issue Resolution
+### 📞 Support & Escalation Tiers
+When a problem persists, it is escalated through the following chain:
 
-Establish a standard process: Identify → Diagnose → Fix → Test → Document.
+* **Level 1 (Helpdesk):** Handles common issues like password resets or "How-to" questions.
+* **Level 2 (Technical Team):** Investigates bugs, data discrepancies, and UI glitches.
+* **Level 3 (System Admin):** Addresses server-level failures, security breaches, or database corruption requiring immediate intervention.
 
-Common issues and actions:
+> [!IMPORTANT]
+> When reporting an issue, please include: **(1)** Error Screenshots, **(2)** Steps to Reproduce, and **(3)** The Tracking ID of the affected application.
 
-Form submission failure:
+---
 
-Check required fields and validation rules
-Verify API/server response
-Review error logs
+### 🔄 Continuous Improvement
+* **Regular Patching:** Monthly security audits and dependency updates.
+* **Data Backups:** Daily automated backups with a tested "Disaster Recovery" plan.
+* **User Feedback Loop:** Quarterly reviews of candidate feedback to simplify the UI/UX.
 
-File upload issues:
-
-Confirm file size and format compliance
-Check server storage and permissions
-
-Login/authentication problems:
-
-Validate user credentials
-Check authentication service
-Provide password reset option
-
-Performance issues:
-
-Monitor server load and database queries
-Optimize slow processes
-
- Support & Escalation
-
-Provide a clear support channel (email, ticket system, or helpdesk).
-When reporting an issue, users should include:
-
-Clear description of the problem
-Steps to reproduce
-Screenshots or error messages
-Time of occurrence
-
-Define escalation levels:
-
-Level 1: Basic support (common issues)
-Level 2: Technical team intervention
-Level 3: Critical system-level issues requiring immediate action
-
- Maintenance & Continuous Improvement
-
-Perform regular system updates, patches, and security checks.
-Schedule routine maintenance (weekly/monthly).
-Back up data frequently and test recovery procedures.
-Clean and archive logs to maintain system efficiency.
-Continuously gather user feedback to improve system usability and performance.
-
- Summary
-A strong maintenance and troubleshooting strategy ensures system reliability, quick issue resolution, data safety, and a smooth experience for all users.
-
+---
 
 
 
