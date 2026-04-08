@@ -8,17 +8,17 @@
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 The **Sidama Mesob Unity Center (SMUC) HR Digitization Project** is a strategic initiative aimed at revolutionizing how human capital is managed within the regional government's "One-Stop-Shop" service hub. 
 
 By replacing the traditional "paper-and-folder" system with a centralized web-based registration platform, we are reducing administrative "energy drain," saving time for both HR officers and citizens, and ensuring a more transparent recruitment process.
 
-### 🎯 Core Objectives
-* **🚀 Efficiency:** Reduce candidate screening time by up to 60%.
-* **🌍 Accessibility:** Allow citizens across all Woredas in the Sidama Region to apply remotely.
-* **🔐 Data Security:** Move from physical cabinets to secure, encrypted digital storage.
-* **🌱 Sustainability:** Eliminate paper waste in alignment with the regional "Paperless Initiative."
+###  Core Objectives
+* ** Efficiency:** Reduce candidate screening time by up to 60%.
+* ** Accessibility:** Allow citizens across all Woredas in the Sidama Region to apply remotely.
+* ** Data Security:** Move from physical cabinets to secure, encrypted digital storage.
+* ** Sustainability:** Eliminate paper waste in alignment with the regional "Paperless Initiative."
 
 ---
 
@@ -32,7 +32,7 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 
 ---
 
-## 🛠️ Project Scope
+##  Project Scope
 
 ### ✅ What's Included (Phase 1)
 * **Digital Intake Portal:** A mobile-responsive web form optimized for low-bandwidth areas.
@@ -59,7 +59,7 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 
 ---
 
-## 🏗️ Tech Stack (Proposed)
+##  Tech Stack (Proposed)
 * **Frontend:** React.js / Tailwind CSS (For a modern, responsive UI)
 * **Backend:** Node.js / Express
 * **Database:** MongoDB (For simple and ease file settlement)
@@ -78,7 +78,7 @@ This section defines the core features and technical logic of the **Sidama Mesob
 
 ---
 
-### 📝 The Registration Pipeline
+###  The Registration Pipeline
 The form is designed as a **Multi-Step Journey** to ensure high completion rates and data accuracy.
 
 #### **Step 1: Personal Profile**
@@ -107,7 +107,7 @@ The form is designed as a **Multi-Step Journey** to ensure high completion rates
 
 ---
 
-### 🛠️ System Logic & Validation
+###  System Logic & Validation
 To prevent "garbage data," the portal implements strict validation rules:
 * **Mandatory Fields:** Real-time checking for required inputs marked with `*`.
 * **Smart Masking:** Phone numbers and IDs are restricted to specific numerical formats.
@@ -118,29 +118,20 @@ To prevent "garbage data," the portal implements strict validation rules:
 
 ### 📊 HR Administrative Features
 The backend dashboard provides SMUC officers with powerful management tools:
-* **🔍 Global Search:** Instantly find applicants by name, ID, or phone number.
-* **📂 Advanced Filtering:** Sort candidates by Woreda, Education Level, or Language fluency.
-* **📥 Bulk Export:** Export shortlisted candidate data to Excel for board review committees.
-* **📄 Inline Document Viewer:** View certificates directly in the browser to save time and storage.
+* ** Global Search:** Instantly find applicants by name, ID, or phone number.
+* ** Advanced Filtering:** Sort candidates by Woreda, Education Level, or Language fluency.
+* ** Bulk Export:** Export shortlisted candidate data to Excel for board review committees.
+* ** Inline Document Viewer:** View certificates directly in the browser to save time and storage.
 
 ---
 
-### ⚡ Non-Functional Requirements
+###  Non-Functional Requirements
 * **Mobile-First Design:** Optimized for smartphones frequently used in regional Woredas.
 * **High Performance:** Lightweight assets to ensure fast loading on 3G/Low-bandwidth connections.
 * **99.9% Uptime:** Hosted on reliable infrastructure to ensure 24/7 availability for applicants.
 
 ---
 
----
-
-## 📞 Contact & Support
-For technical inquiries or contributions regarding the SMUC HR Portal, please contact the development lead or the **Sidama Mesob Unity Center IT Department** in Hawassa.
-
----
-*Developed with the goal of fostering a "Modern Ethiopia through Organized Benefit."*
-
-That draft is a solid foundation, but to make it truly **professional** and **ready to use** for a technical software project, we need to add specific technical standards and clear formatting. 
 
 Here is the refined, high-level version of **Part 4** and **Part 5** formatted for a formal documentation report.
 ---
