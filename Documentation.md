@@ -376,6 +376,11 @@ When a problem persists, it is escalated through the following chain:
 
 ---
 
+## 📞 Contact & Support
+For technical inquiries or contributions regarding the SMUC HR Portal, please contact the development lead or the **Sidama Mesob Unity Center IT Department** in Hawassa.
+
+---
+*Developed with the goal of fostering a "Modern Ethiopia through Organized Benefit."*
 
 
 
