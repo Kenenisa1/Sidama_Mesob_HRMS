@@ -85,6 +85,7 @@ The form is designed as a **Multi-Step Journey** to ensure high completion rates
 * **Identity:** Full Name (First, Middle, Last), Gender, and Date of Birth.
 * **National ID:** Integration/Input for the **Fayda (National ID)** 16-digit number.
 * **Contact:** Verified Phone Number (+251 format) and Email Address.
+* **Gender:** Male, or female.
 
 #### **Step 2: Regional Residency**
 * **Location:** Dropdown selection for all **Woredas** within the Sidama Region.
@@ -93,13 +94,14 @@ The form is designed as a **Multi-Step Journey** to ensure high completion rates
 #### **Step 3: Academic Qualifications**
 * **Level:** (TVET/Diploma, Bachelor’s, Master’s, PhD).
 * **Details:** Institution name, Field of Study, CGPA, and Graduation Year.
+*  **Experience:** dropdown list of year of experience
 
 #### **Step 4: Language & Skills**
 * **Language Proficiency:** (Basic / Intermediate / Fluent)
-    *  **Sidaamu Afoo** (Primary Requirement)
     *  **Amharic**
     *  **English**
-* **Skill Tags:** Input for professional certifications or technical abilities.
+* **Skill Tags:** Input for professional certifications or technical abilities. 
+*  # ?  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 #### **Step 5: Secure Document Vault**
 * **Supported Formats:** PDF, JPG, PNG (Max 2MB/file).
