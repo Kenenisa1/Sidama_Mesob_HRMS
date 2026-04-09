@@ -95,15 +95,12 @@ The form is designed as a **Multi-Step Journey** to ensure high completion rates
 * **Level:** (TVET/Diploma, Bachelor’s, Master’s, PhD).
 * **Details:** Institution name, Field of Study, CGPA, and Graduation Year.
 *  **Experience:** dropdown list of year of experience
+*  **CV Upload:** Applicants cv
 
-#### **Step 4: Language & Skills**
-* **Language Proficiency:** (Basic / Intermediate / Fluent)
-    *  **Amharic**
-    *  **English**
 * **Skill Tags:** Input for professional certifications or technical abilities. 
-*  # ?  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-#### **Step 5: Secure Document Vault**
+
+#### **Step 4: Secure Document Vault**
 * **Supported Formats:** PDF, JPG, PNG (Max 2MB/file).
 * **Requirements:** Digital copy of Degree/Diploma and National ID.
 
