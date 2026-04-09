@@ -34,21 +34,21 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 
 ##  Project Scope
 
-### ✅ What's Included (Phase 1)
+###  What's Included (Phase 1)
 * **Digital Intake Portal:** A mobile-responsive web form optimized for low-bandwidth areas.
 * **Regional Context Integration:** Fields for **Woreda/Kebele** residency and **Sidaamu Afoo** language proficiency.
 * **Document Management:** Secure uploads for **Fayda (National ID)** and educational certificates.
 * **HR Admin Dashboard:** A central panel for HR Managers to filter, search, and export applicant data.
 * **Multilingual Support:** Interface available in **Sidaamu Afoo, Amharic, and English**.
 
-### ❌ Out of Scope
+###  Out of Scope
 * Automated AI-based resume ranking (Planned for Phase 2).
 * Integration with private sector payroll systems.
 * Public-facing application status trackers.
 
 ---
 
-## 👥 Key Stakeholders
+##  Key Stakeholders
 
 | Role | Entity |
 | :--- | :--- |
@@ -66,7 +66,7 @@ Currently, the **manual hiring system** at SMUC faces significant bottlenecks:
 * **Storage:** AWS S3 or Local Secure Servers (For document uploads)
 
 
-# ⚙️ Part 2: Functional Requirements
+#  Part 2: Functional Requirements
 
 This section defines the core features and technical logic of the **Sidama Mesob Unity Center (SMUC)** registration portal.
 
@@ -96,9 +96,9 @@ The form is designed as a **Multi-Step Journey** to ensure high completion rates
 
 #### **Step 4: Language & Skills**
 * **Language Proficiency:** (Basic / Intermediate / Fluent)
-    * 🗣️ **Sidaamu Afoo** (Primary Requirement)
-    * 🇪🇹 **Amharic**
-    * 🇬🇧 **English**
+    *  **Sidaamu Afoo** (Primary Requirement)
+    *  **Amharic**
+    *  **English**
 * **Skill Tags:** Input for professional certifications or technical abilities.
 
 #### **Step 5: Secure Document Vault**
@@ -116,7 +116,7 @@ To prevent "garbage data," the portal implements strict validation rules:
 
 ---
 
-### 📊 HR Administrative Features
+###  HR Administrative Features
 The backend dashboard provides SMUC officers with powerful management tools:
 * ** Global Search:** Instantly find applicants by name, ID, or phone number.
 * ** Advanced Filtering:** Sort candidates by Woreda, Education Level, or Language fluency.
@@ -135,7 +135,7 @@ The backend dashboard provides SMUC officers with powerful management tools:
 
 Here is the refined, high-level version of **Part 4** and **Part 5** formatted for a formal documentation report.
 ---
-📐 3. System Architecture – Sidama Mesob Unity Center (SMUC) HR Digitization Project
+ 3. System Architecture – Sidama Mesob Unity Center (SMUC) HR Digitization Project
 
 This section describes the overall technical design of the Sidama Mesob Unity Center (SMUC) HR Digitization Project, a scalable and secure job application system built using the MERN stack.
 
@@ -313,13 +313,13 @@ To ensure the platform is inclusive, it adheres to **WCAG 2.1 (Level AA)** stand
 * **Error Handling:** Real-time validation provides clear, text-based feedback (e.g., "Please enter a valid email address") rather than relying on color-coding alone.
 
 ---
-## 🛠️ Part 6: Maintenance & Troubleshooting
+##  Part 6: Maintenance & Troubleshooting
 
 A robust system is only as good as its uptime. This section outlines the protocols for keeping the **SMUC HR Portal** stable, secure, and performant.
 
 ---
 
-### 🚀 Deployment & Release Strategy
+###  Deployment & Release Strategy
 To ensure zero-disruption for job seekers in the Sidama Region, we follow a strict CI/CD (Continuous Integration/Continuous Deployment) pipeline:
 
 1.  **Staging First:** All features are tested in a "Sandbox" environment that mirrors production.
@@ -331,21 +331,21 @@ To ensure zero-disruption for job seekers in the Sidama Region, we follow a stri
 
 ---
 
-### 📈 Monitoring & Real-time Alerts
+###  Monitoring & Real-time Alerts
 We don't wait for users to report problems; we monitor the system 24/7.
 
 * **Centralized Logging:** Every action generates a log entry containing:
-    * 🕒 **Timestamp** (EAT - East Africa Time)
-    * ⚠️ **Error Codes** (e.g., 404, 500)
-    * 👤 **Action Trace** (To see where a user got stuck)
+    *  **Timestamp** (EAT - East Africa Time)
+    *  **Error Codes** (e.g., 404, 500)
+    *  **Action Trace** (To see where a user got stuck)
 * **Critical Alerts:** The IT team receives instant notifications for:
-    * ❌ Database connection failures.
-    * ❌ Mass form submission errors.
-    * ❌ Server downtime.
+    *  Database connection failures.
+    *  Mass form submission errors.
+    *  Server downtime.
 
 ---
 
-### 🏥 Troubleshooting & Quick-Fix Guide
+###  Troubleshooting & Quick-Fix Guide
 We follow a standardized resolution loop: **Identify ⮕ Diagnose ⮕ Fix ⮕ Test ⮕ Document.**
 
 | Issue | Potential Cause | Immediate Action |
@@ -369,14 +369,14 @@ When a problem persists, it is escalated through the following chain:
 
 ---
 
-### 🔄 Continuous Improvement
+###  Continuous Improvement
 * **Regular Patching:** Monthly security audits and dependency updates.
 * **Data Backups:** Daily automated backups with a tested "Disaster Recovery" plan.
 * **User Feedback Loop:** Quarterly reviews of candidate feedback to simplify the UI/UX.
 
 ---
 
-## 📞 Contact & Support
+##  Contact & Support
 For technical inquiries or contributions regarding the SMUC HR Portal, please contact the development lead or the **Sidama Mesob Unity Center IT Department** in Hawassa.
 
 ---
