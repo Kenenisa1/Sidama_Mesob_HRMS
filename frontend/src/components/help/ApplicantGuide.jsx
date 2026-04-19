@@ -1,5 +1,5 @@
  import React from 'react';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ChevronRight } from 'lucide-react';
 
 export default function ApplicantGuide() {
   return (
@@ -22,6 +22,20 @@ export default function ApplicantGuide() {
                 Navigate to the home page to view all available job openings at the Sidama Mesob Unity Center. 
                 Use the category filters to find roles that match your expertise.
               </p>
+               <ul className="space-y-3 mt-3">
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>Review the featured position and job requirements carefully</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>Check if you meet the minimum qualifications (CGPA, education level, residency)</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>Note the experience requirements and language proficiency needed</span>
+                  </li>
+                </ul>
             </div>
           </div>
         </div>
@@ -45,7 +59,6 @@ export default function ApplicantGuide() {
                 <DocItem label="National ID / Fayda" desc="Your valid government digital identity card." />
                 <DocItem label="Experience Letter" desc="Proof of previous employment (if applicable)." />
               </div>
-
               <div className="p-5 rounded-xl bg-orange-500/5 border border-orange-500/20 flex gap-4 items-center">
                 <AlertCircle className="text-orange-500 flex-shrink-0" size={24} />
                 <p className="text-sm font-bold text-orange-400">
@@ -66,6 +79,21 @@ export default function ApplicantGuide() {
                 Fill out the 4-step registration form. Ensure your **Woreda** and **Kebele** information is accurate, 
                 as priority is given to regional residents of Sidama.
               </p>
+
+              <ul className="space-y-3 mt-5">
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>Double-check all information for accuracy before submitting</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>You will receive a confirmation email shortly after submission</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-gray-300">
+                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span>Keep your tracking ID for future reference</span>
+                  </li>
+                </ul>
             </div>
           </div>
         </div>
