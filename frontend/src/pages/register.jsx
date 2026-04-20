@@ -33,7 +33,7 @@ const Register = () => {
   const updateData = (newData) => setFormData((prev) => ({ ...prev, ...newData }));
 
   return (
-    <div className="min-h-screen bg-[#020817] text-zinc-300 relative flex flex-col items-center py-16 px-4 md:px-8 overflow-x-hidden selection:bg-emerald-500/30">
+    <div className="bg-[#020817] text-zinc-300 relative flex flex-col items-center py-16 px-4 md:px-8 overflow-x-hidden selection:bg-emerald-500/30">
       
       {/* --- WIDER BACKGROUND GLOW --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -108,14 +108,6 @@ const Register = () => {
             </motion.div>
           </AnimatePresence>
         </div>
-
-        <footer className="mt-20 py-8 border-t border-zinc-900/50 flex flex-col md:flex-row items-center justify-between gap-6 px-10">
-          <div className="flex items-center gap-3">
-             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">Server Connection Secure</span>
-          </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-800">Sidama Mesob Unity Center © 2026</span>
-        </footer>
       </main>
     </div>
   );
