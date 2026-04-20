@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Briefcase, Info, HelpCircle, UserPlus, 
   Shield, Globe, ChevronDown, Menu, X 
@@ -32,25 +33,31 @@ const Navbar = () => {
           <div className="bg-[#059669] p-2 rounded-xl shadow-lg">
             <Shield size={28} className="text-white" />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-xl md:text-2xl font-bold tracking-tight text-white">SMUC</span>
-            <span className="text-[10px] md:text-xs font-medium text-[#059669]">Sidama Mesob Unity Center</span>
-          </div>
+          <Link to='/'>
+            <div className="flex flex-col leading-tight">
+              <span className="text-xl md:text-2xl font-bold tracking-tight text-white">SMUC</span>
+              <span className="text-[10px] md:text-xs font-medium text-[#059669]">Sidama Mesob Unity Center</span>
+            </div>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
           <NavLink icon={Briefcase} text="Open Roles" />
           <NavLink icon={Info} text="About" />
-          <NavLink icon={HelpCircle} text="Help" />
+          <Link to="/help">
+            <NavLink icon={HelpCircle} text="Help" />
+          </Link>
         </div>
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <button className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-md">
-            <UserPlus size={20} />
-            Register
-          </button>
+          <Link to="/register">
+            <button className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-md">
+              <UserPlus size={20} />
+              Register
+            </button>
+          </Link>
           <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
             <Shield size={20} />
             Admin Portal
@@ -105,12 +112,16 @@ const Navbar = () => {
         <div className="flex flex-col gap-2 overflow-y-auto">
           <NavLink icon={Briefcase} text="Open Roles" mobile />
           <NavLink icon={Info} text="About" mobile />
-          <NavLink icon={HelpCircle} text="Help" mobile />
+          <Link to="/help" onClick={() => setIsMenuOpen(false)}>
+            <NavLink icon={HelpCircle} text="Help" mobile />
+          </Link>
 
-          <button className="flex items-center gap-3 bg-[#059669] text-white p-4 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform">
-            <UserPlus size={24} />
-            Register
-          </button>
+          <Link to="/register" onClick={() => setIsMenuOpen(false)}>
+            <button className="flex items-center gap-3 bg-[#059669] text-white p-4 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform">
+              <UserPlus size={24} />
+              Register
+            </button>
+          </Link>
 
           <button className="flex items-center gap-3 bg-white text-[#ea580c] p-4 rounded-xl font-bold border border-orange-200 shadow-sm active:scale-95 transition-transform">
             <Shield size={24} />
