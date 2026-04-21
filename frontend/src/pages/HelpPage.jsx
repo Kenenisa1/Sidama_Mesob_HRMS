@@ -10,10 +10,10 @@ export default function HelpPage() {
   const scrollToSection = (ref) => ref.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="bg-[#020817] text-zinc-300 font-sans pb-16 relative selection:bg-emerald-500/30 overflow-x-hidden">
+    <div className="bg-[#020817] text-zinc-300 font-sans pb-16 min-h-screen relative selection:bg-emerald-500/30 overflow-x-hidden">
       
       {/* BACKGROUND GRADIENT */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-emerald-900/10 blur-[100px]" />
         <div className="absolute inset-0 bg-[#020817]" />
       </div>

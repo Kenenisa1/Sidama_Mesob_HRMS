@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#020c17] text-gray-400 py-12 px-6">
+    <footer className="bg-[#020c17] z-50 text-gray-400 py-12 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Top Section: Links and Initiative Card */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start border-b border-gray-800 pb-12">
