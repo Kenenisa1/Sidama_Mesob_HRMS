@@ -8,11 +8,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 const App = () => {
   return (
     <Router>
-      <div>
-        <Routes>
-          <Route path="/" element={<Register />} />
-          <Route path="/help" element={<HelpPage />} />
-        </Routes>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/register" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/help" element={<HelpPage />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </Router>
   )
