@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const NavLink = ({ icon: Icon, text, mobile = false }) => (
     <button className={`flex items-center gap-3 text-gray-300 hover:text-white transition-colors group ${mobile ? 'w-full py-4 px-2 text-lg border-b border-gray-800/50' : ''}`}>
-      <Icon size={mobile ? 24 : 20} className="group-hover:scale-110 transition-transform" />
+      {Icon && <Icon size={mobile ? 24 : 20} className="group-hover:scale-110 transition-transform" />}
       <span className="font-semibold">{text}</span>
     </button>
   );
@@ -30,8 +30,8 @@ const Navbar = () => {
         
         {/* Branding */}
         <div className="flex items-center gap-3 cursor-pointer z-50">
-          <div className="bg-[#059669] p-2 rounded-xl shadow-lg">
-            <Shield size={28} className="text-white" />
+          <div className="p-2 rounded-xl shadow-lg">
+            <img src="../../public/mesob.png" alt="Logo" className="w-8 h-8" />
           </div>
           <Link to='/'>
             <div className="flex flex-col leading-tight">
@@ -43,10 +43,10 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
-          <NavLink icon={Briefcase} text="Open Roles" />
-          <NavLink icon={Info} text="About" />
+          <NavLink text="Open Roles" />
+          <NavLink text="About" />
           <Link to="/help">
-            <NavLink icon={HelpCircle} text="Help" />
+            <NavLink text="Help" />
           </Link>
         </div>
 
@@ -110,10 +110,10 @@ const Navbar = () => {
       `}>
         <div className="h-20" />
         <div className="flex flex-col gap-2 overflow-y-auto">
-          <NavLink icon={Briefcase} text="Open Roles" mobile />
-          <NavLink icon={Info} text="About" mobile />
+          <NavLink text="Open Roles" mobile />
+          <NavLink text="About" mobile />
           <Link to="/help" onClick={() => setIsMenuOpen(false)}>
-            <NavLink icon={HelpCircle} text="Help" mobile />
+            <NavLink text="Help" mobile />
           </Link>
 
           <Link to="/register" onClick={() => setIsMenuOpen(false)}>
