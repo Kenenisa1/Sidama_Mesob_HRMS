@@ -10,7 +10,7 @@ export default function HelpPage() {
   const scrollToSection = (ref) => ref.current?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="min-h-screen bg-[#020817] text-zinc-300 font-sans pb-16 relative selection:bg-emerald-500/30 overflow-x-hidden">
+    <div className="bg-[#020817] text-zinc-300 font-sans pb-16 relative selection:bg-emerald-500/30 overflow-x-hidden">
       
       {/* BACKGROUND GRADIENT */}
       <div className="fixed inset-0 z-0 pointer-events-none">
