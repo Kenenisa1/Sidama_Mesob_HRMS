@@ -77,10 +77,10 @@ A command center for SMUC officers designed for high-speed decision making:
 ## 6. Implementation Roadmap
 | Phase | Duration | Focus Area |
 | :--- | :--- | :--- |
-| **I: Discovery** | Weeks 1-3 | Stakeholder discovery and Sidama Region residency data mapping. |
-| **II: Design** | Weeks 4-6 | UI/UX prototyping (OLED Dark Theme) and database schema modeling. |
-| **III: Build** | Weeks 7-12 | MERN Stack implementation, Multi-step form logic, and Secure Vault. |
-| **IV: Launch** | Weeks 13-16 | QA testing, Security auditing, and Production launch in Hawassa. |
+| **I: Discovery** | Weeks 1 | Stakeholder discovery and Sidama Region residency data mapping. |
+| **II: Design** | Weeks 2 | UI/UX prototyping (OLED Dark Theme) and database schema modeling. |
+| **III: Build** | Weeks 2-3 | MERN Stack implementation, Multi-step form logic, and Secure Vault. |
+| **IV: Launch** | Weeks 3-4 | QA testing, Security auditing, and Production launch in Hawassa. |
 
 ---
 *“Sidama_MESOB HRMS – Building a Modern Ethiopia through Organized Benefit.”*
