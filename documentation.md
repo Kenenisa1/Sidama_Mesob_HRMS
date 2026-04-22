@@ -1,4 +1,4 @@
-# Sidama_MESOB HRMS: SMUC HR Digitization Portal
+# Sidama_MESOB HR:  Sidama MESOB Unity Center HR Digitization Portal
 **Project Status:** Version 1.0.0 – Development  
 **Location:** Hawassa, Ethiopia  
 **Concept:** Modernizing the hiring landscape of the Sidama Region by transitioning from manual paper-based processes to a streamlined digital ecosystem.
