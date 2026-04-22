@@ -1,4 +1,4 @@
-# Hawassa Pulse: SMUC HR Digitization Portal
+# Sidama_MESOB HRMS: SMUC HR Digitization Portal
 **Project Status:** Version 1.0.0 – Development  
 **Location:** Hawassa, Ethiopia  
 **Concept:** Modernizing the hiring landscape of the Sidama Region by transitioning from manual paper-based processes to a streamlined digital ecosystem.
@@ -48,7 +48,7 @@ The platform utilizes a **Three-Tier (Layered) Architecture** to ensure modulari
 To ensure high completion rates, the registration is divided into logical phases:
 1.  **Identity & Fayda:** Integration of the 16-digit National ID (Fayda) for identity verification.
 2.  **Residency Context:** Granular selection of **Sidama Region Woredas** (e.g., Hawassa Zuria, Aleta Chuko, Dale) and specific **Kebeles**.
-3.  **Academic Portfolio:** Structured entry for educational levels (Diploma to PhD), CGPA, and Sidaamu Afoo language proficiency levels.
+3.  **Academic Portfolio:** Structured entry for educational levels (Diploma to PhD), CGPA.
 4.  **Document Vault:** Drag-and-drop interface for degrees and IDs (Max 2MB, PDF/JPG/PNG).
 
 ### B. HR Admin Intelligence Dashboard
@@ -83,4 +83,4 @@ A command center for SMUC officers designed for high-speed decision making:
 | **IV: Launch** | Weeks 13-16 | QA testing, Security auditing, and Production launch in Hawassa. |
 
 ---
-*“Hawassa Pulse – Building a Modern Ethiopia through Organized Benefit.”*
+*“Sidama_MESOB HRMS – Building a Modern Ethiopia through Organized Benefit.”*
