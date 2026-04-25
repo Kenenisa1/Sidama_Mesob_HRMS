@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Briefcase, Info, HelpCircle, UserPlus, 
-  Shield, Globe, ChevronDown, Menu, X 
+import {
+  Briefcase, Info, HelpCircle, UserPlus,
+  Shield, Globe, ChevronDown, Menu, X
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -27,7 +27,7 @@ const Navbar = () => {
     <nav className="relative bg-[#020c17] text-white shadow-xl z-[100]">
       {/* Main Header Row */}
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        
+
         {/* Branding */}
         <div className="flex items-center gap-3 cursor-pointer z-50">
           <div className="p-2 rounded-xl shadow-lg">
@@ -58,14 +58,15 @@ const Navbar = () => {
               Register
             </button>
           </Link>
-          <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
-            <Shield size={20} />
-            Admin Portal
-          </button>
-
+          <Link to="/admin">
+            <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
+              <Shield size={20} />
+              Admin Portal
+            </button>
+          </Link>
           {/* Desktop Language Dropdown */}
           <div className="relative">
-            <div 
+            <div
               onClick={() => setIsLangOpen(!isLangOpen)}
               className="flex items-center gap-3 ml-2 border border-gray-700 bg-[#0a1929] px-3 py-2 rounded-lg cursor-pointer hover:border-gray-500 min-w-[140px]"
             >
@@ -94,7 +95,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Toggle Button */}
-        <button 
+        <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="lg:hidden p-2 text-gray-300 hover:text-white z-50 transition-transform active:scale-90"
         >
@@ -122,15 +123,15 @@ const Navbar = () => {
               Register
             </button>
           </Link>
-
-          <button className="flex items-center gap-3 bg-white text-[#ea580c] p-4 rounded-xl font-bold border border-orange-200 shadow-sm active:scale-95 transition-transform">
-            <Shield size={24} />
-            Admin Portal
-          </button>
-
+          <Link to="/admin" onClick={() => setIsMenuOpen(false)}>
+            <button className="flex items-center gap-3 bg-white text-[#ea580c] p-4 rounded-xl font-bold border border-orange-200 shadow-sm active:scale-95 transition-transform w-full">
+              <Shield size={24} />
+              Admin Portal
+            </button>
+          </Link>
           {/* Mobile Language Selector (Accordion style) */}
           <div className="flex flex-col bg-[#0a1929] border border-gray-800 rounded-xl mt-2 overflow-hidden">
-            <button 
+            <button
               onClick={() => setIsLangOpen(!isLangOpen)}
               className="flex items-center justify-between p-4"
             >
@@ -140,7 +141,7 @@ const Navbar = () => {
               </div>
               <ChevronDown size={20} className={`text-gray-500 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
             </button>
-            
+
             {isLangOpen && (
               <div className="flex flex-col border-t border-gray-800 bg-[#050e17]">
                 {languages.map((lang) => (
