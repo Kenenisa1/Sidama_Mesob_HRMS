@@ -43,8 +43,13 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
-          <NavLink text="Open Roles" />
-          <NavLink text="About" />
+          <Link to="/featuredPosition">
+            <NavLink text="Open Roles" />
+          </Link>
+          <NavLink  />
+          <Link to="/about">
+            <NavLink text="About" />
+          </Link>
           <Link to="/help">
             <NavLink text="Help" />
           </Link>
@@ -52,12 +57,6 @@ const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link to="/register">
-            <button className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-md">
-              <UserPlus size={20} />
-              Register
-            </button>
-          </Link>
           <Link to="/admin">
             <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
               <Shield size={20} />
