@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import HelpPage from "./pages/HelpPage";
+import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AdminPortal from './pages/admin/AdminPortal';
@@ -13,7 +14,9 @@ const App = () => {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/application" element={<Register />} />
             <Route path="/help" element={<HelpPage />} />
             <Route path="/admin" element={<AdminPortal />} />
           </Routes>
