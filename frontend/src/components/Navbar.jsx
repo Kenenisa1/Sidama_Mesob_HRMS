@@ -43,8 +43,11 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
-          <NavLink text="Open Roles" />
-          <NavLink text="About" />
+          <NavLink text="Home" />
+          
+          <Link to="/about">
+             <NavLink text="About" />
+          </Link>
           <Link to="/help">
             <NavLink text="Help" />
           </Link>
@@ -52,10 +55,10 @@ const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link to="/register">
+          <Link to="/application">
             <button className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-md">
               <UserPlus size={20} />
-              Register
+              Apply
             </button>
           </Link>
           <Link to="/admin">
