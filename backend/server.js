@@ -7,8 +7,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import connectDB from './config/db.js';
-import applicationRoutes from './routes/applicationRoutes.js'; // 3. Keep routes modular
-import { errorHandler, notFound } from './middleware/errorMiddleware.js'; // 4. Custom errors
+import applicationRoutes from './routes/applicationRoutes.js'; 
+import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 // Configuration
 dotenv.config();

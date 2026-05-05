@@ -2,77 +2,63 @@ import Application from '../models/Application.js';
 
 export const submitApplication = async (req, res) => {
   try {
-    // 1. Verify files exist
-    if (!req.files || !req.files.degreeCertificate || !req.files.nationalIdCopy) {
-      return res.status(400).json({ 
-        success: false, 
-        message: "Missing required documents in Step 4" 
-      });
-    }
+    // DEBUG: Check what is actually hitting your server
+    console.log("RECEIVED BODY:", req.body);
 
-    // 2. Parse the text data
-    const data = JSON.parse(req.body.data);
+    const { 
+      fullName, email, phone, gender, 
+      eduLevel, institution, department, gradYear, 
+      faydaId, woreda, kebele, cgpa 
+    } = req.body;
 
-    // 3. Create the document object with MOCK ID and MAPPED FIELDS
+    // Split Name safely
+    const nameParts = fullName ? fullName.trim().split(/\s+/) : [];
+    const fName = nameParts[0] || "Unknown";
+    const lName = nameParts.slice(1).join(' ') || "Unknown";
+
     const newApplication = new Application({
-      // FIX: Use a hardcoded MongoDB ID since req.user is undefined right now
-      userId: "65f1234567890abcdef12345", 
-      jobId: data.jobId || "65f9876543210fedcba09876",
+      userId: req.user?.id || "65f1234567890abcdef12345", 
+      jobId: req.body.jobId || "65f9876543210fedcba09876", 
 
       personalInfo: {
-        firstName: data.firstName,
-        middleName: data.middleName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        faydaId: data.faydaId,
-        gender: data.gender // 'Male' or 'Female' from StepOne
+        firstName: fName,
+        lastName: lName,
+        email: email,
+        phone: phone,
+        faydaId: faydaId, // Will now use actual ID from frontend
+        gender: gender
       },
 
       residency: {
-        woreda: data.woreda,
-        kebele: data.kebele,
-        address: data.address || ""
+        woreda: woreda,
+        kebele: kebele
       },
 
       education: {
-        // FIX: Map 'eduLevel' from frontend to 'level' in backend + Fix Enum
-        level: data.eduLevel === 'Bachelors' ? 'Bachelor' : data.eduLevel, 
-        institution: data.institution,
-        fieldOfStudy: data.department, // Mapping 'department' to 'fieldOfStudy'
-        cgpa: Number(data.cgpa) || 0,
-        graduationYear: Number(data.gradYear),
-        experienceYears: Number(data.experience) || 0
+        level: eduLevel, 
+        institution: institution,
+        fieldOfStudy: department,
+        cgpa: parseFloat(cgpa) || 0,
+        graduationYear: gradYear
       },
 
       documents: {
-        degreeCertificate: req.files.degreeCertificate[0].path,
-        nationalIdCopy: req.files.nationalIdCopy[0].path,
-        cv: req.files.cv ? req.files.cv[0].path : null
+        degreeCertificate: req.files?.degreeCertificate?.[0]?.path,
+        nationalIdCopy: req.files?.nationalIdCopy?.[0]?.path,
+        cv: req.files?.cv?.[0]?.path || null
       },
-
-      status: 'Pending' // Capitalized to match your Enum
+      
+      status: 'Pending'
     });
 
-    // 4. Save to MongoDB
     const savedApplication = await newApplication.save();
-
-    res.status(201).json({
-      success: true,
-      message: "Application submitted successfully!",
-      trackingId: savedApplication.trackingId
-    });
+    res.status(201).json({ success: true, trackingId: savedApplication.trackingId });
 
   } catch (error) {
-    console.error("Submission Error:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: error.message // Showing real error message for debugging
-    });
+    console.error("Database Save Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
-// Update this too so it doesn't crash during testing
 export const getMyApplication = async (req, res) => {
     // Return the mock user's application for now
     try {
