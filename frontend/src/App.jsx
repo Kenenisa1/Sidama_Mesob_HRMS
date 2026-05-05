@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import Register from "./pages/Register";
+import Application from "./pages/Application";
 import HelpPage from "./pages/HelpPage";
 import About from "./pages/About";
 import Navbar from "./components/Navbar";
@@ -16,7 +16,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/application" element={<Register />} />
+            <Route path="/application" element={<Application />} />
             <Route path="/help" element={<HelpPage />} />
             <Route path="/admin" element={<AdminPortal />} />
           </Routes>
