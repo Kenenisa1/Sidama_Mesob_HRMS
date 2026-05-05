@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { User, MapPin, GraduationCap, CloudUpload, CheckCircle, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import StepOne from '../components/registration/StepOne';
-import StepTwo from '../components/registration/StepTwo';
-import StepThree from '../components/registration/StepThree';
-import StepFour from '../components/registration/StepFour';
+import StepOne from '../components/Application/StepOne';
+import StepTwo from '../components/Application/StepTwo';
+import StepThree from '../components/Application/StepThree';
+import StepFour from '../components/Application/StepFour';
 
 const Register = () => {
   const [currentStep, setCurrentStep] = useState(1);
