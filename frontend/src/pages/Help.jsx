@@ -3,7 +3,7 @@ import ApplicantGuide from '../components/help/ApplicantGuide';
 import AdminGuide from '../components/help/AdminGuide';
 import { Users, UserCog, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 
-export default function HelpPage() {
+const Help = () => {
   const applicantRef = useRef(null);
   const adminRef = useRef(null);
 
@@ -107,8 +107,9 @@ export default function HelpPage() {
     </div>
   );
 }
+export default Help;
 
-function NavButton({ onClick, icon, label, color }) {
+const NavButton = ({ onClick, icon, label, color }) => {
   const isEmerald = color === 'emerald';
   return (
     <button onClick={onClick} className="text-left group w-full outline-none">

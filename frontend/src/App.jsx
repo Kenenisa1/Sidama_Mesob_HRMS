@@ -1,6 +1,6 @@
 import Home from "./pages/Home";
 import Application from "./pages/Application";
-import HelpPage from "./pages/HelpPage";
+import Help from "./pages/Help";
 import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -17,7 +17,7 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/application" element={<Application />} />
-            <Route path="/help" element={<HelpPage />} />
+            <Route path="/help" element={<Help />} />
             <Route path="/admin" element={<AdminPortal />} />
           </Routes>
         </main>

@@ -123,10 +123,10 @@ const Navbar = () => {
             <NavLink text="Help" mobile />
           </Link>
 
-          <Link to="/register" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/login" onClick={() => setIsMenuOpen(false)}>
             <button className="flex items-center gap-3 bg-[#059669] text-white p-4 rounded-xl font-bold mt-4 shadow-lg active:scale-95 transition-transform">
               <UserPlus size={24} />
-              Register
+              Login
             </button>
           </Link>
           <Link to="/admin" onClick={() => setIsMenuOpen(false)}>
