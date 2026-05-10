@@ -33,12 +33,10 @@ const Navbar = () => {
           <div className="p-2 rounded-xl shadow-lg">
             <img src="../../public/mesob.png" alt="Logo" className="w-8 h-8" />
           </div>
-          <Link to='/'>
             <div className="flex flex-col leading-tight">
               <span className="text-xl md:text-2xl font-bold tracking-tight text-white">SMUC</span>
               <span className="text-[10px] md:text-xs font-medium text-[#059669]">Sidama Mesob Unity Center</span>
             </div>
-          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -59,12 +57,6 @@ const Navbar = () => {
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
           <Link to="/login">
-            <button className="flex items-center gap-2 bg-[#059669] hover:bg-[#047857] px-5 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-md">
-              <UserPlus size={20} />
-              Login
-            </button>
-          </Link>
-          <Link to="/admin">
             <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
               <Shield size={20} />
               Admin Portal

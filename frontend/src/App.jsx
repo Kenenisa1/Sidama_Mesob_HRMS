@@ -5,7 +5,9 @@ import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AdminPortal from './pages/admin/AdminPortal';
+import Login from './pages/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import FeaturedPosition from "./components/Homepage/FeaturedPositions";
 const App = () => {
   return (
     <Router>
@@ -17,7 +19,9 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/application" element={<Application />} />
+            <Route path="/featuredpositions" element={<FeaturedPosition />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminPortal />} />
           </Routes>
         </main>

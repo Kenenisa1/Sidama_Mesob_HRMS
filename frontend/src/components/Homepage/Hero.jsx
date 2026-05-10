@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
@@ -34,9 +35,11 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-[#059669] hover:bg-[#047857] text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2">
-            Apply Now <ArrowRight size={20} />
-          </button>
+          <Link to="/featuredpositions">
+            <button className="bg-[#059669] hover:bg-[#047857] text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2">
+              Apply Now <ArrowRight size={20} />
+            </button>
+          </Link>
 
           <button className="bg-white text-[#059669] px-8 py-4 rounded-xl font-bold">
             Learn More
