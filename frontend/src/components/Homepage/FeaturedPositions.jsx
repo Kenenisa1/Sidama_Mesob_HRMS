@@ -129,16 +129,8 @@ const FeaturedPosition = () => {
                   Apply Now <ArrowRight size={18} />
                 </button>
                 </Link>
-
-                <button className="w-full border border-white/20 text-white py-3 rounded-xl hover:bg-white hover:text-black">
-                  View All Jobs
-                </button>
-                <Link to="/register">
-                  <button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white py-3 mb-4 rounded-xl flex items-center justify-center gap-2">
-                    Apply Now <ArrowRight size={18} />
-                  </button>
-                </Link>
-                 <Link to="/featuredPosition">
+                
+                 <Link to="/featuredPositions">
                   <button className="w-full border border-white/20 text-white py-3 rounded-xl hover:bg-white hover:text-emerald-500">
                     View All Jobs
                   </button>
