@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import {Link} from "react-router-dom";
-=======
 import { Link } from "react-router-dom";
->>>>>>> 4b7018d5573e67daa94cfcc5797aaa1c374f26f9
 import {
   ArrowRight,
   CheckCircle2,
@@ -128,7 +124,6 @@ const FeaturedPosition = () => {
 
               {/* Buttons */}
               <div className="pt-4 space-y-3">
-<<<<<<< HEAD
                 <Link to="/application" >
                 <button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white py-3 rounded-xl flex items-center justify-center gap-2">
                   Apply Now <ArrowRight size={18} />
@@ -138,7 +133,6 @@ const FeaturedPosition = () => {
                 <button className="w-full border border-white/20 text-white py-3 rounded-xl hover:bg-white hover:text-black">
                   View All Jobs
                 </button>
-=======
                 <Link to="/register">
                   <button className="w-full bg-emerald-500 hover:bg-emerald-400 text-white py-3 mb-4 rounded-xl flex items-center justify-center gap-2">
                     Apply Now <ArrowRight size={18} />
@@ -149,7 +143,6 @@ const FeaturedPosition = () => {
                     View All Jobs
                   </button>
                 </Link>
->>>>>>> 4b7018d5573e67daa94cfcc5797aaa1c374f26f9
               </div>
 
             </div>
