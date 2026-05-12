@@ -48,6 +48,11 @@ const ApplicationSchema = new mongoose.Schema({
     cgpa: { type: Number, required: true },
     graduationYear: { type: Number, required: true },
     experienceYears: { type: Number, default: 0 },
+    sidaamuAfoo: {
+      type: String,
+      enum: ['Basic', 'Intermediate', 'Fluent', 'Native', 'High'],
+      default: 'Basic'
+    },
     skills: [String] // Array of skill tags
   },
 

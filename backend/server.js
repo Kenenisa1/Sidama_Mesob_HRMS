@@ -11,10 +11,11 @@ import applicationRoutes from './routes/applicationRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 // Configuration
-dotenv.config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config();
 
 // Database Connection
 connectDB();

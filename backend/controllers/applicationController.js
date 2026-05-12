@@ -8,7 +8,7 @@ export const submitApplication = async (req, res) => {
     const { 
       fullName, email, phone, gender, 
       eduLevel, institution, department, gradYear, 
-      faydaId, woreda, kebele, cgpa 
+      faydaId, woreda, kebele, cgpa, experience, sidaamuAfoo
     } = req.body;
 
     // Split Name safely
@@ -39,7 +39,9 @@ export const submitApplication = async (req, res) => {
         institution: institution,
         fieldOfStudy: department,
         cgpa: parseFloat(cgpa) || 0,
-        graduationYear: gradYear
+        graduationYear: gradYear,
+        experienceYears: parseInt(experience, 10) || 0,
+        sidaamuAfoo: sidaamuAfoo || 'Basic'
       },
 
       documents: {
