@@ -22,6 +22,7 @@ const seedAdmin = async () => {
     // 3. Create the Admin user
     await User.create({
       email: 'admin@smuc.com',
+      
       password: hashedPassword,
       role: 'ADMIN'
     });
