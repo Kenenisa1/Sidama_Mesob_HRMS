@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, MapPin, GraduationCap, CloudUpload, CheckCircle, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -9,7 +9,7 @@ import StepFour from '../components/Application/StepFour';
 
 const Application = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [direction, setDirection] = useState(0); // Tracking direction for slide effect
+  const [direction, setDirection] = useState(0); 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -21,6 +21,11 @@ const Application = () => {
     kebele: '',
     degreeFile: null,
   });
+
+  // Handle accidental layout locks by making sure steps stay bounded
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
 
   // Animation Variants
   const containerVariants = {
@@ -41,22 +46,22 @@ const Application = () => {
   };
 
   const stepVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 100 : -100,
+    enter: (dir) => ({
+      x: dir > 0 ? 60 : -60,
       opacity: 0,
-      filter: "blur(10px)"
+      filter: "blur(4px)"
     }),
     center: {
       x: 0,
       opacity: 1,
       filter: "blur(0px)",
-      transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }
+      transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
     },
-    exit: (direction) => ({
-      x: direction < 0 ? 100 : -100,
+    exit: (dir) => ({
+      x: dir < 0 ? 60 : -60,
       opacity: 0,
-      filter: "blur(10px)",
-      transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+      filter: "blur(4px)",
+      transition: { duration: 0.3, ease: [0.25, 1, 0.5, 1] }
     })
   };
 
@@ -151,7 +156,7 @@ const Application = () => {
                   <motion.div 
                     initial={{ width: "0%" }}
                     animate={{ width: currentStep > step.id ? '100%' : '0%' }}
-                    transition={{ duration: 0.8, ease: "circInOut" }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="absolute h-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]"
                   />
                 </div>
@@ -160,18 +165,15 @@ const Application = () => {
           ))}
         </nav>
 
-        {/* --- MAIN FORM (Layout-Animated Container) --- */}
-        <motion.div 
-          layout
-          transition={{ duration: 0.6, type: "spring", stiffness: 100, damping: 20 }}
-          className="w-full bg-[#050c1a]/40 border border-zinc-900/50 p-8 md:p-16 rounded-[4rem] shadow-[0_40px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl relative overflow-hidden"
-        >
-          {/* Subtle Background Mark */}
-          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-             <ShieldCheck size={120} className="text-emerald-500" />
+        {/* --- MAIN FORM CONTAINER (Isolate layout animations from multi-step route shifts) --- */}
+        <div className="w-full bg-[#050c1a]/40 border border-zinc-900/50 p-8 md:p-16 rounded-[4rem] shadow-[0_40px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl relative overflow-hidden">
+          
+          {/* Decorative Security Watermark */}
+          <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none text-emerald-500">
+             <ShieldCheck size={140} />
           </div>
 
-          <AnimatePresence mode="wait" custom={direction}>
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
             <motion.div
               key={currentStep}
               custom={direction}
@@ -179,6 +181,7 @@ const Application = () => {
               initial="enter"
               animate="center"
               exit="exit"
+              className="w-full h-full will-change-transform"
             >
               {currentStep === 1 && <StepOne data={formData} update={updateData} onNext={next} />}
               {currentStep === 2 && <StepTwo data={formData} update={updateData} onNext={next} onPrev={prev} />}
@@ -186,7 +189,7 @@ const Application = () => {
               {currentStep === 4 && <StepFour data={formData} update={updateData} onPrev={prev} />}
             </motion.div>
           </AnimatePresence>
-        </motion.div>
+        </div>
       </main>
     </div>
   );
