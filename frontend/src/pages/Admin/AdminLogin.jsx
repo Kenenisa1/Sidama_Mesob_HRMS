@@ -38,7 +38,7 @@ const AdminLogin = () => {
         localStorage.setItem("user", JSON.stringify(data));
 
         toast.success("Access Granted");
-        navigate("/admin/*");
+        navigate("/admin");
       } else {
         toast.error(data.message || "Unauthorized Access");
       }
