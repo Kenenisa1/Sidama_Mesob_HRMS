@@ -4,7 +4,21 @@ import Job from "../models/Job.js";
 // CREATE JOB
 export const createJob = async (req, res) => {
   try {
-    const job = await Job.create(req.body);
+    const jobData = {
+      ...req.body,
+      positions: Number(req.body.positions),
+      title: req.body.title?.trim(),
+      department: req.body.department?.trim(),
+      description: req.body.description?.trim(),
+      requirements: req.body.requirements?.trim(),
+      education: req.body.education?.trim(),
+      cgpa: req.body.cgpa?.trim(),
+      experience: req.body.experience?.trim(),
+      salary: req.body.salary?.trim(),
+      location: req.body.location?.trim(),
+    };
+
+    const job = await Job.create(jobData);
 
     res.status(201).json({
       success: true,
@@ -12,9 +26,14 @@ export const createJob = async (req, res) => {
       job,
     });
   } catch (error) {
-    res.status(500).json({
+    const statusCode = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
+
+    res.status(statusCode).json({
       success: false,
       message: error.message,
+      errors: error.errors
+        ? Object.values(error.errors).map((err) => err.message)
+        : undefined,
     });
   }
 };

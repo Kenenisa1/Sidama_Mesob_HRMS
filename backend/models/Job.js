@@ -40,6 +40,7 @@ const jobSchema = new mongoose.Schema(
     positions: {
       type: Number,
       required: true,
+      min: [1, "Number of positions must be at least 1"],
     },
 
     salary: {

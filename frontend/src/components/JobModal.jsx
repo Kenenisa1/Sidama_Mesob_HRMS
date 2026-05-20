@@ -28,6 +28,8 @@ const JobModal = ({ isOpen, onClose }) => {
       english: false,
     },
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // INPUT CHANGE
   const handleChange = (e) => {
@@ -56,8 +58,10 @@ const JobModal = ({ isOpen, onClose }) => {
   // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
     try {
+      setIsSubmitting(true);
 
       const res = await axios.post(
         "http://localhost:5000/api/jobs",
@@ -73,8 +77,16 @@ const JobModal = ({ isOpen, onClose }) => {
     } catch (error) {
 
       console.log(error);
+      const apiMessage =
+        error.response?.data?.errors?.join("\n") ||
+        error.response?.data?.message ||
+        "Error Posting Job";
 
-      alert("Error Posting Job");
+      setErrorMessage(apiMessage);
+
+      alert(apiMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -121,6 +133,11 @@ const JobModal = ({ isOpen, onClose }) => {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
+          {errorMessage && (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200 whitespace-pre-line">
+              {errorMessage}
+            </div>
+          )}
 
           {/* JOB TITLE */}
           <div>
@@ -133,6 +150,7 @@ const JobModal = ({ isOpen, onClose }) => {
               name="title"
               value={formData.title}
               onChange={handleChange}
+              required
               placeholder="e.g., Junior Woreda Administrator"
               className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50"
             />
@@ -148,6 +166,7 @@ const JobModal = ({ isOpen, onClose }) => {
               name="department"
               value={formData.department}
               onChange={handleChange}
+              required
               className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-4 text-gray-400 focus:outline-none appearance-none"
             >
               <option value="">
@@ -179,6 +198,7 @@ const JobModal = ({ isOpen, onClose }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
+              required
               placeholder="Describe the role, responsibilities, and what the position entails..."
               className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50"
             ></textarea>
@@ -195,6 +215,7 @@ const JobModal = ({ isOpen, onClose }) => {
               name="requirements"
               value={formData.requirements}
               onChange={handleChange}
+              required
               className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-4 text-white focus:outline-none"
             ></textarea>
           </div>
@@ -211,6 +232,7 @@ const JobModal = ({ isOpen, onClose }) => {
                 name="education"
                 value={formData.education}
                 onChange={handleChange}
+                required
                 className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-3 text-gray-400 focus:outline-none appearance-none"
               >
                 <option value="">
@@ -233,10 +255,14 @@ const JobModal = ({ isOpen, onClose }) => {
               </label>
 
               <input
-                type="text"
+                type="number"
                 name="cgpa"
                 value={formData.cgpa}
                 onChange={handleChange}
+                required
+                min="0"
+                max="4"
+                step="0.01"
                 placeholder="e.g., 3.0"
                 className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-3 text-white focus:outline-none placeholder:text-gray-600"
               />
@@ -256,6 +282,7 @@ const JobModal = ({ isOpen, onClose }) => {
                 name="experience"
                 value={formData.experience}
                 onChange={handleChange}
+                required
                 placeholder="e.g., 0-2 years"
                 className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-3 text-white focus:outline-none placeholder:text-gray-600"
               />
@@ -271,6 +298,8 @@ const JobModal = ({ isOpen, onClose }) => {
                 name="positions"
                 value={formData.positions}
                 onChange={handleChange}
+                required
+                min="1"
                 placeholder="e.g., 12"
                 className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-3 text-white focus:outline-none placeholder:text-gray-600"
               />
@@ -305,6 +334,7 @@ const JobModal = ({ isOpen, onClose }) => {
                 name="deadline"
                 value={formData.deadline}
                 onChange={handleChange}
+                required
                 className="w-full bg-[#050e1f] border border-white/10 rounded-xl p-3 text-white focus:outline-none [color-scheme:dark]"
               />
             </div>
@@ -379,11 +409,12 @@ const JobModal = ({ isOpen, onClose }) => {
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="flex-1 flex items-center justify-center gap-2 bg-[#059669] hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition-all"
             >
               <CheckCircle size={20} />
 
-              Publish Job Posting
+              {isSubmitting ? "Publishing..." : "Publish Job Posting"}
             </button>
 
             <button
