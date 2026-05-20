@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import {
-  UserPlus,
-  Shield,
   Globe,
   ChevronDown,
   Menu,
   X,
+  Home,
+  Briefcase,
+  Info,
+  HelpCircle,
+  UserCheck
 } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   const [selectedLang, setSelectedLang] = useState({
     code: "GB",
@@ -24,89 +29,96 @@ const Navbar = () => {
     { code: "ET", name: "Sidama" },
   ];
 
-  const NavLink = ({ text, mobile = false }) => (
-    <button
-      className={`flex items-center gap-3 text-gray-300 hover:text-white transition-colors group ${
-        mobile
-          ? "w-full py-4 px-2 text-lg border-b border-gray-800/50"
-          : ""
-      }`}
-    >
-      <span className="font-semibold">{text}</span>
-    </button>
-  );
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsLangOpen(false);
+  }, [location]);
+
+  const navItems = [
+    { path: "/", text: "Home", icon: <Home size={18} /> },
+    { path: "/featuredPositions", text: "Open Roles", icon: <Briefcase size={18} /> },
+    { path: "/about", text: "About", icon: <Info size={18} /> },
+    { path: "/help", text: "Help", icon: <HelpCircle size={18} /> },
+  ];
 
   return (
-    <nav className="relative bg-[#020c17] text-white shadow-xl z-[100]">
-      {/* Main Header */}
+    <nav 
+      className={`sticky top-0 w-full text-white z-[100] transition-all duration-300 border-b ${
+        scrolled 
+          ? "bg-black/80 backdrop-blur-md border-zinc-800/80 shadow-2xl" 
+          : "bg-[#020c17] border-zinc-900/50"
+      }`}
+    >
+      {/* Main Header Container */}
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        {/* Logo */}
-        <div className="flex items-center gap-3 cursor-pointer z-50">
-          <div className="p-2 rounded-xl shadow-lg">
-            <img src="/mesob.png" alt="Logo" className="w-8 h-8" />
-          </div>
-
-          <div className="flex flex-col leading-tight">
-            <span className="text-xl md:text-2xl font-bold tracking-tight text-white">
+        
+        {/* Logo and Branding Link */}
+        <div className="flex items-center gap-3 group z-50">
+          {/* Secret Backdoor to Admin Login: Clicking the icon itself routes to /login */}
+          <Link 
+            to="/login" 
+            className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-xl group-hover:border-emerald-500/30 transition-colors focus:outline-none"
+            title="SMUC Portal"
+          >
+            <img src="/mesob.png" alt="SMUC Logo" className="w-8 h-8 object-contain" />
+          </Link>
+          
+          <Link to="/" className="flex flex-col leading-tight focus:outline-none">
+            <span className="text-xl font-black uppercase tracking-tighter text-white group-hover:text-emerald-400 transition-colors">
               SMUC
             </span>
-
-            <span className="text-[10px] md:text-xs font-medium text-[#059669]">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">
               Sidama Mesob Unity Center
             </span>
-          </div>
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-8">
-          <Link to="/">
-            <NavLink text="Home" />
-          </Link>
-
-          <Link to="/featuredPositions">
-            <NavLink text="Open Roles" />
-          </Link>
-
-          <Link to="/about">
-            <NavLink text="About" />
-          </Link>
-
-          <Link to="/help">
-            <NavLink text="Help" />
           </Link>
         </div>
 
-        {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link to="/login">
-            <button className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#ea580c] px-5 py-2.5 rounded-xl font-bold border border-orange-200 transition-all shadow-sm">
-              <Shield size={20} />
-              Admin Portal
-            </button>
-          </Link>
-
-          {/* Language Dropdown */}
-          <div className="relative">
-            <div
-              onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-3 ml-2 border border-gray-700 bg-[#0a1929] px-3 py-2 rounded-lg cursor-pointer hover:border-gray-500 min-w-[140px]"
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => `
+                px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 select-none
+                ${isActive 
+                  ? "text-emerald-400 bg-emerald-500/5 border border-emerald-500/10" 
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/40 border border-transparent"
+                }
+              `}
             >
-              <Globe size={18} className="text-gray-400" />
+              {item.text}
+            </NavLink>
+          ))}
+        </div>
 
-              <span className="text-sm font-medium">
-                {selectedLang.code} {selectedLang.name}
-              </span>
-
+        {/* Desktop Interface Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          
+          {/* Language Picker Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="flex items-center gap-2.5 border border-zinc-800 bg-black/40 px-3.5 py-2 rounded-xl cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/30 transition-all text-sm font-bold select-none text-zinc-300 focus:outline-none min-w-[130px]"
+            >
+              <Globe size={16} className="text-zinc-500" />
+              <span>{selectedLang.name}</span>
               <ChevronDown
-                size={16}
-                className={`text-gray-500 transition-transform ${
-                  isLangOpen ? "rotate-180" : ""
-                }`}
+                size={14}
+                className={`text-zinc-500 transition-transform duration-200 ${isLangOpen ? "rotate-180 text-emerald-400" : ""}`}
               />
-            </div>
+            </button>
 
             {isLangOpen && (
-              <div className="absolute right-0 mt-2 w-full bg-[#0a1929] border border-gray-700 rounded-lg shadow-2xl py-1 overflow-hidden">
+              <div className="absolute right-0 mt-2 w-full bg-[#030712] border border-zinc-800/80 rounded-xl shadow-2xl py-1.5 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 z-50">
                 {languages.map((lang) => (
                   <button
                     key={lang.name}
@@ -114,88 +126,92 @@ const Navbar = () => {
                       setSelectedLang(lang);
                       setIsLangOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-[#059669] hover:text-white transition-colors"
+                    className="w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-emerald-600 hover:text-white transition-colors"
                   >
-                    {lang.code} {lang.name}
+                    {lang.code} — {lang.name}
                   </button>
                 ))}
               </div>
             )}
           </div>
+
+          {/* Real World Action Component: Apply Now CTA */}
+          <Link to="/featuredPositions" className="focus:outline-none">
+            <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-black uppercase tracking-wider text-[10px] transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)] active:scale-[0.98]">
+              <UserCheck size={14} />
+              Apply Now
+            </button>
+          </Link>
         </div>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Interface Hamburger Trigger */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="lg:hidden p-2 text-gray-300 hover:text-white z-50 transition-transform active:scale-90"
+          className="lg:hidden p-2 text-zinc-400 hover:text-white z-50 transition-all active:scale-90 focus:outline-none"
+          aria-label="Toggle Menu"
         >
-          {isMenuOpen ? <X size={32} /> : <Menu size={32} />}
+          {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Full-Screen Drawer Layer (Mobile Navigation) */}
       <div
         className={`
-          fixed inset-0 bg-[#020c17] z-40 p-6 flex flex-col gap-4
-          transition-all duration-300 ease-in-out
-          ${
-            isMenuOpen
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-full pointer-events-none"
-          }
-          lg:hidden
+          fixed inset-0 bg-black/95 backdrop-blur-xl z-40 p-6 flex flex-col gap-6
+          transition-all duration-300 ease-in-out lg:hidden
+          ${isMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"}
         `}
       >
-        <div className="h-20" />
+        <div className="h-16" />
 
-        <div className="flex flex-col gap-2 overflow-y-auto">
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            <NavLink text="Home" mobile />
-          </Link>
+        <div className="flex flex-col gap-2 overflow-y-auto pr-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => `
+                flex items-center gap-4 py-4 px-4 rounded-xl text-lg font-bold tracking-wide transition-all
+                ${isActive 
+                  ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20" 
+                  : "text-zinc-400 border border-transparent hover:text-white"
+                }
+              `}
+            >
+              {item.icon}
+              <span>{item.text}</span>
+            </NavLink>
+          ))}
 
-          <Link to="/featuredPositions" onClick={() => setIsMenuOpen(false)}>
-            <NavLink text="Open Roles" mobile />
-          </Link>
+          <div className="h-[1px] bg-zinc-900 my-4" />
 
-          <Link to="/about" onClick={() => setIsMenuOpen(false)}>
-            <NavLink text="About" mobile />
-          </Link>
-
-          <Link to="/help" onClick={() => setIsMenuOpen(false)}>
-            <NavLink text="Help" mobile />
-          </Link>
-
-          <Link to="/login" onClick={() => setIsMenuOpen(false)}>
-            <button className="flex items-center gap-3 bg-white text-[#ea580c] p-4 rounded-xl font-bold border border-orange-200 shadow-sm active:scale-95 transition-transform w-full">
-              <Shield size={24} />
-              Admin Portal
+          {/* Mobile Primary Conversion Action */}
+          <Link to="/application" className="w-full">
+            <button className="flex items-center justify-center gap-3 bg-emerald-600 text-white p-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-md active:scale-[0.98] transition-all w-full">
+              <UserCheck size={18} />
+              Apply Now
             </button>
           </Link>
 
-          {/* Mobile Language */}
-          <div className="flex flex-col bg-[#0a1929] border border-gray-800 rounded-xl mt-2 overflow-hidden">
+          {/* Mobile Language Accordion Container */}
+          <div className="flex flex-col bg-zinc-950 border border-zinc-900 rounded-xl mt-3 overflow-hidden">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center justify-between p-4"
+              className="flex items-center justify-between p-4 text-zinc-400 focus:outline-none"
             >
               <div className="flex items-center gap-3">
-                <Globe size={20} className="text-gray-400" />
-
-                <span className="font-medium text-gray-200">
-                  {selectedLang.code} {selectedLang.name}
+                <Globe size={18} />
+                <span className="font-bold text-sm text-zinc-200">
+                  {selectedLang.name}
                 </span>
               </div>
-
               <ChevronDown
-                size={20}
-                className={`text-gray-500 transition-transform ${
-                  isLangOpen ? "rotate-180" : ""
-                }`}
+                size={16}
+                className={`transition-transform duration-200 ${isLangOpen ? "rotate-180 text-emerald-400" : ""}`}
               />
             </button>
 
             {isLangOpen && (
-              <div className="flex flex-col border-t border-gray-800 bg-[#050e17]">
+              <div className="flex flex-col border-t border-zinc-900 bg-zinc-900/30">
                 {languages.map((lang) => (
                   <button
                     key={lang.name}
@@ -204,9 +220,9 @@ const Navbar = () => {
                       setIsLangOpen(false);
                       setIsMenuOpen(false);
                     }}
-                    className="p-4 text-left text-gray-300 hover:text-white hover:bg-[#059669]/20"
+                    className="p-4 text-left text-sm font-semibold text-zinc-400 hover:text-white hover:bg-emerald-600/10 transition-colors"
                   >
-                    {lang.code} {lang.name}
+                    {lang.code} — {lang.name}
                   </button>
                 ))}
               </div>

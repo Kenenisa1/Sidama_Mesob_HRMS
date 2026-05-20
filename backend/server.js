@@ -8,7 +8,9 @@ import { fileURLToPath } from 'url';
 
 import connectDB from './config/db.js';
 import applicationRoutes from './routes/applicationRoutes.js'; 
+import jobRoutes from './routes/jobRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
+import authRoutes from './routes/authRoutes.js';
 
 // Configuration
 const app = express();
@@ -52,9 +54,11 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Sidama Mesob Unity Center API is operational' });
 });
 
-// Your Application Routes
-app.use('/api/applications', applicationRoutes);
 
+// Your Routes
+app.use('/api/applications', applicationRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use('/api/auth', authRoutes);
 // --- ERROR HANDLING ---
 // These must be at the bottom, AFTER the routes
 app.use(notFound);
@@ -64,6 +68,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
+  console.log(`https://localhost:${PORT}`);
   console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 

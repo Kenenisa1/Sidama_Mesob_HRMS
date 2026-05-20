@@ -1,36 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, BookOpen, Calendar, Briefcase, Award } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { InputWrapper } from './StepOne'; // Ensure clean routing mapping paths
 
 export default function StepThree({ data, update, onNext, onPrev }) {
   const [errors, setErrors] = useState({});
-
-  // Security Check: Redirect or alert if token is missing
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error("Session expired. Please login to continue.", {
-        style: { background: '#000', color: '#fff', border: '1px solid #27272a' }
-      });
-    }
-  }, []);
-
   const proficiencyLevels = ['Basic', 'Intermediate', 'Fluent', 'Native'];
   const eduLevels = ['TVET/Diploma', 'Bachelor', 'Master', 'PhD'];
 
   const validate = () => {
     let newErrors = {};
-    if (!data.institution) newErrors.institution = "Required";
-    if (!data.department) newErrors.department = "Required";
+    if (!data.institution?.trim()) newErrors.institution = "Required";
+    if (!data.department?.trim()) newErrors.department = "Required";
     if (!data.eduLevel) newErrors.eduLevel = "Required";
     if (!data.gradYear) newErrors.gradYear = "Required";
     
-    // CGPA Validation: Ensure it's a valid number between 0 and 4.0
+    const parsedCgpa = parseFloat(data.cgpa);
     if (!data.cgpa) {
       newErrors.cgpa = "Required";
-    } else if (parseFloat(data.cgpa) < 0 || parseFloat(data.cgpa) > 4) {
-      newErrors.cgpa = "0.0 - 4.0";
+    } else if (isNaN(parsedCgpa) || parsedCgpa < 0 || parsedCgpa > 4) {
+      newErrors.cgpa = "0.0 - 4.0 Range";
     }
     
     setErrors(newErrors);
@@ -50,11 +39,10 @@ export default function StepThree({ data, update, onNext, onPrev }) {
       </div>
 
       <div className="space-y-6">
-        {/* Education Level */}
         <div className="space-y-2">
           <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Highest Education Level</label>
           <div className="relative group">
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-emerald-500 transition-colors z-10 pointer-events-none">
               <GraduationCap size={18} />
             </div>
             <select 
@@ -70,7 +58,6 @@ export default function StepThree({ data, update, onNext, onPrev }) {
           </div>
         </div>
 
-        {/* Institution & Department */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <InputWrapper label="University / College" error={errors.institution} icon={<BookOpen size={18}/>}>
             <input 
@@ -91,7 +78,6 @@ export default function StepThree({ data, update, onNext, onPrev }) {
           </InputWrapper>
         </div>
 
-        {/* CGPA & Year */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <InputWrapper label="CGPA" error={errors.cgpa} icon={<Award size={18}/>}>
             <input 
@@ -107,14 +93,14 @@ export default function StepThree({ data, update, onNext, onPrev }) {
           <InputWrapper label="Graduation Year" error={errors.gradYear} icon={<Calendar size={18}/>}>
             <input 
               type="number"
-              className={`w-full bg-black/40 border rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none transition-all ${errors.gradYear ? 'border-red-500/50' : 'border-zinc-800'}`}
+              className={`w-full bg-black/40 border rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none transition-all ${errors.gradYear ? 'border-red-500/50' : 'border-zinc-800 focus:border-emerald-500/50'}`}
               value={data.gradYear || ''}
               onChange={(e) => update({ gradYear: parseInt(e.target.value) || '' })}
-              placeholder="2024"
+              placeholder="2026"
             />
           </InputWrapper>
 
-          <InputWrapper label="Experience" icon={<Briefcase size={18}/>}>
+          <InputWrapper label="Experience (Years)" icon={<Briefcase size={18}/>}>
             <input 
               type="number"
               className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all"
@@ -126,7 +112,6 @@ export default function StepThree({ data, update, onNext, onPrev }) {
         </div>
       </div>
 
-      {/* Sidaamu Afoo Proficiency */}
       <div className="pt-6 border-t border-zinc-900/50">
         <label className="block text-[10px] font-black text-zinc-500 mb-6 uppercase tracking-[0.3em] text-center">
           Sidaamu Afoo Proficiency
@@ -148,36 +133,22 @@ export default function StepThree({ data, update, onNext, onPrev }) {
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex gap-4 pt-4">
         <button 
           onClick={onPrev}
+          type="button"
           className="flex-1 px-8 py-4 rounded-2xl bg-zinc-900/50 text-zinc-500 font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-white transition-all border border-zinc-800/50"
         >
           Back
         </button>
         <button 
           onClick={() => validate() && onNext()}
+          type="button"
           className="flex-[2] py-4 rounded-2xl bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow-xl transition-all"
         >
           Final Step: Uploads
         </button>
       </div>
     </motion.div>
-  );
-}
-
-function InputWrapper({ label, error, icon, children }) {
-  return (
-    <div className="space-y-2 relative">
-      <div className="flex justify-between items-center px-1">
-        <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest">{label}</label>
-        {error && <span className="text-[10px] font-bold text-red-500 uppercase">{error}</span>}
-      </div>
-      <div className="relative flex items-center">
-        {icon && <div className="absolute left-4 text-zinc-600 z-10">{icon}</div>}
-        {children}
-      </div>
-    </div>
   );
 }

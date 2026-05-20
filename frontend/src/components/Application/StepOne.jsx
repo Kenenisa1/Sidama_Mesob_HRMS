@@ -6,13 +6,16 @@ import { toast } from 'react-hot-toast';
 export default function StepOne({ data, update, onNext }) {
   const [errors, setErrors] = useState({});
 
-  // Effect to sync fullName whenever first/middle/last changes
+  // Synchronize fullName whenever identity parts update
   useEffect(() => {
-    const full = `${data.firstName || ''} ${data.middleName || ''} ${data.lastName || ''}`.replace(/\s+/g, ' ').trim();
-    update({ fullName: full });
-  }, [data.firstName, data.middleName, data.lastName, update]);
+    const full = `${data.firstName || ''} ${data.middleName || ''} ${data.lastName || ''}`
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (data.fullName !== full) {
+      update({ fullName: full });
+    }
+  }, [data.firstName, data.middleName, data.lastName]);
 
-  // Security: Prevent numbers in string-only fields
   const handleNameChange = (field, value) => {
     const stringOnly = value.replace(/[0-9]/g, '');
     if (value !== stringOnly) {
@@ -21,12 +24,9 @@ export default function StepOne({ data, update, onNext }) {
     update({ [field]: stringOnly });
   };
 
-  // Security: Prevent strings in number-only fields
   const handleNumberChange = (field, value, maxLength) => {
+    // Keep digits only
     const numbersOnly = value.replace(/\D/g, '');
-    if (value !== numbersOnly) {
-      toast.error("This field only accepts numbers", { id: 'num-error', duration: 1000 });
-    }
     update({ [field]: numbersOnly.slice(0, maxLength) });
   };
 
@@ -34,8 +34,8 @@ export default function StepOne({ data, update, onNext }) {
     let newErrors = {};
     
     if (!data.firstName?.trim()) newErrors.firstName = "Required";
-    if (!data.lastName?.trim()) newErrors.lastName = "Required";
     if (!data.middleName?.trim()) newErrors.middleName = "Required";
+    if (!data.lastName?.trim()) newErrors.lastName = "Required";
     if (!data.gender) newErrors.gender = "Required";
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,9 +43,10 @@ export default function StepOne({ data, update, onNext }) {
       newErrors.email = "Invalid email";
     }
     
-    const phoneRegex = /^(09|07|\+2519|\+2517)\d{8}$/;
+    // Validates 10-digit standard (09/07) or stripped digits for 2519/2517
+    const phoneRegex = /^(09|07|2519|2517)\d{8}$/;
     if (!data.phone || !phoneRegex.test(data.phone.replace(/\s/g, ''))) {
-      newErrors.phone = "Enter valid Ethio phone";
+      newErrors.phone = "Enter valid Ethio phone (09.../07...)";
     }
     
     if (!data.faydaId || data.faydaId.length !== 16) {
@@ -56,8 +57,6 @@ export default function StepOne({ data, update, onNext }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const genderOptions = ['Male', 'Female'];
-
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
@@ -66,17 +65,16 @@ export default function StepOne({ data, update, onNext }) {
     >
       <div>
         <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Identity Credentials</h2>
-        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Register your legal identity for the Sidama Mesob HRMS portal.</p>
+        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Register your legal identity for the SMUC HRMS portal.</p>
       </div>
 
-      {/* Name Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <InputWrapper label="First Name" error={errors.firstName} icon={<User size={16}/>}>
           <input 
             className={`w-full bg-black/40 border ${errors.firstName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
             value={data.firstName || ''}
             onChange={(e) => handleNameChange('firstName', e.target.value)}
-            placeholder="First"
+            placeholder="First Name"
           />
         </InputWrapper>
 
@@ -85,8 +83,7 @@ export default function StepOne({ data, update, onNext }) {
             className={`w-full bg-black/40 border ${errors.middleName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
             value={data.middleName || ''}
             onChange={(e) => handleNameChange('middleName', e.target.value)}
-            placeholder="Father's"
-            required={true}
+            placeholder="Father's Name"
           />
         </InputWrapper>
 
@@ -95,17 +92,16 @@ export default function StepOne({ data, update, onNext }) {
             className={`w-full bg-black/40 border ${errors.lastName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
             value={data.lastName || ''}
             onChange={(e) => handleNameChange('lastName', e.target.value)}
-            placeholder="Grandfather's"
+            placeholder="Grandfather's Name"
           />
         </InputWrapper>
       </div>
 
-      {/* Gender & National ID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-2">
           <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Legal Gender</label>
           <div className="flex gap-2 p-1 bg-black/20 border border-zinc-800 rounded-2xl h-[58px]">
-            {genderOptions.map((option) => (
+            {['Male', 'Female'].map((option) => (
               <button
                 key={option}
                 type="button"
@@ -124,15 +120,16 @@ export default function StepOne({ data, update, onNext }) {
 
         <InputWrapper label="Fayda Number (16-Digit)" error={errors.faydaId} icon={<Fingerprint size={16}/>}>
           <input 
+            type="text"
+            inputMode="numeric"
             className={`w-full bg-black/40 border font-mono ${errors.faydaId ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
             value={data.faydaId || ''}
             onChange={(e) => handleNumberChange('faydaId', e.target.value, 16)}
-            placeholder="0000 0000 0000 0000"
+            placeholder="0000000000000000"
           />
         </InputWrapper>
       </div>
 
-      {/* Contact Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <InputWrapper label="Work Email" error={errors.email} icon={<Mail size={16}/>}>
           <input 
@@ -149,14 +146,14 @@ export default function StepOne({ data, update, onNext }) {
             type="tel"
             className={`w-full bg-black/40 border ${errors.phone ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
             value={data.phone || ''}
-            onChange={(e) => handleNumberChange('phone', e.target.value, 13)}
-            placeholder="0911..."
+            onChange={(e) => handleNumberChange('phone', e.target.value, 12)}
+            placeholder="0911223344"
           />
         </InputWrapper>
       </div>
 
       <button 
-        onClick={() => validate() ? onNext() : toast.error("Please correct errors")}
+        onClick={() => validate() ? onNext() : toast.error("Please correct the form entry values")}
         className="group relative w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all active:scale-[0.98]"
       >
         Continue to Residency
@@ -165,15 +162,16 @@ export default function StepOne({ data, update, onNext }) {
   );
 }
 
-function InputWrapper({ label, error, icon, children }) {
+// Extracted Shared Wrapper Layout Configuration 
+export function InputWrapper({ label, error, icon, children }) {
   return (
-    <div className="space-y-2 relative">
+    <div className="space-y-2 relative w-full">
       <div className="flex justify-between items-center px-1">
         <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest">{label}</label>
         {error && <span className="text-[10px] font-bold text-red-500 uppercase">{error}</span>}
       </div>
       <div className="relative flex items-center">
-        {icon && <div className="absolute left-4 text-zinc-600 z-10">{icon}</div>}
+        {icon && <div className="absolute left-4 text-zinc-600 z-10 pointer-events-none">{icon}</div>}
         {children}
       </div>
     </div>

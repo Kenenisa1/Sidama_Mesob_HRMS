@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast, Toaster } from "react-hot-toast";
@@ -17,24 +17,28 @@ export default function StepFour({ data, update, onPrev }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // 1. Unified handleFileChange with Type/Size validation
+  // Security Verification: Client Session Handling Verification
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error("Session expired. Please login to guarantee transmission safety.", {
+        style: { background: '#000', color: '#fff', border: '1px solid #27272a' }
+      });
+    }
+  }, []);
+
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Check size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      return toast.error(`${field.replace("File", "")} exceeds 5MB limit`, {
-        style: {
-          background: "#000",
-          color: "#fff",
-          border: "1px solid #27272a",
-        },
+      return toast.error(`${field.replace("File", "").toUpperCase()} exceeds 5MB limit`, {
+        style: { background: "#000", color: "#fff", border: "1px solid #27272a" },
       });
     }
 
     update({ [field]: file });
-    toast.success(`${file.name.substring(0, 15)}... uploaded`, {
+    toast.success(`${file.name.substring(0, 15)}... selected`, {
       icon: "📎",
       style: { background: "#000", color: "#fff", border: "1px solid #10b981" },
     });
@@ -42,69 +46,49 @@ export default function StepFour({ data, update, onPrev }) {
 
   const removeFile = (field) => {
     update({ [field]: null });
-    toast("File removed", { icon: "🗑️" });
+    toast("File removed from vault processing queue", { icon: "🗑️" });
   };
 
- const handleSubmit = async () => {
-    // Basic Validation
-    if (!data.degreeFile || !data.idFile || !data.cvFile) {
-      return toast.error("Please upload CV, Degree, and National ID", {
+  const handleSubmit = async () => {
+    if (!data.cvFile || !data.degreeFile || !data.idFile) {
+      return toast.error("Please upload mandatory files: CV, Degree, and National ID", {
         icon: <AlertCircle className="text-red-500" size={20} />,
       });
     }
 
     setIsSubmitting(true);
-
     const formData = new FormData();
 
-    // 1. Files - (Names must match your Multer 'vaultUploads' config)
+    // Append standard payload files structure
     formData.append("cv", data.cvFile);
     formData.append("degreeCertificate", data.degreeFile);
     formData.append("nationalIdCopy", data.idFile);
     if (data.certFile) formData.append("otherCert", data.certFile);
 
-    // 2. Comprehensive Field Mapping 
-    // We include faydaId, woreda, kebele, and cgpa to prevent backend fallbacks
     const fields = [
-      "fullName",
-      "email",
-      "phone",
-      "gender",
-      "faydaId",      
-      "woreda",       
-      "kebele",      
-      "address",
-      "eduLevel",
-      "institution",
-      "department",
-      "gradYear",
-      "cgpa",         
-      "experience",
-      "sidaamuAfoo",
+      "fullName", "email", "phone", "gender", "faydaId",      
+      "woreda", "kebele", "address", "eduLevel",
+      "institution", "department", "gradYear", "cgpa", "experience", "sidaamuAfoo"
     ];
 
     fields.forEach((field) => {
-      // If the field is missing in 'data', we send an empty string instead of undefined
-      formData.append(field, data[field] || "");
+      formData.append(field, data[field] !== undefined && data[field] !== null ? data[field] : "");
     });
 
     try {
       const response = await axios.post(
         "http://localhost:5000/api/applications/submit",
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       if (response.data.success) {
-        toast.success(`Application submitted successfully! Tracking ID: ${response.data.trackingId}`);
         setShowSuccess(true);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Server connection failed";
+      const errorMsg = err.response?.data?.message || "Server connection interface failure";
       toast.error(errorMsg);
-      console.error("Submission Error:", err);
+      console.error("Transmission Error Data:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -173,6 +157,7 @@ export default function StepFour({ data, update, onPrev }) {
               <button
                 onClick={onPrev}
                 disabled={isSubmitting}
+                type="button"
                 className="flex-1 px-10 py-5 rounded-2xl bg-zinc-900/50 text-zinc-400 font-black text-xs uppercase tracking-widest hover:text-white border border-zinc-800/50 disabled:opacity-30 transition-all"
               >
                 Back
@@ -181,12 +166,12 @@ export default function StepFour({ data, update, onPrev }) {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
+                type="button"
                 className={`flex-[2] py-5 rounded-2xl bg-emerald-600 text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-3 ${isSubmitting ? "animate-pulse cursor-wait" : ""}`}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 size={18} className="animate-spin" />{" "}
-                    Transmitting...
+                    <Loader2 size={18} className="animate-spin" /> Transmitting...
                   </>
                 ) : (
                   "Confirm & Submit"
@@ -202,7 +187,6 @@ export default function StepFour({ data, update, onPrev }) {
   );
 }
 
-// Sub-component for Success State
 function SuccessUI() {
   return (
     <motion.div
@@ -219,9 +203,7 @@ function SuccessUI() {
           Applied <span className="text-emerald-500">Successfully</span>
         </h2>
         <p className="text-zinc-400 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-          Your documentation is now in the queue for manual verification. You
-          will receive an update at your registered email address within 3-5
-          business days.
+          Your documentation is now in the queue for manual verification. You will receive an update at your registered email address within 3-5 business days.
         </p>
       </div>
 
@@ -237,7 +219,6 @@ function SuccessUI() {
   );
 }
 
-// Reusable UploadBox
 function UploadBox({ label, file, onFileSelect, onRemove, required }) {
   return (
     <div className="space-y-3">
@@ -276,6 +257,7 @@ function UploadBox({ label, file, onFileSelect, onRemove, required }) {
                 e.stopPropagation();
                 onRemove();
               }}
+              type="button"
               className="mt-4 p-2 rounded-full bg-zinc-900 text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-all"
             >
               <Trash2 size={16} />
