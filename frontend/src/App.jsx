@@ -5,8 +5,6 @@ import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Help from "./pages/Help";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
 import Application from "./pages/Application";
 
 // Components
@@ -37,8 +35,6 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/application" element={<Application />} />
           <Route path="/featuredPositions" element={<FeaturedPosition />} />
 
