@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import {
-  Shield,
   Globe,
   ChevronDown,
   Menu,
@@ -9,7 +8,8 @@ import {
   Home,
   Briefcase,
   Info,
-  HelpCircle
+  HelpCircle,
+  UserCheck
 } from "lucide-react";
 
 const Navbar = () => {
@@ -29,7 +29,6 @@ const Navbar = () => {
     { code: "ET", name: "Sidama" },
   ];
 
-  // Subtle header shadow/opacity adjustment on scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -38,7 +37,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close menus automatically on route shifts
   useEffect(() => {
     setIsMenuOpen(false);
     setIsLangOpen(false);
@@ -63,21 +61,27 @@ const Navbar = () => {
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         
         {/* Logo and Branding Link */}
-        <Link to="/" className="flex items-center gap-3 cursor-pointer group z-50 focus:outline-none">
-          <div className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-xl group-hover:border-emerald-500/30 transition-colors">
+        <div className="flex items-center gap-3 group z-50">
+          {/* Secret Backdoor to Admin Login: Clicking the icon itself routes to /login */}
+          <Link 
+            to="/login" 
+            className="p-1.5 bg-zinc-900/50 border border-zinc-800 rounded-xl group-hover:border-emerald-500/30 transition-colors focus:outline-none"
+            title="SMUC Portal"
+          >
             <img src="/mesob.png" alt="SMUC Logo" className="w-8 h-8 object-contain" />
-          </div>
-          <div className="flex flex-col leading-tight">
+          </Link>
+          
+          <Link to="/" className="flex flex-col leading-tight focus:outline-none">
             <span className="text-xl font-black uppercase tracking-tighter text-white group-hover:text-emerald-400 transition-colors">
               SMUC
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">
               Sidama Mesob Unity Center
             </span>
-          </div>
-        </Link>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation Links (Event Propagation Typos Remedied) */}
+        {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center gap-1">
           {navItems.map((item) => (
             <NavLink
@@ -131,11 +135,11 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Admin Control Link Node */}
-          <Link to="/login" className="focus:outline-none">
+          {/* Real World Action Component: Apply Now CTA */}
+          <Link to="/featuredPositions" className="focus:outline-none">
             <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-black uppercase tracking-wider text-[10px] transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)] active:scale-[0.98]">
-              <Shield size={14} />
-              Admin Portal
+              <UserCheck size={14} />
+              Apply Now
             </button>
           </Link>
         </div>
@@ -180,15 +184,15 @@ const Navbar = () => {
 
           <div className="h-[1px] bg-zinc-900 my-4" />
 
-          {/* Mobile Admin Portal Entry Route */}
-          <Link to="/login">
-            <button className="flex items-center justify-center gap-3 bg-white text-zinc-950 p-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-md active:scale-[0.98] transition-all w-full">
-              <Shield size={18} className="text-emerald-600" />
-              Admin Portal
+          {/* Mobile Primary Conversion Action */}
+          <Link to="/application" className="w-full">
+            <button className="flex items-center justify-center gap-3 bg-emerald-600 text-white p-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-md active:scale-[0.98] transition-all w-full">
+              <UserCheck size={18} />
+              Apply Now
             </button>
           </Link>
 
-          {/* Mobile Language Accordion Option Container */}
+          {/* Mobile Language Accordion Container */}
           <div className="flex flex-col bg-zinc-950 border border-zinc-900 rounded-xl mt-3 overflow-hidden">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
