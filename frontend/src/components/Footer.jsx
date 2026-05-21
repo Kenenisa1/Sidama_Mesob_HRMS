@@ -1,61 +1,244 @@
-import React from 'react';
-import { Leaf, Zap } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Leaf,
+  Zap,
+  Mail,
+  Phone,
+  MapPin,
+  ArrowUpRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  return (
-    <footer className="bg-[#020c17] z-50 text-gray-400 py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Top Section: Links and Initiative Card */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start border-b border-gray-800 pb-12">
-          
-          {/* Contact Column */}
-          <div className="space-y-4">
-            <h3 className="text-white text-xl font-bold">Contact</h3>
-            <div className="flex flex-col space-y-2 text-sm md:text-base">
-              <p>Sidama National Regional State</p>
-              <p>Hawassa, Ethiopia</p>
-              <a href="mailto:info@smuc.gov.et" className="hover:text-[#059669] transition-colors">
-                info@smuc.gov.et
-              </a>
-              <p>+251-46-XXX-XXXX</p>
-            </div>
-          </div>
+  // Mobile Dropdown States
+  const [openBrand, setOpenBrand] = useState(false);
+  const [openLinks, setOpenLinks] = useState(false);
+  const [openContact, setOpenContact] = useState(false);
 
-          {/* Center: Paperless Initiative Card */}
-          <div className="flex justify-center">
-            <div className="bg-[#041d1a] border border-[#059669]/30 rounded-2xl p-8 flex flex-col items-center text-center w-full max-w-[280px] shadow-2xl">
-              <div className="bg-[#059669]/10 p-3 rounded-full mb-4">
-                <Leaf size={40} className="text-[#84cc16]" />
-              </div>
-              <h4 className="text-[#059669] text-lg font-bold mb-1">Paperless Initiative</h4>
-              <p className="text-xs text-gray-500 font-medium tracking-wide uppercase">
-                100% Digital Processing
+  return (
+    <footer className="relative bg-[#020617] border-t border-white/10 text-gray-400 overflow-hidden ">
+      {/* Background Glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/3 w-72 h-72 bg-emerald-500/10 blur-3xl rounded-full" />
+        <div className="absolute bottom-0 right-0 w-60 h-60 bg-cyan-500/10 blur-3xl rounded-full" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-5 lg:px-8 py-8">
+        {/* ================= DESKTOP ================= */}
+        <div className="hidden md:grid grid-cols-3 gap-8 items-start">
+          
+          {/* Brand */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-2xl font-bold text-white tracking-tight">
+                Sidama Mesob
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-gray-400 max-w-sm">
+                Empowering communities through digital transformation,
+                organized services, and modern regional development.
               </p>
             </div>
+
+            <div className="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-2xl backdrop-blur-sm">
+              <div className="bg-emerald-500/15 p-2 rounded-xl">
+                <Leaf size={18} className="text-emerald-400" />
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-emerald-400">
+                  Paperless Initiative
+                </p>
+                <p className="text-xs text-gray-500">
+                  Fast & Fully Digital
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Legal Column */}
-          <div className="md:text-right space-y-4">
-            <h3 className="text-white text-xl font-bold">Legal</h3>
-            <div className="flex flex-col space-y-2 text-sm md:text-base">
-              <a href="#" className="hover:text-white transition-colors">Help & Guidance</a>
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          {/* Quick Links */}
+          <div className="md:mx-auto">
+            <h3 className="text-white font-semibold mb-4 text-base">
+              Quick Links
+            </h3>
+
+            <div className="flex flex-col gap-3 text-sm">
+              {[
+                "Help Center",
+                "Privacy Policy",
+                "Terms & Conditions",
+                "Support",
+              ].map((item, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="group flex items-center gap-2 hover:text-white transition-all duration-300"
+                >
+                  <ArrowUpRight
+                    size={14}
+                    className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                  />
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="md:text-right">
+            <h3 className="text-white font-semibold mb-4 text-base">
+              Contact
+            </h3>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex md:justify-end items-center gap-2">
+                <MapPin size={16} className="text-emerald-400" />
+                <span>Hawassa, Ethiopia</span>
+              </div>
+
+              <div className="flex md:justify-end items-center gap-2">
+                <Mail size={16} className="text-emerald-400" />
+                <a
+                  href="mailto:info@smuc.gov.et"
+                  className="hover:text-white transition-colors"
+                >
+                  info@smuc.gov.et
+                </a>
+              </div>
+
+              <div className="flex md:justify-end items-center gap-2">
+                <Phone size={16} className="text-emerald-400" />
+                <span>+251-46-XXX-XXXX</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section: Copyright and Slogan */}
-        <div className="pt-8 flex flex-col items-center text-center space-y-2">
-          <p className="text-sm">
+        {/* ================= MOBILE ================= */}
+        <div className="md:hidden space-y-4">
+
+          {/* Brand Dropdown */}
+          <div className="border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm overflow-hidden">
+            <button
+              onClick={() => setOpenBrand(!openBrand)}
+              className="w-full flex items-center justify-between px-4 py-4 text-white font-semibold"
+            >
+              Sidama Mesob
+              {openBrand ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
+
+            {openBrand && (
+              <div className="px-4 pb-4 space-y-4">
+                <p className="text-sm leading-6 text-gray-400">
+                  Empowering communities through digital transformation,
+                  organized services, and modern regional development.
+                </p>
+
+                <div className="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-2xl">
+                  <div className="bg-emerald-500/15 p-2 rounded-xl">
+                    <Leaf size={18} className="text-emerald-400" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-400">
+                      Paperless Initiative
+                    </p>
+
+                    <p className="text-xs text-gray-500">
+                      Fast & Fully Digital
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Links Dropdown */}
+          <div className="border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm overflow-hidden">
+            <button
+              onClick={() => setOpenLinks(!openLinks)}
+              className="w-full flex items-center justify-between px-4 py-4 text-white font-semibold"
+            >
+              Quick Links
+              {openLinks ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
+
+            {openLinks && (
+              <div className="px-4 pb-4 flex flex-col gap-3 text-sm">
+                {[
+                  "Help Center",
+                  "Privacy Policy",
+                  "Terms & Conditions",
+                  "Support",
+                ].map((item, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="group flex items-center gap-2 hover:text-white transition-all duration-300"
+                  >
+                    <ArrowUpRight size={14} />
+                    {item}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Contact Dropdown */}
+          <div className="border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm overflow-hidden">
+            <button
+              onClick={() => setOpenContact(!openContact)}
+              className="w-full flex items-center justify-between px-4 py-4 text-white font-semibold"
+            >
+              Contact
+              {openContact ? (
+                <ChevronUp size={18} />
+              ) : (
+                <ChevronDown size={18} />
+              )}
+            </button>
+
+            {openContact && (
+              <div className="px-4 pb-4 space-y-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <MapPin size={16} className="text-emerald-400" />
+                  <span>Hawassa, Ethiopia</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Mail size={16} className="text-emerald-400" />
+
+                  <a
+                    href="mailto:info@smuc.gov.et"
+                    className="hover:text-white transition-colors"
+                  >
+                    info@smuc.gov.et
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Phone size={16} className="text-emerald-400" />
+                  <span>+251-46-XXX-XXXX</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom */}
+        <div className="border-t border-white/10 mt-8 pt-5 flex flex-col md:flex-row items-center justify-between gap-3">
+          <p className="text-sm text-gray-500 text-center md:text-left">
             © {currentYear} Sidama Mesob Unity Center. All rights reserved.
           </p>
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <Zap size={16} className="text-yellow-500 fill-yellow-500" />
-            <span className="bg-gradient-to-r from-gray-300 to-gray-500 bg-clip-text text-transparent">
-              Building a Modern Sidama through Organized Benefit
+
+          <div className="flex items-center gap-2 text-sm">
+            <Zap size={15} className="text-yellow-400 fill-yellow-400" />
+
+            <span className="bg-gradient-to-r from-gray-200 to-gray-500 bg-clip-text text-transparent font-medium">
+              Building a Modern Sidama
             </span>
           </div>
         </div>

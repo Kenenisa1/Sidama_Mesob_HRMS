@@ -27,7 +27,7 @@ const StatsBar = () => {
 
   return (
     <section className="relative z-20 px-6 py-16 
-      bg-gradient-to-r from-[#020c17] via-[#052e2b] to-[#020c17]">
+      bg-gradient-to-r from-[#020c17] via-[#031f1d] to-[#020c17] ">
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {stats.map((stat, i) => (
