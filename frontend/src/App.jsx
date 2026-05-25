@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 // Public Pages
@@ -6,25 +12,27 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Application from "./pages/Application";
+import JobDetail from "./pages/JobDetail";
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import FeaturedPosition from "./components/Homepage/FeaturedPositions";
 
 // Admin System
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminPortal from "./pages/admin/AdminPortal";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CreateJob from "./pages/admin/CreateJob";
+import JobList from "./components/JobList"; 
 
-// Inner layout layout manager to cleanly wipe public Navbar/Footer from Admin space
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPath = location.pathname.startsWith("/admin");
+  
+  // Guard check: Ensures clean separation for BOTH the login view and internal admin panels
+  const isAdminPath = location.pathname.startsWith("/admin") || location.pathname === "/login";
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#020c17] text-white selection:bg-emerald-500/30">
-      {/* Render public Navbar only if we aren't in the Admin view */}
+    <div className="pt-[73px] lg:pt-[80px] min-h-screen flex flex-col bg-[#010409] text-white selection:bg-emerald-500/30">
       {!isAdminPath && <Navbar />}
 
       <main className="flex-grow">
@@ -35,33 +43,54 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
-          <Route path="/application" element={<Application />} />
-          <Route path="/featuredPositions" element={<FeaturedPosition />} />
+          <Route path="/joblist" element={<JobList />} />
+          
+          {/* Detailed Job Vacancy View Gateway */}
+          <Route path="/jobs/:id" element={<JobDetail />} />
+
+          {/* Dual-Mapping Strategy to intercept application calls securely */}
+          <Route path="/apply/:id" element={<Application />} /> 
+          <Route path="/jobs/:id/apply" element={<Application />} />
 
           {/* =========================================================
-              PUBLIC ADMIN AUTHENTICATION
+              PUBLIC ADMIN AUTHENTICATION (Decoupled from /admin root)
              ========================================================= */}
-          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/login" element={<AdminLogin />} />
 
           {/* =========================================================
-              PROTECTED ENTERPRISE PORTAL ROOT
+              PROTECTED ENTERPRISE PORTAL ROOT (Flattened Layout Structure)
              ========================================================= */}
-          {/* The trailing wildcard '*' is critical here. It signals to 
-            React Router that sub-routes like /admin/dashboard or 
-            /admin/settings will be handled internally inside <AdminPortal />.
-          */}
-          <Route
-            path="/admin/*"
+          <Route 
+            path="/admin" 
             element={
               <ProtectedRoute adminOnly={true}>
                 <AdminPortal />
               </ProtectedRoute>
-            }
+            } 
+          />
+          <Route 
+            path="/admin/create-job" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <CreateJob />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* Fallback 404 Interceptor Route */}
+          <Route 
+            path="*" 
+            element={
+              <div className="flex flex-col items-center justify-center py-32 text-center space-y-4">
+                <span className="text-emerald-500 font-mono text-xs tracking-widest uppercase font-black bg-emerald-950/30 border border-emerald-900/50 px-3 py-1.5 rounded-lg">Error 404</span>
+                <h2 className="text-xl font-black uppercase text-zinc-300">ገጹ አልተገኘም / Path Not Found</h2>
+                <p className="text-zinc-500 text-sm max-w-xs">The requested navigation gateway does not exist within the system index configuration.</p>
+              </div>
+            } 
           />
         </Routes>
       </main>
 
-      {/* Render public Footer only if we aren't in the Admin view */}
       {!isAdminPath && <Footer />}
     </div>
   );
@@ -75,26 +104,22 @@ const App = () => {
         toastOptions={{
           icon: null,
           style: {
-            background: "#050c1a",
+            background: "#000000",
             color: "#fff",
-            border: "1px solid rgba(16, 185, 129, 0.2)",
+            border: "1px solid #27272a",
             padding: "16px 24px",
             borderRadius: "1rem",
             fontSize: "12px",
             fontWeight: "bold",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.7)",
           },
           success: {
-            style: {
-              border: "1px solid rgba(16, 185, 129, 0.5)",
-            },
+            style: { border: "1px solid rgba(16, 185, 129, 0.3)", background: "#040905" },
           },
           error: {
-            style: {
-              border: "1px solid rgba(234, 88, 12, 0.5)",
-            },
+            style: { border: "1px solid rgba(239, 68, 68, 0.3)", background: "#0c0505" },
           },
         }}
       />
