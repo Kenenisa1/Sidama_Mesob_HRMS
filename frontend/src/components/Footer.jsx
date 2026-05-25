@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Leaf,
   Zap,
@@ -67,22 +68,21 @@ const Footer = () => {
 
             <div className="flex flex-col gap-3 text-sm">
               {[
-                "Help Center",
-                "Privacy Policy",
-                "Terms & Conditions",
-                "Support",
+                { name: "Help Center", path: "/help" },
+                { name: "Privacy Policy", path: "/privacy" },
+                { name: "Terms & Conditions", path: "/terms" },
               ].map((item, index) => (
-                <a
+                <Link
                   key={index}
-                  href="#"
+                  to={item.path}
                   className="group flex items-center gap-2 hover:text-white transition-all duration-300"
                 >
                   <ArrowUpRight
                     size={14}
                     className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
                   />
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               ))}
             </div>
           </div>
@@ -167,21 +167,20 @@ const Footer = () => {
             </button>
 
             {openLinks && (
-              <div className="px-4 pb-4 flex flex-col gap-3 text-sm">
+              <div className="px-4 pb-4 flex flex-col gap-3 text-sm ">
                 {[
-                  "Help Center",
-                  "Privacy Policy",
-                  "Terms & Conditions",
-                  "Support",
+                  { name: "Help Center", path: "/help" },
+                  { name: "Privacy Policy", path: "/privacy" },
+                  { name: "Terms & Conditions", path: "/terms" },
                 ].map((item, index) => (
-                  <a
+                  <Link
                     key={index}
-                    href="#"
+                    to={item.path}
                     className="group flex items-center gap-2 hover:text-white transition-all duration-300"
                   >
                     <ArrowUpRight size={14} />
-                    {item}
-                  </a>
+                    {item.name}
+                  </Link>
                 ))}
               </div>
             )}
