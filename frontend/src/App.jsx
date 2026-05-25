@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
@@ -6,17 +7,19 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Application from "./pages/Application";
+import JobDetail from "./pages/JobDetail"; // ✅ Fixed: Imported missing detailed vacancy gateway component
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import JobList from "./components/JobList"; 
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 // Admin System
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminPortal from "./pages/admin/AdminPortal";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateJob from "./pages/admin/CreateJob";
-import JobList from "./components/JobList"; 
 
 const AppContent = () => {
   const location = useLocation();
@@ -37,6 +40,8 @@ const AppContent = () => {
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
           <Route path="/joblist" element={<JobList />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
           
           {/* Detailed Job Vacancy View Gateway */}
           <Route path="/jobs/:id" element={<JobDetail />} />
