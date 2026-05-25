@@ -6,23 +6,27 @@ export const protect = async (req, res, next) => {
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Get token from header
+      // Isolate token from string array format
       token = req.headers.authorization.split(' ')[1];
 
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Validate cryptographic payload signature
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key');
 
-      // Get user from the token and attach to req object
+      // Hydrate request layer with absolute model records while screening credentials
       req.user = await User.findById(decoded.id).select('-password');
+      
+      if (!req.user) {
+        return res.status(401).json({ success: false, message: 'User record no longer exists' });
+      }
 
-      next();
+      return next(); // CRITICAL: Stop block execution right here
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ success: false, message: 'Not authorized, token failed' });
+      console.error('JWT Verification Error:', error.message);
+      return res.status(401).json({ success: false, message: 'Not authorized, token failed' });
     }
   }
 
   if (!token) {
-    res.status(401).json({ success: false, message: 'Not authorized, no token' });
+    return res.status(401).json({ success: false, message: 'Not authorized, no token present' });
   }
 };

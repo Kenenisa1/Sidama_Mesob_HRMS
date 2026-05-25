@@ -5,28 +5,31 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const token = localStorage.getItem("adminToken");
   const userString = localStorage.getItem("user");
 
-  if (!token || !userString || userString === "undefined") {
+  // Clean wipe helper to prevent routing locks
+  const clearSessionAndRedirect = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("adminToken");
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
+  };
+
+  if (!token || !userString || userString === "undefined") {
+    return clearSessionAndRedirect();
   }
 
   try {
     const data = JSON.parse(userString);
+    // Deep scan payload formats to capture user parameters
     const userRole = data?.role || data?.user?.role || data?.admin?.role;
 
     if (adminOnly && userRole?.toUpperCase() !== "ADMIN") {
       console.warn("Access Denied: Required ADMIN role, but found:", userRole);
-      localStorage.removeItem("user");
-      localStorage.removeItem("adminToken");
-      return <Navigate to="/admin/login" replace />;
+      return clearSessionAndRedirect();
     }
 
     return children;
-  } catch {
-    localStorage.removeItem("user");
-    localStorage.removeItem("adminToken");
-    return <Navigate to="/admin/login" replace />;
+  } catch (error) {
+    console.error("Session Parse Failure:", error);
+    return clearSessionAndRedirect();
   }
 };
 
