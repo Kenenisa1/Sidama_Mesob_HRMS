@@ -49,7 +49,7 @@ const Help = () => {
         </div>
 
         {/* --- FINAL CONTACT SECTION --- */}
-        <section className="py-12 md:py-16 px-6 md:px-8 rounded-[2rem] bg-[#050c1a]/40 border border-emerald-500/10 mb-10 md:mb-20">
+        <section id="contact" className="py-12 md:py-16 px-6 md:px-8 rounded-[2rem] bg-[#050c1a]/40 border border-emerald-500/10 mb-10 md:mb-20">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-10">
               <h3 className="text-2xl md:text-3xl font-black text-white mb-3 uppercase tracking-tight">
