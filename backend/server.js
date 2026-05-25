@@ -11,6 +11,7 @@ import applicationRoutes from './routes/applicationRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 
 // Configuration
 dotenv.config();
@@ -58,6 +59,7 @@ app.get('/', (req, res) => {
 app.use('/api/applications', applicationRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/stats', statsRoutes); // New stats route
 // --- ERROR HANDLING ---
 // These must be at the bottom, AFTER the routes
 app.use(notFound);
