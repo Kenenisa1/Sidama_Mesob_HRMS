@@ -85,3 +85,66 @@ export const getAllApplications = async (req, res) => {
     });
   }
 };
+
+export const getApplicationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const application = await Application.findById(id);
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: application
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Could not fetch application"
+    });
+  }
+};
+
+export const updateApplicationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['Pending', 'Reviewed', 'Shortlisted', 'Accepted', 'Rejected'];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+      });
+    }
+
+    const application = await Application.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Application status updated to ${status}`,
+      data: application
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Could not update application status"
+    });
+  }
+};

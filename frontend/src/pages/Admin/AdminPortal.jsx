@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Users, MessageCircle, MapPin, Filter, Search, FileText, Eye } from 'lucide-react';
-import JobModal from '../../components/JobModal'; // Make sure the path is correct
+import JobModal from '../../components/JobModal';
+import ApplicantDetailsModal from '../../components/ApplicantDetailsModal';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -52,6 +53,12 @@ function AdminPortal() {
     const [selectedFluency, setSelectedFluency] = useState('');
     const [minCgpa, setMinCgpa] = useState(2);
 
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [selectedApplicationId, setSelectedApplicationId] = useState(null);
+    const [selectedApplicationData, setSelectedApplicationData] = useState(null);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+    const [detailsError, setDetailsError] = useState('');
+
     useEffect(() => {
         const fetchApplications = async () => {
             try {
@@ -75,6 +82,53 @@ function AdminPortal() {
 
         fetchApplications();
     }, []);
+
+    const handleViewApplication = async (applicationId) => {
+        try {
+            setIsLoadingDetails(true);
+            setDetailsError('');
+
+            const response = await fetch(`${API_BASE_URL}/api/applications/${applicationId}`);
+            const result = await response.json();
+
+            if (!response.ok || result.success === false) {
+                throw new Error(result.message || 'Could not fetch application details');
+            }
+
+            setSelectedApplicationData(result.data);
+            setIsDetailsOpen(true);
+        } catch (err) {
+            setDetailsError(err.message || 'Could not load application details');
+            setIsDetailsOpen(true);
+        } finally {
+            setIsLoadingDetails(false);
+        }
+    };
+
+    const handleCloseDetails = () => {
+        setIsDetailsOpen(false);
+        setSelectedApplicationId(null);
+        setSelectedApplicationData(null);
+        setDetailsError('');
+    };
+
+    const handleStatusChanged = () => {
+        const fetchUpdatedApplications = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/applications`);
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    setApplications(Array.isArray(result.data) ? result.data : []);
+                }
+                handleCloseDetails();
+            } catch (err) {
+                console.error('Failed to refresh applications:', err);
+            }
+        };
+
+        fetchUpdatedApplications();
+    };
 
     const woredas = useMemo(() => {
         return [...new Set(applications.map((application) => application.residency?.woreda).filter(Boolean))].sort();
@@ -313,7 +367,7 @@ function AdminPortal() {
                                             <td className="py-4"><span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusClass(status)}`}>{status}</span></td>
                                             <td className="py-4">
                                                 <button
-                                                    onClick={() => window.alert(`${candidateName}\nTracking ID: ${application.trackingId || 'N/A'}\nEmail: ${application.personalInfo?.email || 'N/A'}\nPhone: ${application.personalInfo?.phone || 'N/A'}`)}
+                                                    onClick={() => handleViewApplication(application._id)}
                                                     className="flex items-center gap-1 text-emeraldAccent hover:underline font-bold text-sm"
                                                 >
                                                     <Eye size={16} /> View
@@ -330,6 +384,14 @@ function AdminPortal() {
             <JobModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+            />
+            <ApplicantDetailsModal
+                isOpen={isDetailsOpen}
+                onClose={handleCloseDetails}
+                application={selectedApplicationData}
+                isLoading={isLoadingDetails}
+                error={detailsError}
+                onStatusChange={handleStatusChanged}
             />
         </div>
     );

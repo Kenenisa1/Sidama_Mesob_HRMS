@@ -1,32 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
 // Public Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Application from "./pages/Application";
-
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FeaturedPosition from "./components/Homepage/FeaturedPositions";
 
-// Admin System
+// Admin Systemv 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminPortal from "./pages/admin/AdminPortal";
 import ProtectedRoute from "./components/ProtectedRoute";
-
 // Inner layout layout manager to cleanly wipe public Navbar/Footer from Admin space
 const AppContent = () => {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
-
   return (
     <div className="min-h-screen flex flex-col bg-[#020c17] text-white selection:bg-emerald-500/30">
       {/* Render public Navbar only if we aren't in the Admin view */}
       {!isAdminPath && <Navbar />}
-
       <main className="flex-grow">
         <Routes>
           {/* =========================================================
@@ -34,15 +29,13 @@ const AppContent = () => {
              ========================================================= */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/help" element={<Help />} />
+          as         <Route path="/help" element={<Help />} />
           <Route path="/application" element={<Application />} />
           <Route path="/featuredPositions" element={<FeaturedPosition />} />
-
           {/* =========================================================
               PUBLIC ADMIN AUTHENTICATION
              ========================================================= */}
           <Route path="/admin/login" element={<AdminLogin />} />
-
           {/* =========================================================
               PROTECTED ENTERPRISE PORTAL ROOT
              ========================================================= */}
@@ -66,7 +59,6 @@ const AppContent = () => {
     </div>
   );
 };
-
 const App = () => {
   return (
     <Router>

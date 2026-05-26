@@ -1,12 +1,14 @@
 import express from 'express';
-import { 
-  submitApplication, 
+import {
+  submitApplication,
   getMyApplication,
-  getAllApplications // Added for your group project's Admin view
+  getAllApplications,
+  getApplicationById,
+  updateApplicationStatus
 } from '../controllers/applicationController.js';
 
 // import { protect } from '../middleware/authMiddleware.js';
-import upload from '../middleware/uploadMiddleware.js'; 
+import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -29,8 +31,8 @@ const vaultUploads = [
  * @access  Public (Will be Private once User model is ready)
  */
 router.post(
-  '/submit', 
-  upload.fields(vaultUploads), 
+  '/submit',
+  upload.fields(vaultUploads),
   submitApplication
 );
 
@@ -46,5 +48,19 @@ router.get('/my-status', getMyApplication);
  * @desc    Get all applications (Useful for your group project's Admin panel)
  */
 router.get('/', getAllApplications);
+
+/**
+ * @route   GET /api/applications/:id
+ * @desc    Get a specific application by ID
+ * @access  Public
+ */
+router.get('/:id', getApplicationById);
+
+/**
+ * @route   PATCH /api/applications/:id/status
+ * @desc    Update application status (Shortlist, Accept, Reject)
+ * @access  Public
+ */
+router.patch('/:id/status', updateApplicationStatus);
 
 export default router;
