@@ -4,8 +4,9 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon backend/server.js",
+    "start": "nodemon -L server.js",
     "dev": "nodemon --watch backend/server.js"
+    
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
