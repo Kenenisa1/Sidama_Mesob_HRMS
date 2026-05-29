@@ -11,13 +11,13 @@ import applicationRoutes from './routes/applicationRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import authRoutes from './routes/authRoutes.js';
-import statsRoutes from './routes/statsRoutes.js';
 
 // Configuration
-dotenv.config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config();
 
 // Database Connection
 connectDB();
@@ -31,8 +31,8 @@ app.use(helmet({
 
 // CORS Configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: process.env.CLIENT_URL || 'http://localhost:5173 ', 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true 
 }));
 
@@ -59,7 +59,6 @@ app.get('/', (req, res) => {
 app.use('/api/applications', applicationRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/stats', statsRoutes); // New stats route
 // --- ERROR HANDLING ---
 // These must be at the bottom, AFTER the routes
 app.use(notFound);

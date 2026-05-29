@@ -1,8 +1,21 @@
 import express from 'express';
+<<<<<<< HEAD
+import {
+  submitApplication,
+  getMyApplication,
+  getAllApplications,
+  getApplicationById,
+  updateApplicationStatus
+} from '../controllers/applicationController.js';
+
+// import { protect } from '../middleware/authMiddleware.js';
+import upload from '../middleware/uploadMiddleware.js';
+=======
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { submitApplication, getMyApplication, getAllApplications } from '../controllers/applicationController.js';
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
 
 const router = express.Router();
 
@@ -64,8 +77,48 @@ router.post('/submit', (req, res, next) => {
   });
 }, submitApplication);
 
+<<<<<<< HEAD
+/**
+ * @route   POST /api/applications/submit
+ * @desc    Submit professional credentials & form data
+ * @access  Public (Will be Private once User model is ready)
+ */
+router.post(
+  '/submit',
+  upload.fields(vaultUploads),
+  submitApplication
+);
+
+/**
+ * @route   GET /api/applications/my-status
+ * @desc    Check status of a specific application
+ * @access  Public (Bypass protection for now)
+ */
+router.get('/my-status', getMyApplication);
+
+/**
+ * @route   GET /api/applications
+ * @desc    Get all applications (Useful for your group project's Admin panel)
+ */
+router.get('/', getAllApplications);
+=======
 // Standardized end-point pointers matching frontend configurations
 router.get('/my-application', getMyApplication);
 router.get('/all', getAllApplications);
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
+
+/**
+ * @route   GET /api/applications/:id
+ * @desc    Get a specific application by ID
+ * @access  Public
+ */
+router.get('/:id', getApplicationById);
+
+/**
+ * @route   PATCH /api/applications/:id/status
+ * @desc    Update application status (Shortlist, Accept, Reject)
+ * @access  Public
+ */
+router.patch('/:id/status', updateApplicationStatus);
 
 export default router;

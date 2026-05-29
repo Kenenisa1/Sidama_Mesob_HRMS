@@ -58,6 +58,15 @@ const ApplicationSchema = new mongoose.Schema({
     fieldOfStudy: { type: String, required: true, trim: true },
     cgpa: { type: Number, required: true, min: 0, max: 4.0 },
     graduationYear: { type: Number, required: true },
+<<<<<<< HEAD
+    experienceYears: { type: Number, default: 0 },
+    sidaamuAfoo: {
+      type: String,
+      enum: ['Basic', 'Intermediate', 'Fluent', 'Native', 'High'],
+      default: 'Basic'
+    },
+    skills: [String] // Array of skill tags
+=======
     experienceYears: { type: Number, default: 0, min: 0 },
     sidaamuAfooProficiency: {
       type: String,
@@ -65,6 +74,7 @@ const ApplicationSchema = new mongoose.Schema({
       required: true,
       set: v => v.toUpperCase() // Safely normalizes casing from client buttons
     }
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
   },
 
   // STEP 4: DOCUMENT VAULT SECURE STORAGE POINTERS

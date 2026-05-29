@@ -27,6 +27,58 @@ const jobSchema = new mongoose.Schema(
         "Information Technology"
       ]
     },
+<<<<<<< HEAD
+
+    department: {
+      type: String,
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
+
+    requirements: {
+      type: String,
+      required: true,
+    },
+
+    education: {
+      type: String,
+      required: true,
+    },
+
+    cgpa: {
+      type: String,
+      required: true,
+    },
+
+    experience: {
+      type: String,
+      required: true,
+    },
+
+    positions: {
+      type: Number,
+      required: true,
+      min: [1, "Number of positions must be at least 1"],
+    },
+
+    salary: {
+      type: String,
+    },
+
+    deadline: {
+      type: Date,
+      required: true,
+    },
+
+    location: {
+      type: String,
+    },
+
+=======
     
     rankLevel: { 
       type: String, 
@@ -63,6 +115,7 @@ const jobSchema = new mongoose.Schema(
     }, // Certificate of Competency flag
     
     // Multilingual support requested by the bureau layout
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
     languages: {
       sidama: { type: Boolean, default: true },
       amharic: { type: Boolean, default: true },
@@ -103,8 +156,12 @@ jobSchema.virtual("isExpired").get(function () {
   return new Date() > this.deadline;
 });
 
+<<<<<<< HEAD
+export default Job;
+=======
 jobSchema.set("toJSON", { virtuals: true });
 jobSchema.set("toObject", { virtuals: true });
 
 const Job = mongoose.model("Job", jobSchema);
 export default Job;
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114

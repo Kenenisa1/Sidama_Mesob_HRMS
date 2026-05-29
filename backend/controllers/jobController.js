@@ -10,10 +10,72 @@ import mongoose from "mongoose";
 
 export const createJob = async (req, res) => {
   try {
+<<<<<<< HEAD
+    const jobData = {
+      ...req.body,
+      positions: Number(req.body.positions),
+      title: req.body.title?.trim(),
+      department: req.body.department?.trim(),
+      description: req.body.description?.trim(),
+      requirements: req.body.requirements?.trim(),
+      education: req.body.education?.trim(),
+      cgpa: req.body.cgpa?.trim(),
+      experience: req.body.experience?.trim(),
+      salary: req.body.salary?.trim(),
+      location: req.body.location?.trim(),
+    };
+
+    const job = await Job.create(jobData);
+
+    res.status(201).json({
+      success: true,
+      message: "Job created successfully",
+      job,
+    });
+  } catch (error) {
+    const statusCode = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
+
+    res.status(statusCode).json({
+      success: false,
+      message: error.message,
+      errors: error.errors
+        ? Object.values(error.errors).map((err) => err.message)
+        : undefined,
+    });
+  }
+};
+
+
+// GET ALL JOBS
+export const getJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find().sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(jobs);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+// GET SINGLE JOB
+export const getJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job not found",
+=======
     if (!req.body || Object.keys(req.body).length === 0) {
       return res.status(400).json({
         success: false,
         message: "Administrative payload content cannot be empty.",
+>>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
       });
     }
 
@@ -28,9 +90,9 @@ export const createJob = async (req, res) => {
     // 3. Normalize Multi-Language Incoming Body Structures
     // Safely parsing both nested objects {languages: {sidama: true}} AND flat parameters {sidama: true}
     const hasLanguagesObj = req.body.languages && typeof req.body.languages === 'object';
-    
-    const sidamaLang = hasLanguagesObj 
-      ? req.body.languages.sidama !== false 
+
+    const sidamaLang = hasLanguagesObj
+      ? req.body.languages.sidama !== false
       : req.body.sidama !== false;
 
     const amharicLang = hasLanguagesObj
@@ -53,14 +115,14 @@ export const createJob = async (req, res) => {
       experienceRequirements: req.body.experienceRequirements?.trim(),
       requiresCO_C: req.body.requiresCOC === true || req.body.requiresCOC === "true", // backward compat catch
       requiresCOC: req.body.requiresCOC === true || req.body.requiresCOC === "true",
-      
+
       // Parse multi-language sub-document mapping flags safely from normalized checks
       languages: {
         sidama: sidamaLang,
         amharic: amharicLang,
         english: englishLang,
       },
-      
+
       registrationWindowDays: windowDays,
       deadline: computedDeadline, // Set automatically based on institutional guidelines (May 2026 + days)
       location: "MESOB Center, Hawassa", // Enforced static deployment zone
@@ -84,7 +146,7 @@ export const createJob = async (req, res) => {
     });
   } catch (error) {
     console.error(" 🚨 [HRMS Core] CreateJob Exception:", error);
-    
+
     // Intercept duplicate tracking code entries gracefully
     if (error.code === 11000) {
       return res.status(400).json({
@@ -95,8 +157,8 @@ export const createJob = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: error.name === "ValidationError" 
-        ? `Schema Validation Error: ${error.message}` 
+      message: error.name === "ValidationError"
+        ? `Schema Validation Error: ${error.message}`
         : "Internal Server Error parsing civil service record.",
     });
   }
@@ -121,13 +183,13 @@ export const getJobs = async (req, res) => {
     // 2. Conditional Query Routing Strategy
     if (viewMode === "homepage") {
       // 🌟 CRITICAL RULE: Homepage strictly hides expired items. Deadline MUST be in the future.
-      queryConditions.deadline = { $gt: currentTime }; 
-      
+      queryConditions.deadline = { $gt: currentTime };
+
       // Prioritize featured listings, sorted by newest first, capped to top 4 cards
       const homepageJobs = await Job.find(queryConditions)
         .sort({ featuredOnHome: -1, createdAt: -1 })
         .limit(4);
-        
+
       return res.status(200).json(homepageJobs);
     }
 
@@ -137,9 +199,9 @@ export const getJobs = async (req, res) => {
 
   } catch (error) {
     console.error("Database query exception:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Mesob Registry failed to process active vacancy filters." 
+    return res.status(500).json({
+      success: false,
+      message: "Mesob Registry failed to process active vacancy filters."
     });
   }
 };
@@ -186,7 +248,7 @@ export const updateJob = async (req, res) => {
     if (req.body.rankLevel) {
       const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(req.body.rankLevel);
       req.body.registrationWindowDays = isHighRank ? 10 : 5;
-      
+
       const computedDeadline = new Date();
       computedDeadline.setDate(computedDeadline.getDate() + req.body.registrationWindowDays);
       req.body.deadline = computedDeadline;
@@ -243,8 +305,8 @@ export const getSingleJob = async (req, res) => {
     const job = await Job.findById(jobId);
 
     if (!job) {
-      return res.status(404).json({ 
-        message: "The requested vacancy entry could not be found or has been archived." 
+      return res.status(404).json({
+        message: "The requested vacancy entry could not be found or has been archived."
       });
     }
 
