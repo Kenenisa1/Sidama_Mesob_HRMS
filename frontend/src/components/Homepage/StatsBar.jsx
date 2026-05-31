@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Users, Timer, Award } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
-// 🔢 ANIMATED COUNTER ENGINE (Stays exactly the same for performance)
+// 🔢 ANIMATED COUNTER ENGINE
 const AnimatedNumber = ({ value, suffix = "" }) => {
   const [current, setCurrent] = useState(0);
   const elementRef = useRef(null);
@@ -12,7 +12,10 @@ const AnimatedNumber = ({ value, suffix = "" }) => {
     if (!isElementInView) return;
 
     const targetInteger = parseInt(String(value).replace(/,/g, ""), 10) || 0;
-    if (targetInteger === 0) return;
+    if (targetInteger === 0) {
+      setCurrent(0); // Reset to 0 cleanly if value drops
+      return;
+    }
 
     let startTimestamp = null;
     const durationMs = 1500;
@@ -45,10 +48,15 @@ const StatCard = ({ icon: Icon, value, label, suffix, glowColor, borderHover }) 
       viewport={{ once: true }}
       className={`group relative bg-zinc-950/40 border border-zinc-900/80 p-6 sm:p-8 rounded-3xl flex items-center gap-6 overflow-hidden transition-all duration-300 ${borderHover}`}
     >
+      {/* Background radial soft ambient lighting */}
       <div className={`absolute -right-4 -bottom-4 w-24 h-24 blur-[60px] rounded-full transition-opacity opacity-20 group-hover:opacity-40 duration-500 ${glowColor}`} />
+      
+      {/* Icon Frame */}
       <div className="p-4 rounded-2xl bg-zinc-900/60 border border-zinc-800 group-hover:border-zinc-700/60 group-hover:bg-zinc-900 transition-all duration-300 shrink-0">
         <Icon size={28} className="text-zinc-400 group-hover:text-white transition-colors duration-300" />
       </div>
+
+      {/* Numerical Metrics Metadata */}
       <div className="space-y-1">
         <div className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center">
           <AnimatedNumber value={value} suffix={suffix} />
@@ -70,17 +78,32 @@ const StatsBar = () => {
     successRate: 94,
   });
 
+  // ✅ FIX: Kept fetch API network operations correctly contained within the parent component wrapper
   useEffect(() => {
     const fetchLiveMetrics = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/stats/overview");
         const json = await response.json();
-        if (response.ok && json.success) {
-          setDbStats({
-            activeApplicants: json.data.activeApplicants,
-            openPositions: json.data.openPositions,
-            successRate: json.data.successRate,
-          });
+        
+        // 📝 Check your developer console to make sure the structure matches!
+        console.log("📊 Stats API Payload Received:", json);
+
+        if (response.ok && json) {
+          // If response wraps under data: { ... }
+          if (json.data) {
+            setDbStats({
+              activeApplicants: Number(json.data.activeApplicants) || 0,
+              openPositions: Number(json.data.openPositions) || 0,
+              successRate: Number(json.data.successRate) || 94,
+            });
+          } else {
+            // Flat response fallback mapping mapping parameters straight out
+            setDbStats({
+              activeApplicants: Number(json.activeApplicants) || 0,
+              openPositions: Number(json.openPositions) || 0,
+              successRate: Number(json.successRate) || 94,
+            });
+          }
         }
       } catch (error) {
         console.error("Live metrics pipeline offline. Falling back to local values:", error);
@@ -104,8 +127,8 @@ const StatsBar = () => {
       value: dbStats.openPositions, 
       suffix: "",
       icon: Timer, 
-      glowColor: "bg-red-500",
-      borderHover: "hover:border-red-500/20 shadow-[0_0_50px_rgba(239,68,68,0.02)]"
+      glowColor: "bg-rose-500", // Used cohesive accent matching your design scheme
+      borderHover: "hover:border-rose-500/20 shadow-[0_0_50px_rgba(244,63,94,0.02)]"
     },
     { 
       label: "Platform Success Rate", 

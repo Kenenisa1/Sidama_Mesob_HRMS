@@ -30,15 +30,13 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // 1. Save the token directly from the top level
         localStorage.setItem("adminToken", data.token);
 
-        // 2. Save the entire object as 'user'
-        // This works because 'role' is at the top level: data.role exists!
         localStorage.setItem("user", JSON.stringify(data));
 
-        toast.success("Access Granted");
-        navigate("/admin-dashboard");
+        toast.success("Logged in successfully");
+
+        navigate("/admin/dashboard");
       } else {
         toast.error(data.message || "Unauthorized Access");
       }

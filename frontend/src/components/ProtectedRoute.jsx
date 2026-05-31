@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const clearSessionAndRedirect = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("adminToken");
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/login" replace />;
   };
 
   if (!token || !userString || userString === "undefined") {

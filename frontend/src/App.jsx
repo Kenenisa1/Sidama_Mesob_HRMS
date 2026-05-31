@@ -1,30 +1,46 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom"; // ✅ Added Navigate
 import { Toaster } from "react-hot-toast";
+
 // Public Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Application from "./pages/Application";
+import JobDetail from "./pages/JobDetail";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import FeaturedPosition from "./components/Homepage/FeaturedPositions";
+import JobList from "./components/JobList";
 
-// Admin System
+// Admin System Components & Pages
+import AdminNavbar from "./components/admin/AdminNavbar"; 
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminPortal from "./pages/admin/AdminPortal";
+import CreateJob from "./pages/admin/CreateJob"; 
 import ProtectedRoute from "./components/ProtectedRoute";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
-// Inner layout layout manager to cleanly wipe public Navbar/Footer from Admin space
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPath = location.pathname.startsWith("/admin");
+  const currentPath = location.pathname;
+
+  // Route Segmentation Conditions
+  const isAdminRootPath = currentPath.startsWith("/admin");
+  const isLoginPage = currentPath === "/admin/login";
+  
+  const shouldRenderAdminNavbar = isAdminRootPath && !isLoginPage;
+  const shouldRenderPublicNavbar = !isAdminRootPath;
 
   return (
     <div className="pt-[73px] lg:pt-[80px] min-h-screen flex flex-col bg-[#010409] text-white selection:bg-emerald-500/30">
-      {!isAdminPath && <Navbar />}
+      
+      {/* Dynamic Navbar Router Switch */}
+      {shouldRenderPublicNavbar && <Navbar />}
+      {shouldRenderAdminNavbar && <AdminNavbar />}
+
       <main className="flex-grow">
         <Routes>
           {/* =========================================================
@@ -33,19 +49,31 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/help" element={<Help />} />
-          <Route path="/application" element={<Application />} />
-          <Route path="/featuredPositions" element={<FeaturedPosition />} />
+          <Route path="/joblist" element={<JobList />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          
+          {/* Detailed Dynamic Job Vacancy View Gateways */}
+          <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/apply/:id" element={<Application />} /> 
+          <Route path="/jobs/:id/apply" element={<Application />} />
 
           {/* =========================================================
-              PUBLIC ADMIN AUTHENTICATION (Decoupled from /admin root)
+              SECURE ADMIN AUTHENTICATION MATRIX
              ========================================================= */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* =========================================================
-              PROTECTED ENTERPRISE PORTAL ROOT (Flattened Layout Structure)
-             ========================================================= */}
+          {/* ✅ FIX 1: Safe fallback interceptor. If an unauthenticated user or 
+            logged-out admin tries to target exactly "/admin", bounce them instantly 
+            to the clean credentials page instead of throwing a 404 template.
+          */}
+          <Route 
+            path="/admin" 
+            element={<Navigate to="/admin/login" replace />} 
+          />
+
           <Route
-            path="/admin"
+            path="/admin/dashboard" // Double check if your portal routes to /admin/dashboard or just uses /admin with states
             element={
               <ProtectedRoute adminOnly={true}>
                 <AdminPortal />
@@ -75,9 +103,27 @@ const AppContent = () => {
         </Routes>
       </main>
 
-      {!isAdminPath && <Footer />}
+      {shouldRenderPublicNavbar && <Footer />}
     </div>
   );
+};
+
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById(hash.replace("#", ""));
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+  return null;
 };
 
 const App = () => {
@@ -100,12 +146,8 @@ const App = () => {
             textTransform: "uppercase",
             boxShadow: "0 20px 40px rgba(0,0,0,0.7)",
           },
-          success: {
-            style: { border: "1px solid rgba(16, 185, 129, 0.3)", background: "#040905" },
-          },
-          error: {
-            style: { border: "1px solid rgba(239, 68, 68, 0.3)", background: "#0c0505" },
-          },
+          success: { style: { border: "1px solid rgba(16, 185, 129, 0.3)", background: "#040905" } },
+          error: { style: { border: "1px solid rgba(239, 68, 68, 0.3)", background: "#0c0505" } },
         }}
       />
       <AppContent />

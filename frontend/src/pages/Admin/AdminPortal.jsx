@@ -1,626 +1,413 @@
-<<<<<<< HEAD
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Users, MessageCircle, MapPin, Filter, Search, FileText, Eye } from 'lucide-react';
-import JobModal from '../../components/JobModal';
+import { Plus, Users, MessageCircle, Search, FileText, RefreshCw, Briefcase } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-hot-toast'; // Standardized modern toast controller
+
 import ApplicantDetailsModal from '../../components/ApplicantDetailsModal';
+import CandidateRow from '../../components/admin/CandidateRow';
+import RegistryFilters from '../../components/admin/RegistryFilters';
+import VacancyControlTab from './VacancyControlTab';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-=======
-import React, { useState, useEffect } from 'react'; 
-import { Plus, Users, MapPin, Filter, Search, FileText, Eye, AlertCircle, RefreshCw, Briefcase } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // 🛠️ ADDED FOR CLEAN PAGE ROUTING
-import axios from 'axios';
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
 
+// Unified Real-time Metric Component
 const StatCard = ({ title, value, subtext, icon: Icon, isTrend }) => (
-    <div className="bg-cardBg border border-white/5 p-6 rounded-xl">
-        <div className="flex justify-between items-start mb-6">
-            <h3 className="text-gray-400 text-sm font-medium">{title}</h3>
-            <Icon className="text-emeraldAccent w-5 h-5" />
-        </div>
-        <h2 className="text-4xl font-bold text-white mb-2">{value}</h2>
-        <p className={`text-xs font-medium ${isTrend ? 'text-emeraldAccent' : 'text-gray-500'}`}>
-            {subtext}
-        </p>
+  <div className="bg-cardBg border border-white/5 p-6 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 hover:border-white/10">
+    <div className="flex justify-between items-start mb-4">
+      <h3 className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">{title}</h3>
+      <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-emeraldAccent">
+        <Icon size={15} />
+      </div>
     </div>
+    <h2 className="text-3xl font-black text-white tracking-tight mb-1">{value}</h2>
+    <p className={`text-[10px] font-mono uppercase tracking-wider ${isTrend ? 'text-emeraldAccent font-bold' : 'text-zinc-500'}`}>
+      {subtext}
+    </p>
+  </div>
 );
 
-<<<<<<< HEAD
-const getCandidateName = (application) => {
-    const personalInfo = application.personalInfo || {};
-    return [personalInfo.firstName, personalInfo.middleName, personalInfo.lastName]
-        .filter(Boolean)
-        .join(' ') || 'Unknown Applicant';
-};
-
-const getSidaamuAfoo = (application) => application.education?.sidaamuAfoo || application.sidaamuAfoo || 'Not set';
-
-const getStatusClass = (status) => {
-    if (status === 'Accepted' || status === 'Shortlisted') {
-        return 'bg-emerald-500/10 text-emeraldAccent border-emerald-500/20';
-    }
-
-    if (status === 'Rejected') {
-        return 'bg-red-500/10 text-red-400 border-red-500/20';
-    }
-
-    if (status === 'Reviewed') {
-        return 'bg-sky-500/10 text-sky-400 border-sky-500/20';
-    }
-
-    return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
-};
-
 function AdminPortal() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [applications, setApplications] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedWoreda, setSelectedWoreda] = useState('');
-    const [selectedFluency, setSelectedFluency] = useState('');
-    const [minCgpa, setMinCgpa] = useState(2);
+  const navigate = useNavigate();
+  
+  // View Switchers
+  const [activeTab, setActiveTab] = useState('applicants'); // 'applicants' | 'vacancies'
+  
+  // Operational State Matrices
+  const [applications, setApplications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedWoreda, setSelectedWoreda] = useState('');
+  const [selectedFluency, setSelectedFluency] = useState('');
+  const [minCgpa, setMinCgpa] = useState(2);
+  
+  // Overlay Sheet Targets
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedApplicationData, setSelectedApplicationData] = useState(null);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [detailsError, setDetailsError] = useState('');
 
-    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const [selectedApplicationId, setSelectedApplicationId] = useState(null);
-    const [selectedApplicationData, setSelectedApplicationData] = useState(null);
-    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
-    const [detailsError, setDetailsError] = useState('');
+  // Jobs Datastore Core
+  const [jobsList, setJobsList] = useState([]);
+  const [liveJobsCount, setLiveJobsCount] = useState(0);
+  const [isTestingSync, setIsTestingSync] = useState(false);
 
-    useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                setIsLoading(true);
-                setError('');
+  // Ingest Applications Core Link
+  const fetchApplications = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await fetch(`${API_BASE_URL}/api/applications`);
+      const result = await response.json();
+      if (!response.ok || result.success === false) {
+        throw new Error(result.message || 'Could not fetch applications');
+      }
+      setApplications(Array.isArray(result.data) ? result.data : []);
+    } catch (err) {
+      setError(err.message || 'Registry system offline');
+      toast.error("Unable to link up candidate ledger matrix");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-                const response = await fetch(`${API_BASE_URL}/api/applications`);
-                const result = await response.json();
+  // Sync Pipeline Engine
+  const verifyDatabasePipeline = async (quiet = false) => {
+    if (!quiet) setIsTestingSync(true);
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/jobs`);
+      const jobsArray = Array.isArray(res.data) ? res.data : res.data.jobs || [];
+      setJobsList(jobsArray);
+      setLiveJobsCount(jobsArray.length);
+      if (!quiet) {
+        toast.success(`Pipeline Sync Active: verified ${jobsArray.length} channels.`);
+      }
+    } catch (err) {
+      console.error(err);
+      if (!quiet) {
+        toast.error("Gateway interface dropped or unreachable");
+      }
+    } finally {
+      if (!quiet) setIsTestingSync(false);
+    }
+  };
 
-                if (!response.ok || result.success === false) {
-                    throw new Error(result.message || 'Could not fetch applications');
-                }
+  useEffect(() => {
+    fetchApplications();
+    verifyDatabasePipeline(true);
+  }, []);
 
-                setApplications(Array.isArray(result.data) ? result.data : []);
-            } catch (err) {
-                setError(err.message || 'Could not connect to the backend');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchApplications();
-    }, []);
-
-    const handleViewApplication = async (applicationId) => {
-        try {
-            setIsLoadingDetails(true);
-            setDetailsError('');
-
-            const response = await fetch(`${API_BASE_URL}/api/applications/${applicationId}`);
-            const result = await response.json();
-
-            if (!response.ok || result.success === false) {
-                throw new Error(result.message || 'Could not fetch application details');
-            }
-
-            setSelectedApplicationData(result.data);
-            setIsDetailsOpen(true);
-        } catch (err) {
-            setDetailsError(err.message || 'Could not load application details');
-            setIsDetailsOpen(true);
-        } finally {
-            setIsLoadingDetails(false);
-        }
-    };
-
-    const handleCloseDetails = () => {
-        setIsDetailsOpen(false);
-        setSelectedApplicationId(null);
-        setSelectedApplicationData(null);
+  // Targeted Deep Candidate Sheet Viewer
+  const handleViewApplication = async (app) => {
+    if (app && app._id) {
+      try {
+        setIsLoadingDetails(true);
         setDetailsError('');
-    };
-
-    const handleStatusChanged = () => {
-        const fetchUpdatedApplications = async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/applications`);
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    setApplications(Array.isArray(result.data) ? result.data : []);
-                }
-                handleCloseDetails();
-            } catch (err) {
-                console.error('Failed to refresh applications:', err);
-            }
-        };
-
-        fetchUpdatedApplications();
-    };
-
-    const woredas = useMemo(() => {
-        return [...new Set(applications.map((application) => application.residency?.woreda).filter(Boolean))].sort();
-    }, [applications]);
-
-    const fluencyLevels = useMemo(() => {
-        return [...new Set(applications.map(getSidaamuAfoo).filter((level) => level !== 'Not set'))].sort();
-    }, [applications]);
-
-    const filteredApplications = useMemo(() => {
-        const query = searchTerm.trim().toLowerCase();
-
-        return applications.filter((application) => {
-            const name = getCandidateName(application).toLowerCase();
-            const nationalId = application.personalInfo?.faydaId?.toLowerCase() || '';
-            const woreda = application.residency?.woreda || '';
-            const fluency = getSidaamuAfoo(application);
-            const cgpa = Number(application.education?.cgpa || 0);
-
-            const matchesSearch = !query || name.includes(query) || nationalId.includes(query);
-            const matchesWoreda = !selectedWoreda || woreda === selectedWoreda;
-            const matchesFluency = !selectedFluency || fluency === selectedFluency;
-            const matchesCgpa = cgpa >= Number(minCgpa);
-
-            return matchesSearch && matchesWoreda && matchesFluency && matchesCgpa;
-        });
-    }, [applications, minCgpa, searchTerm, selectedFluency, selectedWoreda]);
-
-    const fluentCount = useMemo(() => {
-        return applications.filter((application) => ['Fluent', 'Native', 'High'].includes(getSidaamuAfoo(application))).length;
-    }, [applications]);
-
-    const fluentPercent = applications.length ? Math.round((fluentCount / applications.length) * 100) : 0;
-
-    const resetFilters = () => {
-        setSearchTerm('');
-        setSelectedWoreda('');
-        setSelectedFluency('');
-        setMinCgpa(2);
-    };
-
-    const exportToExcel = () => {
-        const rows = filteredApplications.map((application) => ({
-            Name: getCandidateName(application),
-            'National ID': application.personalInfo?.faydaId || '',
-            Woreda: application.residency?.woreda || '',
-            'Sidaamu Afoo': getSidaamuAfoo(application),
-            CGPA: application.education?.cgpa ?? '',
-            Status: application.status || 'Pending',
-        }));
-
-        const headers = Object.keys(rows[0] || {
-            Name: '',
-            'National ID': '',
-            Woreda: '',
-            'Sidaamu Afoo': '',
-            CGPA: '',
-            Status: '',
-        });
-        const csv = [
-            headers.join(','),
-            ...rows.map((row) => headers.map((header) => `"${String(row[header]).replace(/"/g, '""')}"`).join(',')),
-        ].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'sidama-applicants.csv';
-        link.click();
-        URL.revokeObjectURL(url);
-    };
-=======
-function AdminPortal() {
-    const navigate = useNavigate(); // 🛠️ INITIALIZE ROUTER HOOK
-    
-    // Telemetry Sync Pipeline for tracking deployed positions real-time
-    const [jobsList, setJobsList] = useState([]);
-    const [liveJobsCount, setLiveJobsCount] = useState(0);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [systemMessage, setSystemMessage] = useState({ text: "", type: "" });
-    const [isTestingSync, setIsTestingSync] = useState(false);
-
-    // Rapid endpoint test sequence to see if backend is up
-    const verifyDatabasePipeline = async (quiet = false) => {
-        if (!quiet) setIsTestingSync(true);
-        try {
-            const res = await axios.get('http://localhost:5000/api/jobs');
-            const jobsArray = Array.isArray(res.data) ? res.data : res.data.jobs || [];
-            
-            setJobsList(jobsArray);
-            setLiveJobsCount(jobsArray.length);
-            
-            if (!quiet) {
-                setSystemMessage({ 
-                    text: `Sync Active: Connected successfully. Detected ${jobsArray.length} database entries.`, 
-                    type: "success" 
-                });
-            }
-        } catch (err) {
-            console.error("Pipeline test block failed:", err);
-            if (!quiet) {
-                setSystemMessage({ 
-                    text: "Pipeline Link Missing: Check if your Node.js server is up on port 5000.", 
-                    type: "error" 
-                });
-            }
-        } finally {
-            if (!quiet) setIsTestingSync(false);
+        setIsDetailsOpen(true);
+        
+        const response = await fetch(`${API_BASE_URL}/api/applications/${app._id}`);
+        const result = await response.json();
+        if (!response.ok || result.success === false) {
+          throw new Error(result.message || 'Could not load profile payload attributes');
         }
-    };
+        setSelectedApplicationData(result.data);
+      } catch (err) {
+        setDetailsError(err.message);
+        setSelectedApplicationData(app);
+      } finally {
+        setIsLoadingDetails(false);
+      }
+    }
+  };
 
-    // Run rapid initial system diagnostic check on mount
-    useEffect(() => {
-        verifyDatabasePipeline(true);
-    }, []);
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false);
+    setSelectedApplicationData(null);
+    setDetailsError('');
+  };
 
-    // Client-side search filtration algorithm
-    const filteredJobs = jobsList.filter(job => 
-        job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.department?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
+  const handleStatusChanged = () => {
+    fetchApplications();
+    handleCloseDetails();
+  };
 
-    return (
-        <div className="min-h-screen bg-darkBg p-6 md:p-12 relative">
-            
-            {/* INTEGRATION TESTING NOTIFICATION BAR */}
-            {systemMessage.text && (
-                <div className={`fixed top-6 right-6 z-50 max-w-md p-4 rounded-xl border backdrop-blur-md shadow-2xl transition-all animate-in fade-in slide-in-from-top-4 
-                    ${systemMessage.type === 'success' 
-                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
-                        : 'bg-rose-500/10 border-rose-500/20 text-rose-400'}`}
-                >
-                    <div className="flex items-start gap-3 text-xs font-mono">
-                        <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                            <span className="font-bold block mb-1">
-                                {systemMessage.type === 'success' ? '[SYSTEM REGISTRY OK]' : '[SYSTEM PIPELINE LINK BREAK]'}
-                            </span>
-                            {systemMessage.text}
-                        </div>
-                        <button 
-                            onClick={() => setSystemMessage({ text: "", type: "" })}
-                            className="text-gray-500 hover:text-white transition-colors text-xs font-sans font-bold"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )}
+  // Vacancy Mutation Pipelines
+  const handleUpdateJobSpecs = async (jobId, updatedPayload) => {
+    try {
+      const res = await axios.put(`${API_BASE_URL}/api/jobs/${jobId}`, updatedPayload);
+      if (res.data) {
+        toast.success("Job spec changes committed successfully");
+        verifyDatabasePipeline(true); 
+        return true;
+      }
+    } catch (err) {
+      toast.error("Database denied modification write rules");
+      return false;
+    }
+  };
 
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-                <div>
-                    <h1 className="text-4xl font-bold text-white tracking-tight">Admin Dashboard</h1>
-                    <div className="flex items-center gap-3 mt-1">
-                        <p className="text-gray-400">HR Staff Portal - Vacancy Control Panel</p>
-                        <span className="text-gray-700">&bull;</span>
-                        <button 
-                            onClick={() => verifyDatabasePipeline(false)}
-                            className="text-[10px] uppercase font-mono tracking-wider font-bold text-gray-500 hover:text-emeraldAccent flex items-center gap-1.5 transition-colors group"
-                        >
-                            <RefreshCw size={10} className={`group-hover:rotate-180 transition-transform duration-500 ${isTestingSync ? 'animate-spin text-emeraldAccent' : ''}`} />
-                            Test Endpoints
-                        </button>
-                    </div>
-                </div>
-                {/* 🛠️ MODIFIED: BUTTON NOW ROUTES CLEANLY TO YOUR NEW PAGE */}
-                <button
-                    onClick={() => navigate('/admin/create-job')}
-                    className="bg-accentOrange hover:bg-orange-700 transition-all text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-[0_4px_20px_rgba(234,88,12,0.15)]"
-                >
-                    <Plus size={20} strokeWidth={3} /> Post New Job
-                </button>
-            </header>
+  const handleDeleteJobRecord = async (jobId) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/api/jobs/${jobId}`);
+      toast.success("Vacancy listing removed from database");
+      verifyDatabasePipeline(true);
+      return true;
+    } catch (err) {
+      toast.error("Failed to execute purge request on target document");
+      return false;
+    }
+  };
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard
-<<<<<<< HEAD
-                    title="Total Applicants"
-                    value={isLoading ? '...' : applications.length}
-                    subtext={error ? 'Backend unavailable' : 'Live from applications API'}
-=======
-                    title="Total Applicants Logs"
-                    value="8"
-                    subtext="Candidate files inside central index"
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
-                    icon={Users}
-                    isTrend={!error}
-                />
-                <StatCard
-<<<<<<< HEAD
-                    title="Sidaamu Afoo Fluent"
-                    value={isLoading ? '...' : fluentCount}
-                    subtext={`${fluentPercent}% of total applicants`}
-                    icon={MessageCircle}
-                    isTrend={false}
-                />
-                <StatCard
-                    title="Woreda Distribution"
-                    value={isLoading ? '...' : woredas.length}
-                    subtext={`${woredas.length} Woredas represented`}
-=======
-                    title="Live Deployed Vacancies"
-                    value={liveJobsCount}
-                    subtext="Real-time open pipelines in MongoDB"
-                    icon={Briefcase}
-                    isTrend={liveJobsCount > 0}
-                />
-                <StatCard
-                    title="Operational Footprint"
-                    value="Hawassa"
-                    subtext="Central Hub Distribution Portal"
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
-                    icon={MapPin}
-                    isTrend={false}
-                />
-            </div>
+  const getStatusStyle = (status) => {
+    if (status === 'Accepted' || status === 'Shortlisted') {
+      return 'bg-emerald-950/40 text-emeraldAccent border-emerald-500/20';
+    }
+    if (status === 'Rejected') {
+      return 'bg-rose-950/40 text-rose-400 border-rose-500/20';
+    }
+    if (status === 'Reviewed') {
+      return 'bg-blue-950/40 text-blue-400 border-blue-500/20';
+    }
+    return 'bg-amber-950/40 text-amber-500 border-amber-500/20';
+  };
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-12">
-                <aside className="lg:col-span-1 bg-cardBg p-6 rounded-2xl border border-white/5 self-start">
-                    <div className="flex items-center gap-2 mb-1">
-                        <Filter className="text-emeraldAccent w-5 h-5" />
-                        <h3 className="text-xl font-bold text-white">Registry Filters</h3>
-                    </div>
-                    <p className="text-gray-500 text-sm mb-8">Refine position index</p>
+  // Memoized Evaluation Slices
+  const woredas = useMemo(() => {
+    return [...new Set(applications.map((app) => app.residency?.woreda).filter(Boolean))].sort();
+  }, [applications]);
 
-                    <div className="space-y-6">
-                        <div>
-<<<<<<< HEAD
-                            <label className="block text-white text-sm font-semibold mb-2">Filter by Woreda</label>
-                            <select
-                                value={selectedWoreda}
-                                onChange={(event) => setSelectedWoreda(event.target.value)}
-                                className="w-full bg-darkBg border border-emerald-900/20 rounded-xl p-3 text-gray-400 focus:outline-none"
-                            >
-                                <option value="">All Woredas</option>
-                                {woredas.map((woreda) => (
-                                    <option key={woreda} value={woreda}>{woreda}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-white text-sm font-semibold mb-2">Sidaamu Afoo Fluency</label>
-                            <select
-                                value={selectedFluency}
-                                onChange={(event) => setSelectedFluency(event.target.value)}
-                                className="w-full bg-darkBg border border-emerald-900/20 rounded-xl p-3 text-gray-400 focus:outline-none"
-                            >
-                                <option value="">All Levels</option>
-                                {fluencyLevels.map((level) => (
-                                    <option key={level} value={level}>{level}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <label className="text-white text-sm font-semibold">Minimum CGPA: {Number(minCgpa).toFixed(1)}</label>
-                            </div>
-                            <input
-                                type="range"
-                                value={minCgpa}
-                                onChange={(event) => setMinCgpa(event.target.value)}
-                                className="w-full accent-emeraldAccent bg-darkBg h-1.5 rounded-lg appearance-none cursor-pointer"
-                                min="2.0"
-                                max="4.0"
-                                step="0.1"
-                            />
-                            <div className="flex justify-between text-[10px] text-gray-500 mt-2 font-bold">
-                                <span>2.0</span>
-                                <span>4.0</span>
-                            </div>
-                        </div>
-                        <button
-                            onClick={resetFilters}
-                            className="w-full bg-white text-emerald-600 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all mt-4"
-                        >
-=======
-                            <label className="block text-white text-sm font-semibold mb-2">Filter by Department</label>
-                            <select className="w-full bg-darkBg border border-emerald-900/20 rounded-xl p-3 text-gray-400 focus:outline-none text-xs">
-                                <option>All Departments</option>
-                                <option>Software Engineering</option>
-                                <option>Human Resources</option>
-                                <option>Finance</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-white text-sm font-semibold mb-2">Allocation Type</label>
-                            <select className="w-full bg-darkBg border border-emerald-900/20 rounded-xl p-3 text-gray-400 focus:outline-none text-xs">
-                                <option>All Classifications</option>
-                                <option>Full-time Active Allocation</option>
-                                <option>Contractual Stream</option>
-                            </select>
-                        </div>
-                        <button className="w-full bg-white text-emerald-600 font-bold py-3 rounded-xl hover:bg-gray-100 transition-all mt-4 text-xs">
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
-                            Reset Filters
-                        </button>
-                    </div>
-                </aside>
+  const fluencyLevels = useMemo(() => {
+    return [...new Set(applications.map((app) => app.education?.sidaamuAfooProficiency || app.education?.sidaamuAfoo || app.sidaamuAfoo).filter(Boolean))].sort();
+  }, [applications]);
 
-                <div className="lg:col-span-3 bg-cardBg p-8 rounded-2xl border border-white/5">
-                    <div className="flex justify-between items-start mb-6">
-                        <div>
-<<<<<<< HEAD
-                            <h3 className="text-2xl font-bold text-white">Candidate List</h3>
-                            <p className="text-gray-500">Showing {filteredApplications.length} of {applications.length} applicants</p>
-                        </div>
-                        <button
-                            onClick={exportToExcel}
-                            className="flex items-center gap-2 bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold text-sm"
-                        >
-                            <FileText size={18} /> Export to Excel
-=======
-                            <h3 className="text-2xl font-bold text-white">Active Vacancies Registry</h3>
-                            <p className="text-gray-500">Showing {filteredJobs.length} of {liveJobsCount} deployed positions</p>
-                        </div>
-                        <button className="flex items-center gap-2 bg-white text-emerald-600 px-4 py-2 rounded-lg font-bold text-sm">
-                            <FileText size={18} /> Export Index
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
-                        </button>
-                    </div>
-                    
-                    <div className="relative mb-8">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-                        <input
-                            type="text"
-<<<<<<< HEAD
-                            value={searchTerm}
-                            onChange={(event) => setSearchTerm(event.target.value)}
-                            placeholder="Search by name or National ID..."
-                            className="w-full bg-darkBg border border-emerald-900/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-emeraldAccent/30"
-                        />
-                    </div>
-                    {error && (
-                        <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-sm font-semibold text-red-300">
-                            {error}
-                        </div>
-                    )}
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="text-gray-500 text-sm border-b border-white/5">
-                                <tr>
-                                    <th className="pb-4"><input type="checkbox" className="accent-emeraldAccent w-4 h-4" /></th>
-                                    <th className="pb-4 font-medium">Name</th>
-                                    <th className="pb-4 font-medium">National ID</th>
-                                    <th className="pb-4 font-medium">Woreda</th>
-                                    <th className="pb-4 font-medium">Sidaamu Afoo</th>
-                                    <th className="pb-4 font-medium">CGPA</th>
-                                    <th className="pb-4 font-medium">Status</th>
-                                    <th className="pb-4 font-medium">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-white">
-                                {isLoading && (
-                                    <tr>
-                                        <td className="py-8 text-center text-gray-400" colSpan="8">Loading applicants...</td>
-                                    </tr>
-                                )}
-                                {!isLoading && filteredApplications.length === 0 && (
-                                    <tr>
-                                        <td className="py-8 text-center text-gray-400" colSpan="8">No applicants match your filters.</td>
-                                    </tr>
-                                )}
-                                {!isLoading && filteredApplications.map((application) => {
-                                    const candidateName = getCandidateName(application);
-                                    const status = application.status || 'Pending';
+  const filteredApplications = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return applications.filter((app) => {
+      const first = app.personalInfo?.firstName || '';
+      const middle = app.personalInfo?.middleName || '';
+      const last = app.personalInfo?.lastName || '';
+      const fullName = `${first} ${middle} ${last}`.toLowerCase();
+      
+      const nationalId = app.personalInfo?.faydaId?.toLowerCase() || '';
+      const woreda = app.residency?.woreda || '';
+      const fluency = app.education?.sidaamuAfooProficiency || app.education?.sidaamuAfoo || app.sidaamuAfoo || '';
+      const cgpa = Number(app.education?.cgpa || 0);
+      
+      const matchesSearch = !query || fullName.includes(query) || nationalId.includes(query);
+      const matchesWoreda = !selectedWoreda || woreda === selectedWoreda;
+      const matchesFluency = !selectedFluency || fluency === selectedFluency;
+      const matchesCgpa = cgpa >= Number(minCgpa);
+      
+      return matchesSearch && matchesWoreda && matchesFluency && matchesCgpa;
+    });
+  }, [applications, minCgpa, searchTerm, selectedFluency, selectedWoreda]);
 
-                                    return (
-                                        <tr key={application._id || application.trackingId} className="border-b border-white/5 hover:bg-emerald-900/5 transition-colors group">
-                                            <td className="py-4"><input type="checkbox" className="accent-emeraldAccent w-4 h-4" /></td>
-                                            <td className="py-4 font-bold">{candidateName}</td>
-                                            <td className="py-4 text-gray-400">{application.personalInfo?.faydaId || 'N/A'}</td>
-                                            <td className="py-4 text-gray-400">{application.residency?.woreda || 'N/A'}</td>
-                                            <td className="py-4"><span className="bg-emerald-500/10 text-emeraldAccent px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/20">{getSidaamuAfoo(application)}</span></td>
-                                            <td className="py-4 font-bold">{application.education?.cgpa ?? 'N/A'}</td>
-                                            <td className="py-4"><span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusClass(status)}`}>{status}</span></td>
-                                            <td className="py-4">
-                                                <button
-                                                    onClick={() => handleViewApplication(application._id)}
-                                                    className="flex items-center gap-1 text-emeraldAccent hover:underline font-bold text-sm"
-                                                >
-                                                    <Eye size={16} /> View
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <JobModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
-            <ApplicantDetailsModal
-                isOpen={isDetailsOpen}
-                onClose={handleCloseDetails}
-                application={selectedApplicationData}
-                isLoading={isLoadingDetails}
-                error={detailsError}
-                onStatusChange={handleStatusChanged}
-            />
-=======
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search vacancies by title or department context..."
-                            className="w-full bg-darkBg border border-emerald-900/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-emeraldAccent/30 text-sm"
-                        />
-                    </div>
+  const fluentCount = useMemo(() => {
+    return applications.filter((app) => {
+      const fluency = app.education?.sidaamuAfooProficiency || app.education?.sidaamuAfoo || app.sidaamuAfoo || '';
+      return ['Fluent', 'Native', 'High'].includes(fluency);
+    }).length;
+  }, [applications]);
 
-                    <div className="overflow-x-auto">
-                        {filteredJobs.length === 0 ? (
-                            <div className="text-center py-12 border border-dashed border-white/5 rounded-xl">
-                                <Briefcase className="mx-auto text-gray-600 mb-3" size={32} />
-                                <p className="text-gray-500 text-sm">No active job posting clusters found inside database nodes.</p>
-                            </div>
-                        ) : (
-                            <table className="w-full text-left">
-                                <thead className="text-gray-500 text-sm border-b border-white/5">
-                                    <tr>
-                                        <th className="pb-4 font-medium">Position Title</th>
-                                        <th className="pb-4 font-medium">Department</th>
-                                        <th className="pb-4 font-medium">Matrix Requirements</th>
-                                        <th className="pb-4 font-medium">Closing Deadline</th>
-                                        <th className="pb-4 font-medium">Status Stream</th>
-                                        <th className="pb-4 font-medium">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="text-white">
-                                    {filteredJobs.map((job) => {
-                                        const isExpired = new Date() > new Date(job.deadline);
-                                        const targetId = job._id || job.id; // 🛡️ SAFE GUARD FALLBACK IDENTIFIER
+  const fluentPercent = applications.length ? Math.round((fluentCount / applications.length) * 100) : 0;
 
-                                        return (
-                                            <tr key={targetId || Math.random().toString()} className="border-b border-white/5 hover:bg-emerald-900/5 transition-colors group">
-                                                <td className="py-4 font-bold text-sm text-zinc-100">{job.title}</td>
-                                                <td className="py-4 text-gray-400 text-xs">{job.department}</td>
-                                                <td className="py-4 text-gray-400 text-xs">
-                                                    <div className="space-y-0.5">
-                                                        <div>Exp: {job.experience || "Not Stated"}</div>
-                                                        <div className="text-[11px] text-gray-500">CGPA: {job.cgpa}+</div>
-                                                    </div>
-                                                </td>
-                                                <td className="py-4 text-gray-400 font-mono text-xs">
-                                                    {job.deadline ? new Date(job.deadline).toLocaleDateString('en-US', {
-                                                        month: 'short', day: 'numeric', year: 'numeric'
-                                                    }) : "Continuous"}
-                                                </td>
-                                                <td className="py-4">
-                                                    {isExpired ? (
-                                                        <span className="bg-rose-500/10 text-rose-400 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border border-rose-500/20">Closed</span>
-                                                    ) : (
-                                                        <span className="bg-emerald-500/10 text-emeraldAccent px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border border-emerald-500/20">Active Intake</span>
-                                                    )}
-                                                </td>
-                                                <td className="py-4">
-                                                    {/* 🛠️ MODIFIED: PREVENTS CRASHES BY ROUTING VIA STABLE VARIABLE REFERENCES */}
-                                                    <button 
-                                                        onClick={() => {
-                                                            if (!targetId) {
-                                                                alert("Error: Missing database identifier for this document record.");
-                                                                return;
-                                                            }
-                                                            navigate(`/apply/${targetId}`);
-                                                        }}
-                                                        className="flex items-center gap-1 text-emeraldAccent hover:underline font-bold text-xs"
-                                                    >
-                                                        <Eye size={14} /> Audit
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                </div>
-            </div>
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
+  const resetFilters = () => {
+    setSearchTerm('');
+    setSelectedWoreda('');
+    setSelectedFluency('');
+    setMinCgpa(2);
+  };
+
+  const exportToExcel = () => {
+    if (filteredApplications.length === 0) return;
+    
+    const rows = filteredApplications.map((app) => ({
+      Name: `${app.personalInfo?.firstName || ''} ${app.personalInfo?.middleName || ''} ${app.personalInfo?.lastName || ''}`.trim(),
+      'National ID': app.personalInfo?.faydaId || '',
+      Woreda: app.residency?.woreda || '',
+      'Sidaamu Afoo Fluency': app.education?.sidaamuAfooProficiency || app.education?.sidaamuAfoo || app.sidaamuAfoo || '',
+      CGPA: app.education?.cgpa ?? '',
+      Status: app.status || 'Pending',
+    }));
+    
+    const headers = Object.keys(rows[0]);
+    const csv = [
+      headers.join(','),
+      ...rows.map((row) => headers.map((header) => `"${String(row[header]).replace(/"/g, '""')}"`).join(',')),
+    ].join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'sidama_mesob_applicants.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="min-h-screen bg-darkBg p-6 md:p-12 relative antialiased selection:bg-emeraldAccent selection:text-black">
+      
+      {/* Structural Workspace Header Layout */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-white/5 pb-6">
+        <div>
+          <h1 className="text-2xl font-black text-white tracking-tight uppercase">Admin Control Room</h1>
+          <div className="flex items-center gap-3 mt-1 text-xs font-medium">
+            <p className="text-zinc-400">Sidama Mesob Digitization Portal</p>
+            <span className="text-zinc-700">&bull;</span>
+            <button 
+              onClick={() => verifyDatabasePipeline(false)}
+              className="uppercase font-mono tracking-wider text-zinc-500 hover:text-emeraldAccent flex items-center gap-1.5 transition-colors group"
+            >
+              <RefreshCw size={10} className={`group-hover:rotate-180 transition-transform duration-500 ${isTestingSync ? 'animate-spin text-emeraldAccent' : ''}`} />
+              Verify Link Rules
+            </button>
+          </div>
         </div>
-    );
+
+        {/* Tab Selector Switch toggles inside header panel */}
+        <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/5 self-stretch md:self-auto">
+          <button
+            onClick={() => setActiveTab('applicants')}
+            className={`flex-1 md:flex-initial px-4 py-2 font-bold uppercase tracking-wider text-[10px] rounded-lg transition-all flex items-center justify-center gap-2
+              ${activeTab === 'applicants' ? 'bg-zinc-900 text-emeraldAccent border border-white/5 shadow-md' : 'text-zinc-400 hover:text-zinc-200'}`}
+          >
+            <Users size={12} /> Applicants
+          </button>
+          <button
+            onClick={() => setActiveTab('vacancies')}
+            className={`flex-1 md:flex-initial px-4 py-2 font-bold uppercase tracking-wider text-[10px] rounded-lg transition-all flex items-center justify-center gap-2
+              ${activeTab === 'vacancies' ? 'bg-zinc-900 text-emeraldAccent border border-white/5 shadow-md' : 'text-zinc-400 hover:text-zinc-200'}`}
+          >
+            <Briefcase size={12} /> Vacancy Control
+          </button>
+        </div>
+      </header>
+
+      {/* System Operational Statistics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <StatCard title="Total Registrants" value={isLoading ? '...' : applications.length} subtext={error ? 'Ledger disconnected' : 'Aggregated from DB Pool'} icon={Users} isTrend={!error} />
+        <StatCard title="Sidaamu Afoo Fluent" value={isLoading ? '...' : fluentCount} subtext={`${fluentPercent}% fluency baseline`} icon={MessageCircle} isTrend={false} />
+        <StatCard title="Active Open Vacancies" value={liveJobsCount} subtext="Operational Pipelines Available" icon={Briefcase} isTrend={liveJobsCount > 0} />
+      </div>
+
+      {/* Dynamic View Composition Space */}
+      {activeTab === 'applicants' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 animate-in fade-in duration-200">
+          <RegistryFilters 
+            selectedWoreda={selectedWoreda} setSelectedWoreda={setSelectedWoreda} woredas={woredas}
+            selectedFluency={selectedFluency} setSelectedFluency={setSelectedFluency} fluencyLevels={fluencyLevels}
+            minCgpa={minCgpa} setMinCgpa={setMinCgpa} resetFilters={resetFilters}
+          />
+
+          <div className="lg:col-span-3 bg-cardBg p-6 md:p-8 rounded-2xl border border-white/5 shadow-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h3 className="text-lg font-extrabold text-white">Registry Explorer</h3>
+                <p className="text-zinc-500 text-xs font-mono mt-0.5">Filtered list outputting {filteredApplications.length} files</p>
+              </div>
+              <button
+                onClick={exportToExcel}
+                disabled={filteredApplications.length === 0}
+                className="flex items-center gap-2 bg-white hover:bg-zinc-100 disabled:opacity-40 text-emerald-950 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 w-full sm:w-auto justify-center"
+              >
+                <FileText size={15} /> Save Report (.CSV)
+              </button>
+            </div>
+            
+            <div className="relative mb-6">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-4 h-4" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Lookup name or Fayda National ID token key..."
+                className="w-full bg-darkBg border border-white/5 rounded-xl py-3 pl-11 pr-4 text-xs text-white focus:outline-none focus:border-emeraldAccent/30 placeholder:text-zinc-600 transition-colors"
+              />
+            </div>
+            
+            {error && (
+              <div className="mb-6 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-xs font-mono font-bold text-rose-400">
+                {error}
+              </div>
+            )}
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="text-zinc-500 text-[10px] font-mono uppercase tracking-widest border-b border-white/5">
+                    <th className="pb-4 pl-4"><input type="checkbox" className="accent-emeraldAccent w-4 h-4 rounded bg-darkBg border-white/10" /></th>
+                    <th className="pb-4 font-bold">Candidate Name</th>
+                    <th className="pb-4 font-bold">National ID Token</th>
+                    <th className="pb-4 font-bold">Woreda</th>
+                    <th className="pb-4 font-bold">Sidaamu Afoo</th>
+                    <th className="pb-4 font-bold">CGPA</th>
+                    <th className="pb-4 font-bold">Status</th>
+                    <th className="pb-4 font-bold text-right pr-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/[0.02]">
+                  {isLoading ? (
+                    <tr>
+                      <td className="py-12 text-center text-xs font-mono text-zinc-500" colSpan="8">
+                        <div className="w-4 h-4 border-2 border-emeraldAccent/20 border-t-emeraldAccent rounded-full animate-spin mx-auto mb-2" />
+                        Fetching tracking database registers...
+                      </td>
+                    </tr>
+                  ) : filteredApplications.length === 0 ? (
+                    <tr>
+                      <td className="py-12 text-center text-xs font-mono text-zinc-500" colSpan="8">
+                        No structural profile logs matching active dashboard matrices.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredApplications.map((application) => (
+                      <CandidateRow
+                        key={application._id || application.trackingId}
+                        app={application}
+                        onView={handleViewApplication}
+                        getStatusStyle={getStatusStyle}
+                      />
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          {/* Action trigger placed directly in context */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => navigate('/admin/create-job')}
+              className="bg-accentOrange hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg transition-all active:scale-95"
+            >
+              <Plus size={14} strokeWidth={3} /> Launch New Vacancy Channel
+            </button>
+          </div>
+          
+          <VacancyControlTab 
+            jobsList={jobsList}
+            onRefreshJobs={() => verifyDatabasePipeline(false)}
+            onUpdateJobStatus={handleUpdateJobSpecs}
+            onDeleteJob={handleDeleteJobRecord}
+          />
+        </div>
+      )}
+      
+      {/* Deep Flow Modal Overlays */}
+      <ApplicantDetailsModal
+        isOpen={isDetailsOpen}
+        onClose={handleCloseDetails}
+        application={selectedApplicationData}
+        isLoading={isLoadingDetails}
+        error={detailsError}
+        onStatusChange={handleStatusChanged}
+      />
+    </div>
+  );
 }
 
 export default AdminPortal;

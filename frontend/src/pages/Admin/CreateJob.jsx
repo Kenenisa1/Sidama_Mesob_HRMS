@@ -55,7 +55,7 @@ function CreateJob() {
 
   // Direct return to admin desk configuration
   const handleBackToDashboard = () => {
-    window.location.href = "/admin-dashboard/manage-posts";
+    window.location.href = "/admin";
   };
 
   // 2. Form submission payload compilation
