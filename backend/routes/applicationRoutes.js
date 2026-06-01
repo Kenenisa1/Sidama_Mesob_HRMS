@@ -1,5 +1,7 @@
 import express from 'express';
-<<<<<<< HEAD
+import path from 'path';
+import fs from 'fs';
+import multer from 'multer';
 import {
   submitApplication,
   getMyApplication,
@@ -8,16 +10,11 @@ import {
   updateApplicationStatus
 } from '../controllers/applicationController.js';
 
-// import { protect } from '../middleware/authMiddleware.js';
-import upload from '../middleware/uploadMiddleware.js';
-=======
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { submitApplication, getMyApplication, getAllApplications } from '../controllers/applicationController.js';
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
-
 const router = express.Router();
+
+// =========================================================
+// MULTI-PART FILE SYSTEM CONFIGURATION (MULTER)
+// =========================================================
 
 // Ensure the local multi-part file directory path exists safely on initialization
 const uploadDir = 'uploads/applications';
@@ -56,6 +53,7 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
+// Structural layout map matching the fields expected from the frontend form submission
 const structuralUploadMap = upload.fields([
   { name: 'cv', maxCount: 1 },
   { name: 'degreeCertificate', maxCount: 1 },
@@ -63,7 +61,15 @@ const structuralUploadMap = upload.fields([
   { name: 'otherCert', maxCount: 1 }
 ]);
 
-// Route pipelines wrapped securely to capture file errors without dropping the socket stream
+// =========================================================
+// ROUTE IMPLEMENTATIONS
+// =========================================================
+
+/**
+ * @route   POST /api/applications/submit
+ * @desc    Submit professional credentials & multi-file form data
+ * @access  Public
+ */
 router.post('/submit', (req, res, next) => {
   structuralUploadMap(req, res, (err) => {
     if (err) {
@@ -77,46 +83,32 @@ router.post('/submit', (req, res, next) => {
   });
 }, submitApplication);
 
-<<<<<<< HEAD
 /**
- * @route   POST /api/applications/submit
- * @desc    Submit professional credentials & form data
- * @access  Public (Will be Private once User model is ready)
- */
-router.post(
-  '/submit',
-  upload.fields(vaultUploads),
-  submitApplication
-);
-
-/**
- * @route   GET /api/applications/my-status
- * @desc    Check status of a specific application
- * @access  Public (Bypass protection for now)
+ * @route   GET /api/applications/my-status OR /api/applications/my-application
+ * @desc    Check status of a specific candidate submission
+ * @access  Public
  */
 router.get('/my-status', getMyApplication);
+router.get('/my-application', getMyApplication); // Alias fallback to match frontend api instances
 
 /**
- * @route   GET /api/applications
- * @desc    Get all applications (Useful for your group project's Admin panel)
+ * @route   GET /api/applications OR /api/applications/all
+ * @desc    Get all system applications for the Admin management panel
+ * @access  Public
  */
 router.get('/', getAllApplications);
-=======
-// Standardized end-point pointers matching frontend configurations
-router.get('/my-application', getMyApplication);
-router.get('/all', getAllApplications);
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
+router.get('/all', getAllApplications); // Alias fallback to match frontend dashboards
 
 /**
  * @route   GET /api/applications/:id
- * @desc    Get a specific application by ID
+ * @desc    Get a detailed breakdown of a specific application by database ID
  * @access  Public
  */
 router.get('/:id', getApplicationById);
 
 /**
  * @route   PATCH /api/applications/:id/status
- * @desc    Update application status (Shortlist, Accept, Reject)
+ * @desc    Update application status workflow state (Shortlist, Accept, Reject)
  * @access  Public
  */
 router.patch('/:id/status', updateApplicationStatus);

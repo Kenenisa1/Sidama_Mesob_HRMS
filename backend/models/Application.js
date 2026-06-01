@@ -58,23 +58,14 @@ const ApplicationSchema = new mongoose.Schema({
     fieldOfStudy: { type: String, required: true, trim: true },
     cgpa: { type: Number, required: true, min: 0, max: 4.0 },
     graduationYear: { type: Number, required: true },
-<<<<<<< HEAD
-    experienceYears: { type: Number, default: 0 },
-    sidaamuAfoo: {
-      type: String,
-      enum: ['Basic', 'Intermediate', 'Fluent', 'Native', 'High'],
-      default: 'Basic'
-    },
-    skills: [String] // Array of skill tags
-=======
     experienceYears: { type: Number, default: 0, min: 0 },
+    skills: [String],
     sidaamuAfooProficiency: {
       type: String,
       enum: ['BASIC', 'INTERMEDIATE', 'FLUENT', 'NATIVE'],
       required: true,
       set: v => v.toUpperCase() // Safely normalizes casing from client buttons
     }
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
   },
 
   // STEP 4: DOCUMENT VAULT SECURE STORAGE POINTERS
@@ -88,7 +79,7 @@ const ApplicationSchema = new mongoose.Schema({
   // STRUCTURAL WORKFLOW TRACKING STATE
   status: {
     type: String,
-    enum: ['Pending', 'Reviewed', 'Accepted', 'Rejected'],
+    enum: ['Pending', 'Reviewed', 'Shortlisted', 'Accepted', 'Rejected'],
     default: 'Pending'
   },
   trackingId: {
@@ -98,7 +89,7 @@ const ApplicationSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Optimize lookups based on relational query patterns
+// Optimize lookups based on relational query patterns to deny dual concurrent profile registry actions
 ApplicationSchema.index({ userId: 1, jobId: 1 }, { unique: true });
 
 const Application = mongoose.model('Application', ApplicationSchema);

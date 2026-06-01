@@ -35,18 +35,10 @@ export const submitApplication = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    const { 
-      fullName, email, phone, gender, 
-      eduLevel, institution, department, gradYear, 
-      faydaId, woreda, kebele, cgpa, experience, sidaamuAfoo
-    } = req.body;
-=======
-    // 2. Parse text parameters stringified from StepFour React application hooks
+    // 2. Parse text parameters stringified from React application hooks safely
     let personalInfo = {};
     let residency = {};
     let education = {};
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
 
     try {
       personalInfo = typeof req.body.personalInfo === 'string' ? JSON.parse(req.body.personalInfo) : (req.body.personalInfo || {});
@@ -91,35 +83,6 @@ export const submitApplication = async (req, res) => {
       sidaamuAfoo: sidaamuAfoo,
       
       personalInfo: {
-<<<<<<< HEAD
-        firstName: fName,
-        lastName: lName,
-        email: email,
-        phone: phone,
-        faydaId: faydaId, // Will now use actual ID from frontend
-        gender: gender
-      },
-
-      residency: {
-        woreda: woreda,
-        kebele: kebele
-      },
-
-      education: {
-        level: eduLevel, 
-        institution: institution,
-        fieldOfStudy: department,
-        cgpa: parseFloat(cgpa) || 0,
-        graduationYear: gradYear,
-        experienceYears: parseInt(experience, 10) || 0,
-        sidaamuAfoo: sidaamuAfoo || 'Basic'
-      },
-
-      documents: {
-        degreeCertificate: req.files?.degreeCertificate?.[0]?.path,
-        nationalIdCopy: req.files?.nationalIdCopy?.[0]?.path,
-        cv: req.files?.cv?.[0]?.path || null
-=======
         firstName: personalInfo.firstName?.trim() || "Unknown",
         middleName: personalInfo.middleName?.trim() || "",
         lastName: personalInfo.lastName?.trim() || "Unknown",
@@ -127,7 +90,6 @@ export const submitApplication = async (req, res) => {
         phone: personalInfo.phone?.trim() || "",
         faydaId: personalInfo.faydaId?.trim() || "",
         gender: personalInfo.gender || "Male"
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
       },
       
       residency: {
@@ -217,13 +179,17 @@ export const getAllApplications = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Could not parse data index references." });
   }
-<<<<<<< HEAD
 };
 
+/**
+ * @desc    Get a specific application by ID
+ * @route   GET /api/applications/:id
+ * @access  Private/Admin
+ */
 export const getApplicationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const application = await Application.findById(id);
+    const application = await Application.findById(id).populate('jobId', 'title department structuralLevel');
 
     if (!application) {
       return res.status(404).json({
@@ -244,6 +210,11 @@ export const getApplicationById = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Update application status (Shortlist, Accept, Reject)
+ * @route   PATCH /api/applications/:id/status
+ * @access  Private/Admin
+ */
 export const updateApplicationStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -282,6 +253,3 @@ export const updateApplicationStatus = async (req, res) => {
     });
   }
 };
-=======
-};
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114

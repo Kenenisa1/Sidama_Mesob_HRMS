@@ -7,78 +7,16 @@ import mongoose from "mongoose";
  * @desc    Publish a new Mesob civil service vacancy & compute exact deadline parameters
  * @access  Protected (HR Administrator)
  */
-
 export const createJob = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const jobData = {
-      ...req.body,
-      positions: Number(req.body.positions),
-      title: req.body.title?.trim(),
-      department: req.body.department?.trim(),
-      description: req.body.description?.trim(),
-      requirements: req.body.requirements?.trim(),
-      education: req.body.education?.trim(),
-      cgpa: req.body.cgpa?.trim(),
-      experience: req.body.experience?.trim(),
-      salary: req.body.salary?.trim(),
-      location: req.body.location?.trim(),
-    };
-
-    const job = await Job.create(jobData);
-
-    res.status(201).json({
-      success: true,
-      message: "Job created successfully",
-      job,
-    });
-  } catch (error) {
-    const statusCode = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
-
-    res.status(statusCode).json({
-      success: false,
-      message: error.message,
-      errors: error.errors
-        ? Object.values(error.errors).map((err) => err.message)
-        : undefined,
-    });
-  }
-};
-
-
-// GET ALL JOBS
-export const getJobs = async (req, res) => {
-  try {
-    const jobs = await Job.find().sort({
-      createdAt: -1,
-    });
-
-    res.status(200).json(jobs);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-
-// GET SINGLE JOB
-export const getJob = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id);
-
-    if (!job) {
-      return res.status(404).json({
-        message: "Job not found",
-=======
     if (!req.body || Object.keys(req.body).length === 0) {
       return res.status(400).json({
         success: false,
         message: "Administrative payload content cannot be empty.",
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
       });
     }
 
+    // 1. Evaluate Civil Service Rank to determine the open application window
     const rankStr = req.body.rankLevel || "Level VII";
     const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(rankStr);
     const windowDays = isHighRank ? 10 : 5;
@@ -88,7 +26,6 @@ export const getJob = async (req, res) => {
     computedDeadline.setDate(computedDeadline.getDate() + windowDays);
 
     // 3. Normalize Multi-Language Incoming Body Structures
-    // Safely parsing both nested objects {languages: {sidama: true}} AND flat parameters {sidama: true}
     const hasLanguagesObj = req.body.languages && typeof req.body.languages === 'object';
 
     const sidamaLang = hasLanguagesObj
@@ -103,20 +40,37 @@ export const getJob = async (req, res) => {
       ? (req.body.languages.english === true || req.body.languages.english === "true")
       : (req.body.english === true || req.body.english === "true");
 
-    // 4. Force clean structure matching Sidama Mesob database rules
+    // 4. Extract raw text from incoming schema pipeline to prevent drop exceptions
+    const rawDescription = req.body.description?.trim();
+    const rawRequirements = req.body.requirements?.trim() || req.body.experienceRequirements?.trim();
+
+    // 5. Hard validation check before committing directly to database layer
+    if (!rawDescription || !rawRequirements) {
+      return res.status(400).json({
+        success: false,
+        message: `Validation Exception: Both 'description' and 'requirements' must be supplied by the administrator UI view.`
+      });
+    }
+
+    // 6. Assemble finalized pristine structure matching your Mongoose strict model rules
     const cleanData = {
-      title: req.body.title?.trim(),
-      jobCode: req.body.jobCode?.trim(),
-      department: req.body.department,
-      rankLevel: rankStr.trim(),
+      title: req.body.title?.trim(), 
+      jobCode: req.body.jobCode?.trim(), 
+      department: req.body.department?.trim(),
+      rankLevel: rankStr.trim(), 
       salary: Number(req.body.salary) || 0,
       positions: req.body.positions ? Number(req.body.positions) : 1,
-      eligibleFields: req.body.eligibleFields?.trim(),
-      experienceRequirements: req.body.experienceRequirements?.trim(),
-      requiresCO_C: req.body.requiresCOC === true || req.body.requiresCOC === "true", // backward compat catch
+      eligibleFields: req.body.eligibleFields?.trim(), 
+      experienceRequirements: req.body.experienceRequirements?.trim(), 
       requiresCOC: req.body.requiresCOC === true || req.body.requiresCOC === "true",
 
-      // Parse multi-language sub-document mapping flags safely from normalized checks
+      // BIND DIRECTLY TO UI BODY PAYLOAD (NO HIDDEN ARBITRARY STRINGS)
+      description: rawDescription,
+      requirements: rawRequirements,
+      
+      // PARSE ADMIN SPECIFIED CGPA ACCURATELY
+      cgpa: !isNaN(parseFloat(req.body.cgpa)) ? parseFloat(parseFloat(req.body.cgpa).toFixed(2)) : 0,
+
       languages: {
         sidama: sidamaLang,
         amharic: amharicLang,
@@ -124,14 +78,17 @@ export const getJob = async (req, res) => {
       },
 
       registrationWindowDays: windowDays,
-      deadline: computedDeadline, // Set automatically based on institutional guidelines (May 2026 + days)
-      location: "MESOB Center, Hawassa", // Enforced static deployment zone
-      employmentType: "Public Service",
+      deadline: computedDeadline, 
+      
+      // READ DYNAMICALLY FROM ADMIN SUBMISSION WITH SOLID SYSTEM DEFAULTS
+      location: req.body.location?.trim() || "MESOB Center, Hawassa", 
+      employmentType: req.body.employmentType?.trim() || "Public Service",
+      
       featuredOnHome: req.body.featuredOnHome === true || req.body.featuredOnHome === "true",
       status: req.body.status || "published"
     };
 
-    // 5. Commit clean record block to MongoDB cluster
+    // 7. Commit clean record block to MongoDB cluster
     const job = await Job.create(cleanData);
 
     // Asynchronous Fire-and-Forget Notification Engine Hook
@@ -144,6 +101,7 @@ export const getJob = async (req, res) => {
       message: `Vacancy successfully registered into Mesob archives. Open window calculated at ${windowDays} operational days.`,
       job,
     });
+
   } catch (error) {
     console.error(" 🚨 [HRMS Core] CreateJob Exception:", error);
 
@@ -175,14 +133,14 @@ export const getJobs = async (req, res) => {
     const currentTime = new Date();
     let queryConditions = {};
 
-    // 1. Apply generic department filtering if requested by client structures
+    // Apply generic department filtering if requested by client structures
     if (department && department !== "All") {
       queryConditions.department = department;
     }
 
-    // 2. Conditional Query Routing Strategy
+    // Conditional Query Routing Strategy
     if (viewMode === "homepage") {
-      // 🌟 CRITICAL RULE: Homepage strictly hides expired items. Deadline MUST be in the future.
+      // Homepage strictly hides expired items. Deadline MUST be in the future.
       queryConditions.deadline = { $gt: currentTime };
 
       // Prioritize featured listings, sorted by newest first, capped to top 4 cards
@@ -193,7 +151,7 @@ export const getJobs = async (req, res) => {
       return res.status(200).json(homepageJobs);
     }
 
-    // 3. Default (Open Roles Page): Keep active and expired items searchable in directory views
+    // Default (Open Roles Page): Keep active and expired items searchable in directory views
     const allDirectoryJobs = await Job.find(queryConditions).sort({ createdAt: -1 });
     return res.status(200).json(allDirectoryJobs);
 
@@ -209,7 +167,7 @@ export const getJobs = async (req, res) => {
 /**
  * @route   GET /api/jobs/:id
  * @desc    Retrieve structured details for a single targeted position reference
- * @access  Public / Internal
+ * @access  Public
  */
 export const getJob = async (req, res) => {
   try {
@@ -239,35 +197,81 @@ export const getJob = async (req, res) => {
 
 /**
  * @route   PUT /api/jobs/:id
- * @desc    Modify target profile parameters dynamically & recalculate timelines on Rank shifts
+ * @desc    Modify target profile parameters dynamically, normalize incoming payloads & handle Rank shifts
  * @access  Protected (HR Administrator)
  */
 export const updateJob = async (req, res) => {
   try {
-    // If the admin modifies the rank level, recalculate the window and deadline rules automatically
-    if (req.body.rankLevel) {
-      const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(req.body.rankLevel);
-      req.body.registrationWindowDays = isHighRank ? 10 : 5;
+    const { id } = req.params;
 
-      const computedDeadline = new Date();
-      computedDeadline.setDate(computedDeadline.getDate() + req.body.registrationWindowDays);
-      req.body.deadline = computedDeadline;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The requested job reference ID format is structurally invalid.",
+      });
     }
 
+    // 1. Capture updates and dynamically structure incoming data fields
+    let updates = { ...req.body };
+
+    // 2. Handle dynamically computed timeline rules if Rank Level is shifted
+    if (updates.rankLevel) {
+      const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(updates.rankLevel);
+      updates.registrationWindowDays = isHighRank ? 10 : 5;
+
+      const computedDeadline = new Date();
+      computedDeadline.setDate(computedDeadline.getDate() + updates.registrationWindowDays);
+      updates.deadline = computedDeadline;
+    } else if (updates.deadline) {
+      // If the admin manually changed the custom expiration deadline instead
+      updates.deadline = new Date(updates.deadline);
+    }
+
+    // 3. Normalize Multi-Language Array structures coming from frontend components back into Schema Objects
+    if (updates.languages && Array.isArray(updates.languages)) {
+      updates.languages = {
+        sidama: updates.languages.includes("Sidama"),
+        amharic: updates.languages.includes("Amharic"),
+        english: updates.languages.includes("English"),
+      };
+    } else if (typeof updates.sidama !== 'undefined' || typeof updates.amharic !== 'undefined') {
+      // Fallback fallback handle if separate flags were passed directly
+      updates.languages = {
+        sidama: updates.sidama === true || updates.sidama === "true",
+        amharic: updates.amharic === true || updates.amharic === "true",
+        english: updates.english === true || updates.english === "true",
+      };
+    }
+
+    // 4. Fire localized updates strictly through Mongoose validators
     const updatedJob = await Job.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+      id,
+      { $set: updates },
       { new: true, runValidators: true }
     );
 
     if (!updatedJob) {
-      return res.status(404).json({ success: false, message: "Target document registry link dropped." });
+      return res.status(404).json({ 
+        success: false, 
+        message: "Target vacancy document registry link dropped or missing from collection index." 
+      });
     }
 
-    return res.status(200).json(updatedJob);
+    return res.status(200).json({
+      success: true,
+      message: "Vacancy parameter specifications modified successfully.",
+      job: updatedJob
+    });
+
   } catch (error) {
     console.error("⛔ [HRMS Core] UpdateJob Exception:", error);
-    return res.status(500).json({ success: false, message: error.message });
+    
+    return res.status(500).json({ 
+      success: false, 
+      message: error.name === "ValidationError" 
+        ? `Schema Validation Failed: ${error.message}` 
+        : "Internal processing update exception handling your payload data structures." 
+    });
   }
 };
 
@@ -296,7 +300,7 @@ export const deleteJob = async (req, res) => {
 
 /**
  * @route   GET /api/jobs/single/:id
- * @desc    Get details for validation checks inside submission panels
+ * @desc    Get details for validation checks inside submission panels (Alias Fallback)
  * @access  Internal / Public
  */
 export const getSingleJob = async (req, res) => {
@@ -347,7 +351,6 @@ export const submitJobApplication = async (req, res) => {
       });
     }
 
-    // Proceed with creating database record in application collection schemas...
     return res.status(200).json({
       success: true,
       message: "Application gateway baseline check cleared. Processing packet transmission authorized.",

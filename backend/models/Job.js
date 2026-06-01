@@ -27,58 +27,6 @@ const jobSchema = new mongoose.Schema(
         "Information Technology"
       ]
     },
-<<<<<<< HEAD
-
-    department: {
-      type: String,
-      required: true,
-    },
-
-    description: {
-      type: String,
-      required: true,
-    },
-
-    requirements: {
-      type: String,
-      required: true,
-    },
-
-    education: {
-      type: String,
-      required: true,
-    },
-
-    cgpa: {
-      type: String,
-      required: true,
-    },
-
-    experience: {
-      type: String,
-      required: true,
-    },
-
-    positions: {
-      type: Number,
-      required: true,
-      min: [1, "Number of positions must be at least 1"],
-    },
-
-    salary: {
-      type: String,
-    },
-
-    deadline: {
-      type: Date,
-      required: true,
-    },
-
-    location: {
-      type: String,
-    },
-
-=======
     
     rankLevel: { 
       type: String, 
@@ -88,17 +36,27 @@ const jobSchema = new mongoose.Schema(
     salary: { 
       type: Number, 
       required: true 
-    }, // Storing as a number allows strict budget filtering
+    }, // Storing as a number allows strict administrative budget filtering
     
     positions: { 
       type: Number, 
       required: true, 
-      min: 1, 
+      min: [1, "Number of positions must be at least 1"], 
       default: 1 
     }, // Number of open seats
     
-    // Storing multiple acceptable qualifications as a text block 
-    // to match the bureau's extensive qualification listing
+    description: {
+      type: String,
+      required: true,
+      trim: true
+    }, // General description of the civil service posting
+
+    requirements: {
+      type: String,
+      required: true,
+      trim: true
+    }, // Broad operational responsibilities 
+    
     eligibleFields: { 
       type: String, 
       required: true 
@@ -109,13 +67,18 @@ const jobSchema = new mongoose.Schema(
       required: true 
     }, // e.g., "6 Years of experience in database administration"
     
+    cgpa: {
+      type: Number,
+      required: true,
+      default: 0
+    }, // Numeric assignment to allow automatic cutoff evaluations in submission gateways
+    
     requiresCOC: { 
       type: Boolean, 
       default: false 
-    }, // Certificate of Competency flag
+    }, // Certificate of Competency mandatory verification flag
     
     // Multilingual support requested by the bureau layout
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
     languages: {
       sidama: { type: Boolean, default: true },
       amharic: { type: Boolean, default: true },
@@ -127,7 +90,7 @@ const jobSchema = new mongoose.Schema(
       required: true, 
       enum: [5, 10], 
       default: 10 
-    }, // Level VII gets 5 days; Level VIII and above get 10 days per the document guidelines
+    }, // Level VII gets 5 days; Level VIII and above get 10 days per regional guidelines
     
     deadline: { 
       type: Date, 
@@ -156,12 +119,9 @@ jobSchema.virtual("isExpired").get(function () {
   return new Date() > this.deadline;
 });
 
-<<<<<<< HEAD
-export default Job;
-=======
+// Ensure virtuals are parsed cleanly when outputting JSON object payloads to the frontend
 jobSchema.set("toJSON", { virtuals: true });
 jobSchema.set("toObject", { virtuals: true });
 
 const Job = mongoose.model("Job", jobSchema);
 export default Job;
->>>>>>> 542e9efbcb964d96d65aa795afab0b9a5b468114
