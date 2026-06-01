@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Users, MessageCircle, Search, FileText, RefreshCw, Briefcase } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Users, MessageCircle, Search, FileText, RefreshCw, Briefcase } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast'; // Standardized modern toast controller
 
@@ -28,8 +27,6 @@ const StatCard = ({ title, value, subtext, icon: Icon, isTrend }) => (
 );
 
 function AdminPortal() {
-  const navigate = useNavigate();
-  
   // View Switchers
   const [activeTab, setActiveTab] = useState('applicants'); // 'applicants' | 'vacancies'
   
@@ -241,7 +238,7 @@ function AdminPortal() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'sidama_mesob_applicants.csv';
+    link.download = 'hawassa_pulse_applicants.csv';
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -254,7 +251,7 @@ function AdminPortal() {
         <div>
           <h1 className="text-2xl font-black text-white tracking-tight uppercase">Admin Control Room</h1>
           <div className="flex items-center gap-3 mt-1 text-xs font-medium">
-            <p className="text-zinc-400">Sidama Mesob Digitization Portal</p>
+            <p className="text-zinc-400">Hawassa Pulse Digitization Portal</p>
             <span className="text-zinc-700">&bull;</span>
             <button 
               onClick={() => verifyDatabasePipeline(false)}
@@ -378,16 +375,7 @@ function AdminPortal() {
         </div>
       ) : (
         <div className="space-y-4 animate-in fade-in duration-200">
-          {/* Action trigger placed directly in context */}
-          <div className="flex justify-end">
-            <button
-              onClick={() => navigate('/admin/create-job')}
-              className="bg-accentOrange hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg transition-all active:scale-95"
-            >
-              <Plus size={14} strokeWidth={3} /> Launch New Vacancy Channel
-            </button>
-          </div>
-          
+          {/* Legacy isolated "Add new Vacancy" button was fully purged from here */}
           <VacancyControlTab 
             jobsList={jobsList}
             onRefreshJobs={() => verifyDatabasePipeline(false)}

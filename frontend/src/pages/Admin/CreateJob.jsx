@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { 
   Briefcase, 
-  ArrowLeft, 
+  X, 
   Hash, 
   Building2, 
   TrendingUp, 
@@ -12,14 +12,15 @@ import {
   FileText, 
   Globe, 
   CheckCircle2, 
-  AlertCircle, 
+  AlertTriangle, 
   Loader2,
   ShieldAlert,
-  CalendarClock
+  CalendarClock,
+  MapPin,
+  Award
 } from "lucide-react";
 
-function CreateJob() {
-  // 1. Unified state structure matching strict backend schema requirements with zero data loss
+function CreateJobModal({ onClose, onCreationSuccess }) {
   const [formData, setFormData] = useState({
     title: "",
     jobCode: "",
@@ -27,8 +28,12 @@ function CreateJob() {
     rankLevel: "Level XIII",
     salary: "",
     positions: "1",
-    eligibleFields: "", // Holds extensive multi-major text blocks from mesob.docx
+    eligibleFields: "",
     experienceRequirements: "",
+    description: "",       
+    cgpa: "0.00",          
+    location: "MESOB Center, Hawassa", 
+    employmentType: "Public Service", 
     requiresCOC: false,
     sidama: true,
     amharic: true,
@@ -36,15 +41,34 @@ function CreateJob() {
     featuredOnHome: false,
   });
 
-  // UI Status tracking variables
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusMessage, setStatusMessage] = useState({ text: "", type: "" });
+  
+  // Real-world state-driven notification toast array system
+  const [toasts, setToasts] = useState([]);
 
-  // 🕒 Institutional lookahead preview calculation helper
+  // Lock background body scroll on mount
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
   const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(formData.rankLevel);
   const activeWindowDays = isHighRank ? 10 : 5;
 
-  // Input modifier interceptor
+  // Helper engine to spawn professional non-blocking toasts
+  const spawnToast = (title, message, type = "success") => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, title, message, type }]);
+    
+    // Auto-dismiss after 4 seconds
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    }, 4000);
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -53,23 +77,17 @@ function CreateJob() {
     }));
   };
 
-  // Direct return to admin desk configuration
-  const handleBackToDashboard = () => {
-    window.location.href = "/admin";
-  };
-
-  // 2. Form submission payload compilation
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setStatusMessage({ text: "", type: "" });
 
-    // Client-side guard rails for high-priority metadata rows
-    if (!formData.title.trim() || !formData.jobCode.trim() || !formData.eligibleFields.trim()) {
-      setStatusMessage({
-        text: "Validation Fault: Position Title, Unique Serial Code, and Educational Fields cannot be empty.",
-        type: "error",
-      });
+    // Frontend strict payload validation
+    if (!formData.title.trim() || !formData.jobCode.trim() || !formData.eligibleFields.trim() || !formData.description.trim()) {
+      spawnToast(
+        "Validation Fault",
+        "Required registry node parameters (Title, Serial Code, Fields, Description) are empty.",
+        "error"
+      );
       setIsSubmitting(false);
       return;
     }
@@ -84,7 +102,11 @@ function CreateJob() {
         positions: Number(formData.positions) || 1,
         eligibleFields: formData.eligibleFields.trim(),
         experienceRequirements: formData.experienceRequirements.trim(),
-        requiresCOC: formData.requiresCOC,
+        description: formData.description.trim(),
+        requirements: formData.experienceRequirements.trim(), 
+        cgpa: !isNaN(parseFloat(formData.cgpa)) ? parseFloat(parseFloat(formData.cgpa).toFixed(2)) : 0,
+        location: formData.location.trim(),
+        employmentType: formData.employmentType.trim(),
         languages: {
           sidama: formData.sidama,
           amharic: formData.amharic,
@@ -96,340 +118,420 @@ function CreateJob() {
       const response = await axios.post("http://localhost:5000/api/jobs", payload);
 
       if (response.data.success) {
-        setStatusMessage({
-          text: `Transaction Complete: ${response.data.message}`,
-          type: "success",
-        });
-
-        // Reset variables back to default baselines cleanly
-        setFormData({
-          title: "",
-          jobCode: "",
-          department: "Information Technology",
-          rankLevel: "Level XIII",
-          salary: "",
-          positions: "1",
-          eligibleFields: "",
-          experienceRequirements: "",
-          requiresCOC: false,
-          sidama: true,
-          amharic: true,
-          english: false,
-          featuredOnHome: false,
-        });
+        spawnToast(
+          "Transaction Complete",
+          `Vacancy successfully written into system archives. Code: ${formData.jobCode}`,
+          "success"
+        );
+        
+        // Delay form closing to let user witness the beautiful success toast
+        setTimeout(() => {
+          if (onCreationSuccess) onCreationSuccess();
+        }, 1200);
       }
     } catch (err) {
       console.error("Backend transmission error:", err);
-      setStatusMessage({
-        text: err.response?.data?.message || "Network Error: Unable to sync with the backend service.",
-        type: "error",
-      });
+      const backendErrorMessage = err.response?.data?.message || "Unable to sync payload data with server database node.";
+      spawnToast(
+        "Registry Access Error",
+        backendErrorMessage,
+        "error"
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#010409] text-zinc-100 font-sans p-4 sm:p-6 md:p-12 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-[#030712] border border-zinc-800/60 rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden">
-        
-        {/* Dynamic top visual indicator edge line */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400" />
-
-        <div className="p-6 sm:p-10">
-          
-          {/* Header Action Row */}
-          <header className="mb-8 border-b border-zinc-900 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-black tracking-tight uppercase text-zinc-100 flex items-center gap-3">
-                <Briefcase className="text-emerald-500 w-7 h-7" /> Deploy Civil Vacancy
-              </h1>
-              <p className="text-xs text-zinc-500 font-mono mt-1">
-                MANAGEMENT PLATFORM // SIDAMA MESOB INTEGRATED PORTAL REGISTRY
+    <>
+      {/* GLOBAL TOAST OVERLAY LAYER HUB (Renders top-right out of modal flow) */}
+      <div className="fixed top-6 right-6 z-[10000] flex flex-col gap-3 w-full max-w-sm pointer-events-none font-mono">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`pointer-events-auto p-4 rounded-xl border backdrop-blur-xl shadow-2xl flex items-start gap-3 transition-all duration-300 transform animate-[slideIn_0.25s_ease-out] ${
+              toast.type === "success"
+                ? "bg-[#022c22]/90 border-emerald-500/40 shadow-emerald-950/20"
+                : "bg-[#4c0519]/90 border-rose-500/40 shadow-rose-950/20"
+            }`}
+          >
+            {toast.type === "success" ? (
+              <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+            ) : (
+              <AlertTriangle size={16} className="text-rose-400 shrink-0 mt-0.5" />
+            )}
+            <div className="flex-1 min-w-0">
+              <span className={`text-[11px] font-black uppercase tracking-widest block ${
+                toast.type === "success" ? "text-emerald-300" : "text-rose-300"
+              }`}>
+                [{toast.title}]
+              </span>
+              <p className="text-[10px] text-zinc-300 leading-normal mt-1 font-sans">
+                {toast.message}
               </p>
             </div>
-            
             <button
-              type="button"
-              onClick={handleBackToDashboard}
-              className="group text-zinc-400 hover:text-white font-mono text-xs flex items-center gap-2 transition-all border border-zinc-800/80 hover:border-zinc-700 px-4 py-2.5 rounded-xl bg-zinc-950/60 shadow-inner"
+              onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
+              className="text-zinc-500 hover:text-zinc-300 p-0.5 transition-colors cursor-pointer"
             >
-              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" /> 
-              [RETURN_TO_ADMIN_PORTAL]
+              <X size={12} />
             </button>
-          </header>
+          </div>
+        ))}
+      </div>
 
-          {/* Transaction Status Logs Notification Banners */}
-          {statusMessage.text && (
-            <div className={`mb-6 p-4 rounded-xl border flex items-start gap-3 text-xs font-mono backdrop-blur-md ${
-              statusMessage.type === "success" 
-                ? "bg-emerald-950/30 border-emerald-500/20 text-emerald-400" 
-                : "bg-rose-950/30 border-rose-500/20 text-rose-400"
-            }`}>
-              {statusMessage.type === "success" ? <CheckCircle2 size={16} className="shrink-0" /> : <AlertCircle size={16} className="shrink-0" />}
-              <div>
-                <span className="font-bold block uppercase mb-0.5">
-                  {statusMessage.type === "success" ? "[NODE SYNC SUCCESSFUL]" : "[REGISTRY ACCESS EXCEPTION]"}
-                </span>
-                {statusMessage.text}
-              </div>
+      {/* CORE FORM MODAL OVERLAY */}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 selection:bg-emerald-500/20 animate-[fadeIn_0.2s_ease-out]">
+        <div className="w-full max-w-3xl my-auto bg-[#030712] border border-zinc-800/80 rounded-2xl shadow-[0_0_80px_-20px_rgba(16,185,129,0.1)] overflow-hidden flex flex-col max-h-[95vh]">
+          
+          {/* Top Decorative Border Strip */}
+          <div className="h-1 w-full bg-gradient-to-r from-emerald-600 via-indigo-500 to-blue-500 shrink-0" />
+
+          {/* Modal Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-[#050914] shrink-0">
+            <div>
+              <h2 className="text-sm font-black tracking-widest uppercase text-zinc-100 flex items-center gap-2 font-mono">
+                <Briefcase className="text-emerald-500 w-4 h-4" /> Deploy Civil Vacancy Node
+              </h2>
+              <p className="text-[9px] text-zinc-400 font-mono tracking-wider mt-0.5 uppercase">
+                Sidama Mesob Integrated Portal Registry
+              </p>
             </div>
-          )}
+            <button 
+              type="button"
+              onClick={onClose}
+              className="text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-950/80 border border-zinc-900 transition-colors cursor-pointer"
+            >
+              <X size={14} className="stroke-[2.5]" />
+            </button>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            
-            {/* Row 1: Core Identifiers */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Briefcase size={12} className="text-zinc-600" /> Vacancy Position Title
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="e.g., የሲስተም አድሚኒስትሬተር IV"
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl py-3 px-4 text-zinc-200 text-sm focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-zinc-700"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Hash size={12} className="text-zinc-600" /> Registry Serial Code (jobCode)
-                </label>
-                <input
-                  type="text"
-                  name="jobCode"
-                  value={formData.jobCode}
-                  onChange={handleChange}
-                  placeholder="e.g., ሲዳ/መሶብ-1.2.18-012"
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl py-3 px-4 text-zinc-200 text-sm font-mono focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-zinc-700"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Row 2: Structural Placement Specifications */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Building2 size={12} className="text-zinc-600" /> Director Department
-                </label>
-                <select
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl p-3 text-zinc-300 text-sm focus:outline-none focus:border-emerald-500/50 transition-all cursor-pointer"
-                >
-                  <option value="Information Technology">Information Technology</option>
-                  <option value="Human Resource Development Directorate">Human Resource Directorate</option>
-                  <option value="Planning & Budgeting">Planning & Budgeting</option>
-                  <option value="Public Relations">Public Relations</option>
-                  <option value="Technical Services">Technical Services</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <TrendingUp size={12} className="text-zinc-600" /> Civil Service Rank Level
-                </label>
-                <select
-                  name="rankLevel"
-                  value={formData.rankLevel}
-                  onChange={handleChange}
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl p-3 text-zinc-300 text-sm focus:outline-none focus:border-emerald-500/50 transition-all font-mono cursor-pointer"
-                >
-                  <option value="Level XIV">Level XIV</option>
-                  <option value="Level XIII">Level XIII</option>
-                  <option value="Level XII">Level XII</option>
-                  <option value="Level XI">Level XI</option>
-                  <option value="Level X">Level X</option>
-                  <option value="Level IX">Level IX</option>
-                  <option value="Level VIII">Level VIII</option>
-                  <option value="Level VII">Level VII</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <DollarSign size={12} className="text-zinc-600" /> Monthly Base Salary (ETB)
-                </label>
-                <input
-                  type="number"
-                  name="salary"
-                  value={formData.salary}
-                  onChange={handleChange}
-                  placeholder="e.g., 19464"
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl p-3 text-zinc-200 text-sm font-mono focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-zinc-700"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Row 3: Metrics Block with Integrated Expiration Deadline Monitor */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-4 bg-zinc-950 border border-zinc-900 rounded-xl">
-              <div>
-                <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <Users size={12} className="text-zinc-600" /> Positions Open / Allocation Count
-                </label>
-                <input
-                  type="number"
-                  name="positions"
-                  value={formData.positions}
-                  onChange={handleChange}
-                  min="1"
-                  className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl p-3 text-zinc-200 text-sm font-mono focus:outline-none focus:border-emerald-500/50 transition-all"
-                  required
-                />
-              </div>
-
-              <div>
-                <div className="text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <CalendarClock size={13} className="text-amber-500" /> Computed Institutional Target Window
+          {/* Main Form Body */}
+          <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-gradient-to-b from-[#030712] to-[#010409] custom-scrollbar">
+            <form id="modal-vacancy-form" onSubmit={handleSubmit} className="space-y-5">
+              
+              {/* Row 1: Position Title & Job Code */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Briefcase size={12} className="text-emerald-500" /> Vacancy Position Title
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="e.g., የሲስተም አድሚኒስትሬተር IV"
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs transition-all placeholder:text-zinc-600 outline-none"
+                    required
+                  />
                 </div>
-                <div className="bg-[#010409] border border-zinc-800/70 p-3 rounded-xl text-zinc-300 font-mono text-xs flex items-center justify-between h-[46px]">
-                  <span className="text-zinc-500">BACKEND AUTO-TIMELINE:</span>
-                  <span className={`font-black uppercase ${isHighRank ? "text-teal-400" : "text-amber-500"}`}>
-                    {activeWindowDays} Operational Days
-                  </span>
+
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Hash size={12} className="text-emerald-500" /> Registry Serial Code (jobCode)
+                  </label>
+                  <input
+                    type="text"
+                    name="jobCode"
+                    value={formData.jobCode}
+                    onChange={handleChange}
+                    placeholder="e.g., ሲዳ/መሶብ-1.2.18-012"
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                    required
+                  />
                 </div>
               </div>
-            </div>
 
-            {/* Row 4: Multi-Major Educational Alignment Block */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-zinc-400 text-xs font-black uppercase tracking-wider flex items-center gap-1.5">
-                  <GraduationCap size={14} className="text-zinc-500" /> Eligible Educational Qualification Backgrounds
-                </label>
-                <span className="text-[10px] font-mono text-zinc-600 uppercase">Supports multi-line field logs</span>
+              {/* Row 2: Department, Civil Rank, and Salary */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Building2 size={12} className="text-emerald-500" /> Department
+                  </label>
+                  <select
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all cursor-pointer outline-none"
+                  >
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Human Resource Development Directorate">Human Resource Directorate</option>
+                    <option value="Planning & Budgeting">Planning & Budgeting</option>
+                    <option value="Public Relations">Public Relations</option>
+                    <option value="Technical Services">Technical Services</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <TrendingUp size={12} className="text-emerald-500" /> Civil Service Rank
+                  </label>
+                  <select
+                    name="rankLevel"
+                    value={formData.rankLevel}
+                    onChange={handleChange}
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all font-mono cursor-pointer outline-none"
+                  >
+                    <option value="Level XIV">Level XIV</option>
+                    <option value="Level XIII">Level XIII</option>
+                    <option value="Level XII">Level XII</option>
+                    <option value="Level XI">Level XI</option>
+                    <option value="Level X">Level X</option>
+                    <option value="Level IX">Level IX</option>
+                    <option value="Level VIII">Level VIII</option>
+                    <option value="Level VII">Level VII</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <DollarSign size={12} className="text-emerald-500" /> Monthly Salary (ETB)
+                  </label>
+                  <input
+                    type="number"
+                    name="salary"
+                    value={formData.salary}
+                    onChange={handleChange}
+                    placeholder="e.g., 19464"
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                    required
+                  />
+                </div>
               </div>
-              <textarea
-                name="eligibleFields"
-                value={formData.eligibleFields}
-                onChange={handleChange}
-                rows="4"
-                placeholder="e.g., ኮምፒዉተር ሳይንስ፤ ሶፍትወር ኢንጂነሪንግ፤ ኢንፎርሜሽን ቴክኖሎጂ፤ ዳታ ቤዝ ማኔጅመንት..."
-                className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl py-3 px-4 text-zinc-200 text-sm leading-relaxed focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-zinc-800"
-                required
-              />
-            </div>
 
-            {/* Row 5: Exact Experience Text Block */}
-            <div>
-              <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <FileText size={13} className="text-zinc-500" /> Experience Terms & Specific Requirements
-              </label>
-              <textarea
-                name="experienceRequirements"
-                value={formData.experienceRequirements}
-                onChange={handleChange}
-                rows="3"
-                placeholder="e.g., 6 አመት የስራ ልምድ በዳታ ቤዝ አድሚኒስትሬተርነት የሰራ/ች..."
-                className="w-full bg-[#010409] border border-zinc-800/70 rounded-xl py-3 px-4 text-zinc-200 text-sm leading-relaxed focus:outline-none focus:border-emerald-500/50 transition-all placeholder:text-zinc-800"
-                required
-              />
-            </div>
+              {/* Row 3: Location, Employment Type & CGPA */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <MapPin size={12} className="text-emerald-500" /> Working Location
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                    required
+                  />
+                </div>
 
-            {/* Operational Gateway Certification Checkboxes Matrix */}
-            <div className="p-4 bg-zinc-950/40 border border-zinc-900/80 rounded-xl flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Briefcase size={12} className="text-emerald-500" /> Employment Category
+                  </label>
+                  <input
+                    type="text"
+                    name="employmentType"
+                    value={formData.employmentType}
+                    onChange={handleChange}
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Award size={12} className="text-emerald-500" /> Required CGPA Threshold
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0.00"
+                    max="4.00"
+                    name="cgpa"
+                    value={formData.cgpa}
+                    onChange={handleChange}
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Row 4: Positions Allocated & Window Timeline Counter */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-zinc-950/40 border border-zinc-900 rounded-xl">
+                <div>
+                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Users size={12} className="text-emerald-500" /> Allocated Open Positions
+                  </label>
+                  <input
+                    type="number"
+                    name="positions"
+                    value={formData.positions}
+                    onChange={handleChange}
+                    min="1"
+                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2 text-zinc-100 text-xs font-mono transition-all outline-none"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <div className="text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <CalendarClock size={13} className="text-indigo-400" /> Calculated Filing Window
+                  </div>
+                  <div className="bg-[#010409] border border-zinc-800 p-2 rounded-xl text-zinc-200 font-mono text-[11px] flex items-center justify-between h-[38px]">
+                    <span className="text-zinc-500 text-[10px] font-sans font-bold">SYSTEM TERM:</span>
+                    <span className={`font-black uppercase tracking-wide ${isHighRank ? "text-indigo-400" : "text-amber-400"}`}>
+                      {activeWindowDays} Operational Days
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 5: Detailed Job Description */}
+              <div>
+                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FileText size={13} className="text-emerald-500" /> Comprehensive Job Description
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="3"
+                  placeholder="Provide deep structural descriptions mapping specific workflows and unit obligations..."
+                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  required
+                />
+              </div>
+
+              {/* Row 6: Educational Backgrounds */}
+              <div>
+                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <GraduationCap size={14} className="text-emerald-500" /> Educational Qualifications & Fields
+                </label>
+                <textarea
+                  name="eligibleFields"
+                  value={formData.eligibleFields}
+                  onChange={handleChange}
+                  rows="2"
+                  placeholder="e.g., ኮምፒዉተር ሳይንስ፤ ሶፍትወር ኢንጂነሪንግ፤ ኢንፎርሜሽን ቴክኖሎጂ..."
+                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  required
+                />
+              </div>
+
+              {/* Row 7: Experience */}
+              <div>
+                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FileText size={13} className="text-emerald-500" /> Experience Terms & Specific Requirements (ተገላጊ ችሎታ)
+                </label>
+                <textarea
+                  name="experienceRequirements"
+                  value={formData.experienceRequirements}
+                  onChange={handleChange}
+                  rows="2"
+                  placeholder="e.g., 6 አመት የስራ ልምድ በዳታ ቤዝ..."
+                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  required
+                />
+              </div>
+
+              {/* COC Certificate Toggle */}
+              <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    name="requiresCOC"
+                    id="modalRequiresCOC"
+                    checked={formData.requiresCOC}
+                    onChange={handleChange}
+                    className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
+                  />
+                  <label htmlFor="modalRequiresCOC" className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide">
+                    Requires Active COC Qualification Certification
+                  </label>
+                </div>
+                <div className="text-[9px] text-zinc-400 font-mono flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded border border-zinc-800/60">
+                  <ShieldAlert size={11} className="text-indigo-400" /> Level VII Bypasses COC rules.
+                </div>
+              </div>
+
+              {/* Language Selection Matrix */}
+              <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl">
+                <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 flex items-center gap-1.5 mb-2.5">
+                  <Globe size={13} className="text-emerald-500/70" /> Language Fluency Requirements Matrix
+                </div>
+                <div className="flex flex-wrap gap-5 text-[11px] font-mono">
+                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                    <input
+                      type="checkbox"
+                      name="sidama"
+                      checked={formData.sidama}
+                      onChange={handleChange}
+                      className="accent-emerald-500 w-3.5 h-3.5"
+                    />
+                    SIDAMINGA
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                    <input
+                      type="checkbox"
+                      name="amharic"
+                      checked={formData.amharic}
+                      onChange={handleChange}
+                      className="accent-emerald-500 w-3.5 h-3.5"
+                    />
+                    AMHARIC REQUIRED
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                    <input
+                      type="checkbox"
+                      name="english"
+                      checked={formData.english}
+                      onChange={handleChange}
+                      className="accent-emerald-500 w-3.5 h-3.5"
+                    />
+                    ENGLISH FLUID
+                  </label>
+                </div>
+              </div>
+
+              {/* Pin Announcement Grid */}
+              <div className="flex items-center gap-2.5 py-1.5 border-t border-b border-zinc-900">
                 <input
                   type="checkbox"
-                  name="requiresCOC"
-                  id="requiresCOC"
-                  checked={formData.requiresCOC}
+                  name="featuredOnHome"
+                  id="modalFeaturedOnHome"
+                  checked={formData.featuredOnHome}
                   onChange={handleChange}
-                  className="accent-emerald-500 w-4 h-4 cursor-pointer"
+                  className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
                 />
-                <label htmlFor="requiresCOC" className="text-xs font-bold text-zinc-400 cursor-pointer select-none uppercase tracking-wide flex items-center gap-1">
-                  Requires Active COC Qualification Certification
+                <label htmlFor="modalFeaturedOnHome" className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide">
+                  Pin announcement to primary homepage highlights carousel grid
                 </label>
               </div>
-              
-              <div className="text-[10px] text-zinc-500 font-mono flex items-center gap-1 bg-zinc-900/60 px-2.5 py-1.5 rounded-lg border border-zinc-800/40">
-                <ShieldAlert size={12} className="text-amber-500" /> Level VII and below typically bypasses COC rules.
-              </div>
-            </div>
+            </form>
+          </div>
 
-            {/* Conversational Competency Selection Matrices */}
-            <div className="p-4 bg-zinc-950/40 border border-zinc-900/80 rounded-xl">
-              <div className="text-[10px] uppercase font-black tracking-widest text-zinc-500 flex items-center gap-1.5 mb-3">
-                <Globe size={14} className="text-emerald-500/70" /> Language Fluency Requirements Matrix
-              </div>
-              <div className="flex flex-wrap gap-6 text-xs font-mono">
-                <label className="flex items-center gap-2 cursor-pointer text-zinc-400 select-none">
-                  <input
-                    type="checkbox"
-                    name="sidama"
-                    checked={formData.sidama}
-                    onChange={handleChange}
-                    className="accent-emerald-500 w-3.5 h-3.5"
-                  />
-                  SIDAMINGA (DEFAULT)
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-zinc-400 select-none">
-                  <input
-                    type="checkbox"
-                    name="amharic"
-                    checked={formData.amharic}
-                    onChange={handleChange}
-                    className="accent-emerald-500 w-3.5 h-3.5"
-                  />
-                  AMHARIC REQUIRED
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer text-zinc-400 select-none">
-                  <input
-                    type="checkbox"
-                    name="english"
-                    checked={formData.english}
-                    onChange={handleChange}
-                    className="accent-emerald-500 w-3.5 h-3.5"
-                  />
-                  ENGLISH FLUID
-                </label>
-              </div>
-            </div>
+          {/* Modal Action Toolbar Footer */}
+          <div className="px-6 py-4 bg-[#050914] border-t border-zinc-900 flex justify-end gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-bold text-[10px] uppercase font-mono tracking-widest px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-40"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="modal-vacancy-form"
+              disabled={isSubmitting}
+              className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-900 text-white font-black text-[10px] uppercase tracking-widest px-5 py-2.5 rounded-xl transition-all border border-emerald-500/20 shadow-[0_4px_20px_rgba(16,185,129,0.15)] flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={12} className="animate-spin text-zinc-400" /> Committing Row...
+                </>
+              ) : (
+                "Publish Vacancy Posting"
+              )}
+            </button>
+          </div>
 
-            {/* Dynamic UI Flag: Homepage Pins */}
-            <div className="flex items-center gap-3 py-2 border-t border-b border-zinc-900">
-              <input
-                type="checkbox"
-                name="featuredOnHome"
-                id="featuredOnHome"
-                checked={formData.featuredOnHome}
-                onChange={handleChange}
-                className="accent-emerald-500 w-4 h-4 cursor-pointer"
-              />
-              <label htmlFor="featuredOnHome" className="text-xs font-bold text-zinc-400 cursor-pointer select-none uppercase tracking-wide">
-                Pin announcement to primary homepage highlights carousel grid
-              </label>
-            </div>
-
-            {/* Form Execution Node Actions Row */}
-            <div className="pt-4 flex justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full sm:w-auto min-w-[220px] flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-900 text-white font-black text-xs uppercase tracking-widest py-4 px-6 rounded-xl transition-all duration-200 disabled:cursor-not-allowed border border-emerald-500/20 shadow-[0_4px_25px_rgba(16,185,129,0.15)]"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin text-zinc-400" /> Committing Row...
-                  </>
-                ) : (
-                  "Publish Vacancy Posting"
-                )}
-              </button>
-            </div>
-
-          </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default CreateJob;
+export default CreateJobModal;

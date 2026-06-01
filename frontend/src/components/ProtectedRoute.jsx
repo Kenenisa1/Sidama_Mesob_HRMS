@@ -5,31 +5,39 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const token = localStorage.getItem("adminToken");
   const userString = localStorage.getItem("user");
 
-  // Clean wipe helper to prevent routing locks
-  const clearSessionAndRedirect = () => {
+  // Catch unpopulated, malformed, or missing authentication credentials instantly
+  if (!token || !userString || userString === "undefined") {
+    // Clean wipe corrupted states safely
     localStorage.removeItem("user");
     localStorage.removeItem("adminToken");
     return <Navigate to="/admin/login" replace />;
-  };
-
-  if (!token || !userString || userString === "undefined") {
-    return clearSessionAndRedirect();
   }
 
   try {
     const data = JSON.parse(userString);
-    // Deep scan payload formats to capture user parameters
+    
+    // Deep scan payload formats to safely extract user role configurations
     const userRole = data?.role || data?.user?.role || data?.admin?.role;
+    const normalizedRole = userRole?.trim().toUpperCase();
 
-    if (adminOnly && userRole?.toUpperCase() !== "ADMIN") {
-      console.warn("Access Denied: Required ADMIN role, but found:", userRole);
-      return clearSessionAndRedirect();
+    // REAL-WORLD FIX: Separate unauthorized entry from total session destruction
+    if (adminOnly && normalizedRole !== "ADMIN") {
+      console.warn("Access Denied: Required ADMIN privilege matrix, found role topology:", userRole);
+      
+      // Redirect them to their respective unauthorized or standard portal view instead of logging them out completely
+      return <Navigate to="/unauthorized" replace />;
     }
 
+    // Pass verification check successfully
     return children;
+    
   } catch (error) {
-    console.error("Session Parse Failure:", error);
-    return clearSessionAndRedirect();
+    console.error("Session Payload Parse Failure:", error);
+    
+    // Hard structural wipe fallback on severe data corruption
+    localStorage.removeItem("user");
+    localStorage.removeItem("adminToken");
+    return <Navigate to="/admin/login" replace />;
   }
 };
 
