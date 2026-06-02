@@ -1,19 +1,81 @@
- import React from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { CheckCircle2, AlertCircle, ChevronRight } from 'lucide-react';
+
+// Main Container Variants - Orchestrates children transitions on viewport entry
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15, // Cascades each section down smoothly on scroll
+    },
+  },
+};
+
+// Main Item Variants
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 60,
+      damping: 15,
+    },
+  },
+};
+
+// Inline List Item Variants (Eliminates broken absolute delays)
+const listItemVariants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { type: "spring", stiffness: 100, damping: 12 }
+  }
+};
+
+const hoverScaleVariants = {
+  hover: {
+    y: -4,
+    borderColor: "rgba(16, 185, 129, 0.25)", // Subtle glow on hover
+    transition: { type: "spring", stiffness: 300, damping: 20 },
+  },
+};
 
 export default function ApplicantGuide() {
   return (
-    <div className="space-y-12">
-      <div className="flex items-center gap-4">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ 
+        once: false,       // Allows re-triggering animations when scrolling back up/down
+        amount: 0.12       // Triggers when 12% of the element enters the viewport
+      }}
+      className="space-y-12"
+    >
+      {/* Animated Header Section */}
+      <motion.div 
+        variants={itemVariants}
+        className="flex items-center gap-4"
+      >
         <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
           <CheckCircle2 className="text-emerald-500" size={32} />
         </div>
         <h2 className="text-4xl font-black text-white uppercase tracking-tight">Applicant Guide</h2>
-      </div>
+      </motion.div>
 
       <div className="space-y-6">
         {/* Step 1 */}
-        <div className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-zinc-900 shadow-2xl">
+        <motion.div 
+          variants={itemVariants}
+          whileHover="hover"
+          layout
+          className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-zinc-900 shadow-2xl transition-colors duration-300"
+        >
           <div className="flex flex-col md:flex-row gap-8">
             <span className="bg-emerald-600 text-white text-xs font-black px-4 py-2 rounded-lg h-fit uppercase">Step 1</span>
             <div>
@@ -22,26 +84,38 @@ export default function ApplicantGuide() {
                 Navigate to the home page to view all available job openings at the Sidama Mesob Unity Center. 
                 Use the category filters to find roles that match your expertise.
               </p>
-               <ul className="space-y-3 mt-3">
-                  <li className="flex items-start gap-3 text-gray-300">
+              
+              {/* Animated Sub-list */}
+              <motion.ul 
+                variants={containerVariants} // Re-triggers cascading lines upon viewport entry
+                className="space-y-3 mt-5"
+              >
+                {[
+                  "Review the featured position and job requirements carefully",
+                  "Check if you meet the minimum qualifications (CGPA, education level, residency)",
+                  "Note the experience requirements and language proficiency needed"
+                ].map((text, idx) => (
+                  <motion.li 
+                    key={idx}
+                    variants={listItemVariants}
+                    className="flex items-start gap-3 text-gray-300"
+                  >
                     <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>Review the featured position and job requirements carefully</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-300">
-                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>Check if you meet the minimum qualifications (CGPA, education level, residency)</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-300">
-                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>Note the experience requirements and language proficiency needed</span>
-                  </li>
-                </ul>
+                    <span>{text}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Step 2 - Detailed Box */}
-        <div className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-emerald-500/10 shadow-2xl">
+        <motion.div 
+          variants={itemVariants}
+          whileHover="hover"
+          layout
+          className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-zinc-900 shadow-2xl transition-colors duration-300"
+        >
           <div className="flex flex-col md:flex-row gap-8">
             <span className="bg-emerald-600 text-white text-xs font-black px-4 py-2 rounded-lg h-fit uppercase">Step 2</span>
             <div className="flex-1 space-y-6">
@@ -53,24 +127,37 @@ export default function ApplicantGuide() {
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black/40 p-8 rounded-2xl border border-zinc-800">
+              {/* Document Grid with inherited scroll staging */}
+              <motion.div 
+                variants={containerVariants}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black/40 p-8 rounded-2xl border border-zinc-800"
+              >
                 <DocItem label="Curriculum Vitae (CV)" desc="A clear, updated PDF of your professional history." />
                 <DocItem label="Degree Certificate" desc="Scanned copies of your original transcripts or degree." />
                 <DocItem label="National ID / Fayda" desc="Your valid government digital identity card." />
                 <DocItem label="Experience Letter" desc="Proof of previous employment (if applicable)." />
-              </div>
-              <div className="p-5 rounded-xl bg-orange-500/5 border border-orange-500/20 flex gap-4 items-center">
+              </motion.div>
+
+              <motion.div 
+                variants={itemVariants}
+                className="p-5 rounded-xl bg-orange-500/5 border border-orange-500/20 flex gap-4 items-center"
+              >
                 <AlertCircle className="text-orange-500 flex-shrink-0" size={24} />
                 <p className="text-sm font-bold text-orange-400">
                   CRITICAL: All files must be under 5MB. We recommend using PDF compressors if your scans are too large.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Step 3 */}
-        <div className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-zinc-900 shadow-2xl">
+        <motion.div 
+          variants={itemVariants}
+          whileHover="hover"
+          layout
+          className="p-10 rounded-[2rem] bg-[#050c1a]/50 border border-zinc-900 shadow-2xl transition-colors duration-300"
+        >
           <div className="flex flex-col md:flex-row gap-8">
             <span className="bg-emerald-600 text-white text-xs font-black px-4 py-2 rounded-lg h-fit uppercase">Step 3</span>
             <div>
@@ -80,36 +167,45 @@ export default function ApplicantGuide() {
                 as priority is given to regional residents of Sidama.
               </p>
 
-              <ul className="space-y-3 mt-5">
-                  <li className="flex items-start gap-3 text-gray-300">
+              <motion.ul 
+                variants={containerVariants}
+                className="space-y-3 mt-5"
+              >
+                {[
+                  "Double-check all information for accuracy before submitting",
+                  "You will receive a confirmation email shortly after submission",
+                  "Keep your tracking ID for future reference"
+                ].map((text, idx) => (
+                  <motion.li 
+                    key={idx}
+                    variants={listItemVariants}
+                    className="flex items-start gap-3 text-gray-300"
+                  >
                     <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>Double-check all information for accuracy before submitting</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-300">
-                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>You will receive a confirmation email shortly after submission</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-gray-300">
-                    <ChevronRight className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span>Keep your tracking ID for future reference</span>
-                  </li>
-                </ul>
+                    <span>{text}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
+// Fixed Sub-Component using unified variants inheriting from parent scroll states
 function DocItem({ label, desc }) {
   return (
-    <div className="flex items-start gap-4">
+    <motion.div 
+      variants={itemVariants}
+      className="flex items-start gap-4"
+    >
       <CheckCircle2 className="text-emerald-500 mt-1" size={20} />
       <div>
         <p className="text-lg font-bold text-white">{label}</p>
         <p className="text-sm text-zinc-500">{desc}</p>
       </div>
-    </div>
+    </motion.div>
   );
 }

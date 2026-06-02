@@ -131,9 +131,9 @@ function JobList({ mode = "explore" }) {
                 </p>
               </div>
               
-              <div className="bg-zinc-950/80 border border-zinc-800 p-3 rounded-xl max-w-sm text-[11px] font-mono text-zinc-400 leading-relaxed">
-                💡 <strong className="text-zinc-200">የምዝገባ ቦታ፦</strong> ወልደአማኑኤል ስታዲየም አጠገብ፣ በአሮጌው ገበያ ወደ ውስጥ በሚወስደው መንገድ ላይ፣ በሲዳማ መሶብ የሰው ኃይል ልማት ዳይሬክቶሬት 4ኛ ፎቅ።
-              </div>
+              {/* <div className="bg-zinc-950/80 border border-zinc-800 p-3 rounded-xl max-w-sm text-[11px] font-mono text-zinc-400 leading-relaxed">
+                 <strong className="text-zinc-200">የምዝገባ ቦታ፦</strong> ወልደአማኑኤል ስታዲየም አጠገብ፣ በአሮጌው ገበያ ወደ ውስጥ በሚወስደው መንገድ ላይ፣ በሲዳማ መሶብ የሰው ኃይል ልማት ዳይሬክቶሬት 4ኛ ፎቅ።
+              </div> */}
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#000000] p-5 rounded-2xl border-2 border-zinc-800 shadow-xl">
