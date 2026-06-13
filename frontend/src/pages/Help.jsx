@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import ApplicantGuide from '../components/help/ApplicantGuide';
 import AdminGuide from '../components/help/AdminGuide';
 import { Users, UserCog, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Main Orchestration Container Variants
 const containerVariants = {
@@ -30,6 +31,7 @@ const itemVariants = {
 };
 
 const Help = () => {
+  const { t } = useTranslation();
   const applicantRef = useRef(null);
   const adminRef = useRef(null);
 
@@ -58,19 +60,19 @@ const Help = () => {
             className="text-[10px] md:text-xs font-bold text-emerald-500 uppercase tracking-[0.2em] mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10"
           >
             <Users size={14} />
-            Guidance & Support
+            {t('help.guidance')}
           </motion.span>
           <motion.h1 
             variants={itemVariants}
             className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight leading-tight"
           >
-            How Can We <span className="text-emerald-500">Help You?</span>
+            {t('help.howCanWe')} <span className="text-emerald-500">{t('help.helpYou')}</span>
           </motion.h1>
           <motion.p 
             variants={itemVariants}
             className="text-zinc-500 text-sm md:text-base max-w-2xl mx-auto"
           >
-            Everything you need to know about the SMUC HR Portal recruitment process.
+            {t('help.subtitle')}
           </motion.p>
         </section>
 
@@ -79,8 +81,8 @@ const Help = () => {
           variants={itemVariants}
           className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-20 md:mb-32"
         >
-          <NavButton onClick={() => scrollToSection(applicantRef)} icon={<Users />} label="For Applicants" color="emerald" />
-          <NavButton onClick={() => scrollToSection(adminRef)} icon={<UserCog />} label="For Administrators" color="orange" />
+          <NavButton onClick={() => scrollToSection(applicantRef)} icon={<Users />} label={t('help.forApplicants')} color="emerald" t={t} />
+          <NavButton onClick={() => scrollToSection(adminRef)} icon={<UserCog />} label={t('help.forAdmins')} color="orange" t={t} />
         </motion.div>
 
         {/* RENDER SECTIONS */}
@@ -103,10 +105,10 @@ const Help = () => {
           <div className="max-w-4xl mx-auto">
             <motion.div variants={itemVariants} className="text-center mb-10">
               <h3 className="text-2xl md:text-3xl font-black text-white mb-3 uppercase tracking-tight">
-                Direct <span className="text-emerald-500">Support</span>
+                {t('help.direct')} <span className="text-emerald-500">{t('help.support')}</span>
               </h3>
               <p className="text-zinc-500 text-sm md:text-base">
-                Reach out to the Sidama Mesob Unity Center HR team.
+                {t('help.reachOut')}
               </p>
             </motion.div>
 
@@ -123,7 +125,7 @@ const Help = () => {
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-emerald-500">
                   <Mail size={20} />
                 </div>
-                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">Email</h4>
+                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">{t('help.email')}</h4>
                 <p className="text-white font-bold text-xs md:text-sm break-all">support@smuc-hr.gov.et</p>
               </motion.a>
 
@@ -138,7 +140,7 @@ const Help = () => {
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-emerald-500">
                   <Phone size={20} />
                 </div>
-                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">Call</h4>
+                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">{t('help.call')}</h4>
                 <p className="text-white font-bold text-xs md:text-sm">+251 912 000 000</p>
               </motion.a>
 
@@ -152,9 +154,9 @@ const Help = () => {
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 text-emerald-500">
                   <MapPin size={20} />
                 </div>
-                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">Location</h4>
-                <p className="text-white font-bold text-xs md:text-sm leading-tight mb-4 text-center">
-                  MESOB Service Center<br/>Hawassa, Ethiopia
+                <h4 className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest mb-2">{t('help.location')}</h4>
+                <p className="text-white font-bold text-xs md:text-sm leading-tight mb-4 text-center whitespace-pre-line">
+                  {t('help.mesobCenter')}
                 </p>
                 <a 
                   href="https://www.google.com/maps/search/?api=1&query=MESOB+One-stop+Service+Center+Hawassa" 
@@ -162,7 +164,7 @@ const Help = () => {
                   rel="noopener noreferrer"
                   className="mt-auto inline-flex items-center gap-2 text-emerald-500 hover:text-emerald-400 font-bold text-[10px] uppercase tracking-tighter transition-colors group"
                 >
-                  Locate Map
+                  {t('help.locateMap')}
                   <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </a>
               </motion.div>
@@ -176,7 +178,7 @@ const Help = () => {
 }
 export default Help;
 
-const NavButton = ({ onClick, icon, label, color }) => {
+const NavButton = ({ onClick, icon, label, color, t }) => {
   const isEmerald = color === 'emerald';
   return (
     <motion.button 
@@ -197,7 +199,7 @@ const NavButton = ({ onClick, icon, label, color }) => {
         </div>
         <div>
           <h3 className="text-xl md:text-2xl font-black text-white">{label}</h3>
-          <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-0.5">Jump to guide</p>
+          <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mt-0.5">{t ? t('help.jumpToGuide') : "Jump to guide"}</p>
         </div>
       </div>
     </motion.button>
