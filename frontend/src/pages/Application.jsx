@@ -25,7 +25,7 @@ const Application = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // SECURITY ARCHITECTURE: Core structural mapping verification fallback tree
+  // Fallback for job ID
   const targetIdPointer = id || location.state?.targetedJobId;
   const fallbackPositionTitle = location.state?.positionTitle || "Specified Position";
 
@@ -36,7 +36,7 @@ const Application = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [direction, setDirection] = useState(0); 
   
-  // REAL-WORLD PRODUCTION STATE OBJECT: Holds all values expected by our backend Mongoose model
+  // Application form data
   const [formData, setFormData] = useState({
     jobId: targetIdPointer || "", 
     firstName: '',
@@ -69,7 +69,7 @@ const Application = () => {
     }
   }, [targetIdPointer]);
 
-  // Dynamic Pipeline Health and Integrity Verification Checklist
+  // Fetch job details and check deadline
   useEffect(() => {
     if (!targetIdPointer) {
       setPageLoading(false);
@@ -83,7 +83,7 @@ const Application = () => {
         const res = await axios.get(`http://localhost:5000/api/jobs/${targetIdPointer}`);
         setJob(res.data);
 
-        // Security Timestamp Validation: Block expired intakes immediately on the client side
+        // Check if the application deadline has passed
         if (res.data.deadline) {
           const expiredCheck = new Date() > new Date(res.data.deadline);
           setIsExpired(expiredCheck);
@@ -98,12 +98,12 @@ const Application = () => {
     verifyPipelineHealth();
   }, [targetIdPointer]);
 
-  // Track scroll position across structural step transitions for improved desktop accessibility
+  // Scroll to top on step change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
-  // Pure Minimalist High-Performance Animation Matrix Variants
+  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -160,32 +160,32 @@ const Application = () => {
 
   const updateData = (newData) => setFormData((prev) => ({ ...prev, ...newData }));
 
-  // SCREEN CHECKPOINT 1: Broken Link Interceptor Guard Block
+  // Missing Job ID view
   if (!targetIdPointer) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4 text-white animate-in fade-in duration-200">
         <div className="max-w-md w-full bg-black border border-zinc-900 rounded-[2rem] p-8 text-center shadow-2xl">
-          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-400">No Target Token Identified</h3>
-          <p className="text-zinc-600 text-xs mt-2 mb-6 leading-relaxed">The application route context parameters are missing required database indexing metrics.</p>
+          <h3 className="text-sm font-black uppercase tracking-wider text-zinc-400">Job Not Found</h3>
+          <p className="text-zinc-600 text-xs mt-2 mb-6 leading-relaxed">The link you followed is missing the required job information.</p>
           <button onClick={() => navigate("/joblist")} className="w-full bg-zinc-900 text-zinc-300 hover:text-white font-black text-xs uppercase py-4 rounded-xl border border-zinc-800 transition-colors">
-            Return to Vacancies Directory
+            Return to Job Listings
           </button>
         </div>
       </div>
     );
   }
 
-  // SCREEN CHECKPOINT 2: Skeletal Authentication Core Loading Gate
+  // Loading view
   if (pageLoading) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center gap-4 text-white">
         <Loader2 size={28} className="text-emerald-500 animate-spin" />
-        <p className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase">Verifying Pipeline Parameters...</p>
+        <p className="text-[10px] font-black tracking-[0.2em] text-zinc-600 uppercase">Loading Job Details...</p>
       </div>
     );
   }
 
-  // SCREEN CHECKPOINT 3: Time Compliance Enforcement Rejection Box
+  // Expired deadline view
   if (isExpired || !job) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center p-4 text-white animate-in fade-in duration-300">
@@ -193,16 +193,16 @@ const Application = () => {
           <div className="mx-auto w-12 h-12 bg-red-500/5 border border-red-500/10 rounded-xl flex items-center justify-center text-red-500/80 mb-5">
             <ShieldAlert size={22} />
           </div>
-          <h2 className="text-base font-black uppercase tracking-tight text-zinc-200">Intake Window Concluded</h2>
+          <h2 className="text-base font-black uppercase tracking-tight text-zinc-200">Application Closed</h2>
           <p className="text-zinc-500 text-xs mt-2 leading-relaxed">
-            The standard registration timeframe entry queue allocation limit for <span className="text-red-400 font-semibold">"{job?.title || fallbackPositionTitle}"</span> has closed.
+            The application deadline for <span className="text-red-400 font-semibold">"{job?.title || fallbackPositionTitle}"</span> has passed.
           </p>
           <div className="my-5 py-2.5 px-4 bg-zinc-950/80 rounded-xl inline-flex items-center gap-2 text-xs font-mono text-zinc-400 border border-zinc-900">
             <Calendar size={13} className="text-red-400/80" />
             Deadline: {job ? new Date(job.deadline).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : "Archived"}
           </div>
           <button onClick={() => navigate("/joblist")} className="w-full flex items-center justify-center gap-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-black text-xs uppercase py-4 rounded-xl border border-zinc-800 transition-all">
-            <ArrowLeft size={14} className="text-emerald-500" /> Return to Active Slots
+            <ArrowLeft size={14} className="text-emerald-500" /> Return to Job Listings
           </button>
         </div>
       </div>
@@ -212,12 +212,12 @@ const Application = () => {
   return (
     <div className="text-zinc-300 relative min-h-screen flex flex-col items-center py-12 px-4 md:px-8 overflow-x-hidden selection:bg-emerald-500/20 selection:text-emerald-400">
       
-      {/* Dynamic Subdued OLED Ambient Background Flare */}
+      {/* Ambient Background */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-950/10 blur-[130px] z-0 pointer-events-none" />
 
       <main className="relative z-10 w-full max-w-4xl">
         
-        {/* Entrance Identity Header Zone */}
+        {/* Header */}
         <motion.header 
           variants={containerVariants}
           initial="hidden"
@@ -225,7 +225,7 @@ const Application = () => {
           className="text-center mb-12 space-y-3"
         >
           <motion.span variants={itemVariants} className="text-[9px] font-mono font-black text-emerald-400 uppercase tracking-[0.3em] inline-block px-4 py-1.5 rounded-xl bg-emerald-950/30 border border-emerald-900/40">
-            Secure Enrollment Portal
+            Secure Application Portal
           </motion.span>
           <motion.h1 variants={itemVariants} className="text-2xl md:text-4xl font-black text-white tracking-tight leading-none uppercase">
             Applying for: <span className="text-emerald-500 lowercase first-letter:uppercase">{job.title}</span>
@@ -235,7 +235,7 @@ const Application = () => {
           </motion.p>
         </motion.header>
 
-        {/* Modular Progress Track Stepper Matrix */}
+        {/* Step Progress Bar */}
         <nav className="flex items-center justify-between mb-16 relative max-w-2xl mx-auto px-4">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
@@ -279,10 +279,10 @@ const Application = () => {
           ))}
         </nav>
 
-        {/* High-Contrast Pure Black Core Workspace Box */}
+        {/* Main Content Area */}
         <div className="w-full bg-black border border-zinc-800 p-6 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
           
-          {/* Subtle Security Layer Decorative Watermark */}
+          {/* Decorative Watermark */}
           <div className="absolute top-0 right-0 p-8 opacity-[0.015] pointer-events-none text-emerald-500">
              <ShieldCheck size={110} />
           </div>

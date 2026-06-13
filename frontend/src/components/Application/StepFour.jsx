@@ -19,13 +19,7 @@ export default function StepFour({ data, update, onPrev }) {
   const [trackingId, setTrackingId] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error(
-        "Session unauthenticated. Please authenticate to preserve transport integrity.",
-        { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
-      );
-    }
+    // Session token check removed since application submission is a public route
   }, []);
 
   const handleFileChange = (e, field) => {
@@ -34,14 +28,14 @@ export default function StepFour({ data, update, onPrev }) {
 
     if (file.size > 5 * 1024 * 1024) {
       return toast.error(
-        `${field.replace("File", "").toUpperCase()} exceeds the mandatory 5MB allocation cap.`,
+        `${field.replace("File", "").toUpperCase()} size is too large. Maximum allowed size is 5MB.`,
         { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
       );
     }
 
     if (field === "cvFile" && file.type !== "application/pdf") {
       return toast.error(
-        "Security Enforcement: CV must be submitted exclusively as a crisp PDF file.",
+        "Please upload your CV as a PDF file.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
@@ -50,14 +44,14 @@ export default function StepFour({ data, update, onPrev }) {
       const permittedVisualTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
       if (!permittedVisualTypes.includes(file.type)) {
         return toast.error(
-          "Unsupported file format. Please present clean images or PDF documents.",
+          "Unsupported file format. Please upload PDF, PNG, or JPG files.",
           { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
         );
       }
     }
 
     update({ [field]: file });
-    toast.success(`${file.name.substring(0, 15)}... vaulted clean`, {
+    toast.success(`${file.name.substring(0, 15)}... attached successfully`, {
       icon: "📎",
       style: { background: "#000", color: "#fff", border: "1px solid #10b981" },
     });
@@ -65,7 +59,7 @@ export default function StepFour({ data, update, onPrev }) {
 
   const removeFile = (field) => {
     update({ [field]: null });
-    toast("Asset flushed from local memory buffer", {
+    toast("File removed successfully", {
       icon: "🗑️",
       style: { background: "#000", color: "#a1a1aa", border: "1px solid #27272a" },
     });
@@ -74,14 +68,14 @@ export default function StepFour({ data, update, onPrev }) {
   const handleSubmit = async () => {
     if (!data.cvFile || !data.degreeFile || !data.idFile) {
       return toast.error(
-        "Missing mandatory assets: CV, University Degree, and National ID are required.",
+        "Please upload your CV, Degree Certificate, and Kebele ID to continue.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
 
     if (!data.jobId) {
       return toast.error(
-        "Pipeline failure: Missing target job deployment structural index.",
+        "Error: Job information is missing. Please restart your application.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
@@ -145,7 +139,7 @@ export default function StepFour({ data, update, onPrev }) {
         setShowSuccess(true);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Server connection interface failure protocol error";
+      const errorMsg = err.response?.data?.message || "Connection failed. Please check your internet and try again.";
       toast.error(errorMsg, {
         style: { background: "#000", color: "#fff", border: "1px solid #dc2626" },
       });
@@ -169,55 +163,55 @@ export default function StepFour({ data, update, onPrev }) {
           >
             <header className="space-y-2 border-b border-zinc-900 pb-5">
               <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight">
-                Document Vault
+                Upload Documents
               </h2>
               <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-2xl">
-                Please attach clean, unaltered digital copies of your official documents. Ensure all documents are clear, legible, and match your verified application profile details.
+                Please upload clear and readable copies of your documents. Make sure they match your application details.
               </p>
               <div className="text-[10px] text-zinc-600 font-mono tracking-wider uppercase pt-1">
-                Hawassa Pulse Digitization Portal Framework
+                Sidama MESOB HRMS Application Portal
               </div>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <UploadBox
                 label="Curriculum Vitae"
-                description="Your professional resume. Must contain updated contact channels."
+                description="Your professional resume with your current contact information."
                 file={data.cvFile}
                 onFileSelect={(e) => handleFileChange(e, "cvFile")}
                 onRemove={() => removeFile("cvFile")}
                 acceptType="application/pdf"
                 required
-                infoNote="PDF format only. Maximum allowed file capacity size: 5MB."
+                infoNote="PDF format only. Maximum size: 5MB."
               />
               <UploadBox
                 label="University Degree Certificate"
-                description="Official graduation certificate verifying completion of your field of study."
+                description="Your official degree or graduation certificate."
                 file={data.degreeFile}
                 onFileSelect={(e) => handleFileChange(e, "degreeFile")}
                 onRemove={() => removeFile("degreeFile")}
                 acceptType=".pdf,image/png,image/jpeg,image/jpg"
                 required
-                infoNote="Accepts clear document scans in PDF, PNG, or JPEG image standards (Max 5MB)."
+                infoNote="Accepts PDF, PNG, or JPG formats (Max 5MB)."
               />
               <UploadBox
                 label="Kebele ID/ መታወቅያ "
-                description="Your official digital or physical National ID (Fayda Card)."
+                description="Your official Kebele ID or National ID (Fayda Card)."
                 file={data.idFile}
                 onFileSelect={(e) => handleFileChange(e, "idFile")}
                 onRemove={() => removeFile("idFile")}
                 acceptType=".pdf,image/png,image/jpeg,image/jpg"
                 required
-                infoNote="Ensure both the card tracking number and your official photograph are cleanly visible."
+                infoNote="Make sure your ID number and photo are clearly visible."
               />
               <UploadBox
                 label="Supplemental Supporting Credentials"
-                description="Optional workspace recommendations, language proficiencies, or certificates."
+                description="Other optional certificates or recommendation letters."
                 file={data.certFile}
                 onFileSelect={(e) => handleFileChange(e, "certFile")}
                 onRemove={() => removeFile("certFile")}
                 acceptType=".pdf,image/png,image/jpeg,image/jpg"
-                infoNote="Optional upload slot. Combines up to 5MB total in PDF or image format configurations."
+                infoNote="Optional. Accepts PDF or images up to 5MB."
               />
             </div>
 
@@ -225,10 +219,10 @@ export default function StepFour({ data, update, onPrev }) {
               <ShieldCheck size={18} className="text-emerald-500 mt-0.5 shrink-0" />
               <div className="space-y-0.5">
                 <p className="text-[10px] font-mono font-black uppercase tracking-[0.2em]">
-                  Secure Pipeline Cryptographic Tunnel Active (TLS 1.3)
+                  Your Information is Secure
                 </p>
                 <p className="text-zinc-500 text-[11px]">
-                  All database transmission records are end-to-end encrypted and directly linked to your digital identity profile.
+                  All uploaded documents and information are safely stored and protected.
                 </p>
               </div>
             </div>
@@ -251,7 +245,7 @@ export default function StepFour({ data, update, onPrev }) {
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" /> Committing Stream...
+                    <Loader2 size={16} className="animate-spin" /> Submitting...
                   </>
                 ) : (
                   "Confirm & Submit Application"
@@ -280,15 +274,15 @@ function SuccessUI({ trackingId }) {
 
       <div className="space-y-3">
         <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">
-          Transmission <span className="text-emerald-500">Successful</span>
+          Application <span className="text-emerald-500">Submitted Successfully</span>
         </h2>
         <p className="text-zinc-400 text-sm max-w-md mx-auto leading-relaxed">
-          Your documentation pipeline packets have been stored securely. Human resource systems are scheduling structural manual validation reviews.
+          Your application has been received successfully. Our HR team will review your documents and contact you soon.
         </p>
         
         {trackingId && (
           <div className="mt-4 p-4 bg-zinc-950 border border-zinc-800 rounded-xl inline-block font-mono text-xs text-zinc-300">
-            TRACKING ID: <span className="text-emerald-400 font-black tracking-wider ml-1">{trackingId}</span>
+            APPLICATION ID: <span className="text-emerald-400 font-black tracking-wider ml-1">{trackingId}</span>
           </div>
         )}
       </div>

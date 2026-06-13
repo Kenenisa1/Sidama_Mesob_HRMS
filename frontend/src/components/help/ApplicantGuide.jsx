@@ -37,13 +37,7 @@ const listItemVariants = {
   }
 };
 
-const hoverScaleVariants = {
-  hover: {
-    y: -4,
-    borderColor: "rgba(16, 185, 129, 0.25)", // Subtle glow on hover
-    transition: { type: "spring", stiffness: 300, damping: 20 },
-  },
-};
+
 
 export default function ApplicantGuide() {
   return (

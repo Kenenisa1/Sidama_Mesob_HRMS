@@ -14,7 +14,7 @@ export default function StepOne({ data, update, onNext }) {
     if (data.fullName !== full) {
       update({ fullName: full });
     }
-  }, [data.firstName, data.middleName, data.lastName]);
+  }, [data.firstName, data.middleName, data.lastName, data.fullName, update]);
 
   const handleNameChange = (field, value) => {
     const stringOnly = value.replace(/[0-9]/g, '');
@@ -64,8 +64,8 @@ export default function StepOne({ data, update, onNext }) {
       className="space-y-8"
     >
       <div>
-        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Identity Credentials</h2>
-        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Register your legal identity for the SMUC HRMS portal.</p>
+        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Personal Information</h2>
+        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Please enter your personal details below.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -153,7 +153,7 @@ export default function StepOne({ data, update, onNext }) {
       </div>
 
       <button 
-        onClick={() => validate() ? onNext() : toast.error("Please correct the form entry values")}
+        onClick={() => validate() ? onNext() : toast.error("Please fill in all required fields correctly")}
         className="group relative w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all active:scale-[0.98]"
       >
         Continue to Residency
@@ -162,7 +162,7 @@ export default function StepOne({ data, update, onNext }) {
   );
 }
 
-// Extracted Shared Wrapper Layout Configuration 
+// Reusable Input Wrapper Component
 export function InputWrapper({ label, error, icon, children }) {
   return (
     <div className="space-y-2 relative w-full">

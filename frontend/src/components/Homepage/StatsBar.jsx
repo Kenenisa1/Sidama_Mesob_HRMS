@@ -13,7 +13,7 @@ const AnimatedNumber = ({ value, suffix = "" }) => {
 
     const targetInteger = parseInt(String(value).replace(/,/g, ""), 10) || 0;
     if (targetInteger === 0) {
-      setCurrent(0); // Reset to 0 cleanly if value drops
+      setTimeout(() => setCurrent(0), 0); // Reset to 0 cleanly if value drops
       return;
     }
 

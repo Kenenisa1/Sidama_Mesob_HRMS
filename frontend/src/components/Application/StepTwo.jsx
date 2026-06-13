@@ -28,8 +28,8 @@ export default function StepTwo({ data, update, onNext, onPrev }) {
       className="space-y-10"
     >
       <div>
-        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Residency Context</h2>
-        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Select your current residential location within the Sidama region.</p>
+        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Your Address</h2>
+        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Please provide your current address details in the Sidama region.</p>
       </div>
 
       <div className="space-y-8">

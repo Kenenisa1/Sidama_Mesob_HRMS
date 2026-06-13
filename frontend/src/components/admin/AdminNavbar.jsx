@@ -12,7 +12,7 @@ const AdminNavbar = ({ adminName, onLogout }) => {
       const data = JSON.parse(userString);
       const userRole = data?.role || data?.user?.role || data?.admin?.role;
       return userRole?.trim().toUpperCase();
-    } catch (e) {
+    } catch {
       return null;
     }
   };

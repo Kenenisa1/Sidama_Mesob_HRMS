@@ -43,10 +43,10 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Real-world state-driven notification toast array system
+  // Toast notifications
   const [toasts, setToasts] = useState([]);
 
-  // Lock background body scroll on mount
+  // Prevent background scrolling
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = "hidden";
@@ -58,7 +58,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
   const isHighRank = /Level\s+(VIII|IX|X|XI|XII|XIII|XIV)/i.test(formData.rankLevel);
   const activeWindowDays = isHighRank ? 10 : 5;
 
-  // Helper engine to spawn professional non-blocking toasts
+  // Toast helper
   const spawnToast = (title, message, type = "success") => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, title, message, type }]);
@@ -81,11 +81,11 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Frontend strict payload validation
+    // Validate form data
     if (!formData.title.trim() || !formData.jobCode.trim() || !formData.eligibleFields.trim() || !formData.description.trim()) {
       spawnToast(
-        "Validation Fault",
-        "Required registry node parameters (Title, Serial Code, Fields, Description) are empty.",
+        "Missing Information",
+        "Please fill in all required fields (Title, Job Code, Fields, Description).",
         "error"
       );
       setIsSubmitting(false);
@@ -119,21 +119,21 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
       if (response.data.success) {
         spawnToast(
-          "Transaction Complete",
-          `Vacancy successfully written into system archives. Code: ${formData.jobCode}`,
+          "Job Created",
+          `Job vacancy has been successfully published. Job Code: ${formData.jobCode}`,
           "success"
         );
         
-        // Delay form closing to let user witness the beautiful success toast
+        // Delay modal close to show success message
         setTimeout(() => {
           if (onCreationSuccess) onCreationSuccess();
         }, 1200);
       }
     } catch (err) {
       console.error("Backend transmission error:", err);
-      const backendErrorMessage = err.response?.data?.message || "Unable to sync payload data with server database node.";
+      const backendErrorMessage = err.response?.data?.message || "Failed to create job. Please try again.";
       spawnToast(
-        "Registry Access Error",
+        "Error Creating Job",
         backendErrorMessage,
         "error"
       );
@@ -144,7 +144,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
   return (
     <>
-      {/* GLOBAL TOAST OVERLAY LAYER HUB (Renders top-right out of modal flow) */}
+      {/* Toast Overlay */}
       <div className="fixed top-6 right-6 z-[10000] flex flex-col gap-3 w-full max-w-sm pointer-events-none font-mono">
         {toasts.map((toast) => (
           <div
@@ -180,21 +180,21 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
         ))}
       </div>
 
-      {/* CORE FORM MODAL OVERLAY */}
+      {/* Main Modal */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 selection:bg-emerald-500/20 animate-[fadeIn_0.2s_ease-out]">
         <div className="w-full max-w-3xl my-auto bg-[#030712] border border-zinc-800/80 rounded-2xl shadow-[0_0_80px_-20px_rgba(16,185,129,0.1)] overflow-hidden flex flex-col max-h-[95vh]">
           
-          {/* Top Decorative Border Strip */}
+          {/* Decorative border */}
           <div className="h-1 w-full bg-gradient-to-r from-emerald-600 via-indigo-500 to-blue-500 shrink-0" />
 
           {/* Modal Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-[#050914] shrink-0">
             <div>
               <h2 className="text-sm font-black tracking-widest uppercase text-zinc-100 flex items-center gap-2 font-mono">
-                <Briefcase className="text-emerald-500 w-4 h-4" /> Deploy Civil Vacancy Node
+                <Briefcase className="text-emerald-500 w-4 h-4" /> Create New Job Vacancy
               </h2>
               <p className="text-[9px] text-zinc-400 font-mono tracking-wider mt-0.5 uppercase">
-                Sidama Mesob Integrated Portal Registry
+                Sidama MESOB HRMS
               </p>
             </div>
             <button 
@@ -206,7 +206,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
             </button>
           </div>
 
-          {/* Main Form Body */}
+          {/* Form content */}
           <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-gradient-to-b from-[#030712] to-[#010409] custom-scrollbar">
             <form id="modal-vacancy-form" onSubmit={handleSubmit} className="space-y-5">
               
@@ -214,7 +214,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Briefcase size={12} className="text-emerald-500" /> Vacancy Position Title
+                    <Briefcase size={12} className="text-emerald-500" /> Job Title
                   </label>
                   <input
                     type="text"
@@ -229,7 +229,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Hash size={12} className="text-emerald-500" /> Registry Serial Code (jobCode)
+                    <Hash size={12} className="text-emerald-500" /> Job Code
                   </label>
                   <input
                     type="text"
@@ -265,7 +265,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <TrendingUp size={12} className="text-emerald-500" /> Civil Service Rank
+                    <TrendingUp size={12} className="text-emerald-500" /> Job Level / Rank
                   </label>
                   <select
                     name="rankLevel"
@@ -304,7 +304,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <MapPin size={12} className="text-emerald-500" /> Working Location
+                    <MapPin size={12} className="text-emerald-500" /> Work Location
                   </label>
                   <input
                     type="text"
@@ -332,7 +332,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Award size={12} className="text-emerald-500" /> Required CGPA Threshold
+                    <Award size={12} className="text-emerald-500" /> Minimum CGPA Required
                   </label>
                   <input
                     type="number"
@@ -352,7 +352,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-zinc-950/40 border border-zinc-900 rounded-xl">
                 <div>
                   <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Users size={12} className="text-emerald-500" /> Allocated Open Positions
+                    <Users size={12} className="text-emerald-500" /> Number of Positions
                   </label>
                   <input
                     type="number"
@@ -367,12 +367,12 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
                 <div>
                   <div className="text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <CalendarClock size={13} className="text-indigo-400" /> Calculated Filing Window
+                    <CalendarClock size={13} className="text-indigo-400" /> Application Window
                   </div>
                   <div className="bg-[#010409] border border-zinc-800 p-2 rounded-xl text-zinc-200 font-mono text-[11px] flex items-center justify-between h-[38px]">
-                    <span className="text-zinc-500 text-[10px] font-sans font-bold">SYSTEM TERM:</span>
+                    <span className="text-zinc-500 text-[10px] font-sans font-bold">DURATION:</span>
                     <span className={`font-black uppercase tracking-wide ${isHighRank ? "text-indigo-400" : "text-amber-400"}`}>
-                      {activeWindowDays} Operational Days
+                      {activeWindowDays} Days
                     </span>
                   </div>
                 </div>
@@ -381,14 +381,14 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               {/* Row 5: Detailed Job Description */}
               <div>
                 <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileText size={13} className="text-emerald-500" /> Comprehensive Job Description
+                  <FileText size={13} className="text-emerald-500" /> Job Description
                 </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   rows="3"
-                  placeholder="Provide deep structural descriptions mapping specific workflows and unit obligations..."
+                  placeholder="Provide a detailed description of the job responsibilities..."
                   className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
                   required
                 />
@@ -397,7 +397,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               {/* Row 6: Educational Backgrounds */}
               <div>
                 <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <GraduationCap size={14} className="text-emerald-500" /> Educational Qualifications & Fields
+                  <GraduationCap size={14} className="text-emerald-500" /> Required Education & Fields
                 </label>
                 <textarea
                   name="eligibleFields"
@@ -438,18 +438,18 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
                   />
                   <label htmlFor="modalRequiresCOC" className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide">
-                    Requires Active COC Qualification Certification
+                    Requires COC Certification
                   </label>
                 </div>
                 <div className="text-[9px] text-zinc-400 font-mono flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded border border-zinc-800/60">
-                  <ShieldAlert size={11} className="text-indigo-400" /> Level VII Bypasses COC rules.
+                  <ShieldAlert size={11} className="text-indigo-400" /> Level VII jobs do not require COC.
                 </div>
               </div>
 
               {/* Language Selection Matrix */}
               <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl">
                 <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 flex items-center gap-1.5 mb-2.5">
-                  <Globe size={13} className="text-emerald-500/70" /> Language Fluency Requirements Matrix
+                  <Globe size={13} className="text-emerald-500/70" /> Required Languages
                 </div>
                 <div className="flex flex-wrap gap-5 text-[11px] font-mono">
                   <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
@@ -460,7 +460,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                       onChange={handleChange}
                       className="accent-emerald-500 w-3.5 h-3.5"
                     />
-                    SIDAMINGA
+                    SIDAMU AFOO
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
                     <input
@@ -470,7 +470,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                       onChange={handleChange}
                       className="accent-emerald-500 w-3.5 h-3.5"
                     />
-                    AMHARIC REQUIRED
+                    AMHARIC
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
                     <input
@@ -480,12 +480,12 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                       onChange={handleChange}
                       className="accent-emerald-500 w-3.5 h-3.5"
                     />
-                    ENGLISH FLUID
+                    ENGLISH
                   </label>
                 </div>
               </div>
 
-              {/* Pin Announcement Grid */}
+              {/* Homepage feature option */}
               <div className="flex items-center gap-2.5 py-1.5 border-t border-b border-zinc-900">
                 <input
                   type="checkbox"
@@ -496,13 +496,13 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                   className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
                 />
                 <label htmlFor="modalFeaturedOnHome" className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide">
-                  Pin announcement to primary homepage highlights carousel grid
+                  Show this job on the homepage
                 </label>
               </div>
             </form>
           </div>
 
-          {/* Modal Action Toolbar Footer */}
+          {/* Modal Footer */}
           <div className="px-6 py-4 bg-[#050914] border-t border-zinc-900 flex justify-end gap-3 shrink-0">
             <button
               type="button"
@@ -520,7 +520,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 size={12} className="animate-spin text-zinc-400" /> Committing Row...
+                  <Loader2 size={12} className="animate-spin text-zinc-400" /> Publishing...
                 </>
               ) : (
                 "Publish Vacancy Posting"

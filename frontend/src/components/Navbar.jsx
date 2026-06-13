@@ -50,8 +50,10 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    setIsMenuOpen(false);
-    setIsLangOpen(false);
+    setTimeout(() => {
+      setIsMenuOpen(false);
+      setIsLangOpen(false);
+    }, 0);
   }, [location]);
 
   const navItems = [

@@ -38,11 +38,11 @@ const AdminLogin = () => {
 
         navigate("/admin/dashboard");
       } else {
-        toast.error(data.message || "Unauthorized Access");
+        toast.error(data.message || "Invalid Email or Password");
       }
     } catch (error) {
       console.error("Login Error:", error);
-      toast.error("Server Connection Failed");
+      toast.error("Connection Failed. Please check your internet connection.");
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +76,7 @@ const AdminLogin = () => {
             {/* Email Field */}
             <div className="space-y-2">
               <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
-                Admin Identifier
+                Email Address
               </label>
               <div className="relative">
                 <UserCircle
@@ -99,7 +99,7 @@ const AdminLogin = () => {
             {/* Password Field with Toggle */}
             <div className="space-y-2">
               <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
-                Security Key
+                Password
               </label>
               <div className="relative">
                 <Lock
@@ -134,14 +134,14 @@ const AdminLogin = () => {
                 <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  Initiate Authentication <ArrowRight size={16} />
+                  Login <ArrowRight size={16} />
                 </>
               )}
             </button>
           </form>
         </div>
         <p className="text-center mt-8 text-[9px] text-zinc-700 font-black uppercase tracking-widest">
-          System activity is being monitored and logged
+          Sidama MESOB HRMS Admin System
         </p>
       </motion.div>
     </div>

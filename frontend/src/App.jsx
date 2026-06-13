@@ -27,7 +27,7 @@ const AppContent = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  // Route Segmentation Conditions
+
   const isAdminRootPath = currentPath.startsWith("/admin");
   const isLoginPage = currentPath === "/admin/login";
   
@@ -37,7 +37,7 @@ const AppContent = () => {
   return (
     <div className="pt-[73px] lg:pt-[80px] min-h-screen flex flex-col bg-[#010409] text-white selection:bg-emerald-500/30">
       
-      {/* Dynamic Navbar Router Switch */}
+
       {shouldRenderPublicNavbar && <Navbar />}
       {shouldRenderAdminNavbar && <AdminNavbar />}
 
@@ -53,7 +53,7 @@ const AppContent = () => {
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           
-          {/* Detailed Dynamic Job Vacancy View Gateways */}
+          {/* Job Vacancy Routes */}
           <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/apply/:id" element={<Application />} /> 
           <Route path="/jobs/:id/apply" element={<Application />} />
@@ -63,10 +63,7 @@ const AppContent = () => {
              ========================================================= */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* ✅ FIX 1: Safe fallback interceptor. If an unauthenticated user or 
-            logged-out admin tries to target exactly "/admin", bounce them instantly 
-            to the clean credentials page instead of throwing a 404 template.
-          */}
+          {/* Redirect /admin to /admin/login for unauthenticated users */}
           <Route 
             path="/admin" 
             element={<Navigate to="/admin/login" replace />} 
@@ -89,7 +86,7 @@ const AppContent = () => {
             }
           />
 
-          {/* Fallback 404 Interceptor Route */}
+          {/* 404 Fallback Route */}
           <Route
             path="*"
             element={
