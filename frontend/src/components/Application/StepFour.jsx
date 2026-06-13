@@ -19,7 +19,7 @@ export default function StepFour({ data, update, onPrev }) {
   const [trackingId, setTrackingId] = useState("");
 
   useEffect(() => {
-    // Session token check removed since application submission is a public route
+    // Note: Authentication bypass intended. Applicant submission portal operates on a public tier.
   }, []);
 
   const handleFileChange = (e, field) => {
@@ -28,14 +28,14 @@ export default function StepFour({ data, update, onPrev }) {
 
     if (file.size > 5 * 1024 * 1024) {
       return toast.error(
-        `${field.replace("File", "").toUpperCase()} size is too large. Maximum allowed size is 5MB.`,
+        `Sidama MESOB Portal: ${field.replace("File", "").toUpperCase()} exceeds the 5MB size limit. Please compress your file.`,
         { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
       );
     }
 
     if (field === "cvFile" && file.type !== "application/pdf") {
       return toast.error(
-        "Please upload your CV as a PDF file.",
+        "Sidama MESOB HR: For standardized review, your CV must be in PDF format.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
@@ -44,14 +44,14 @@ export default function StepFour({ data, update, onPrev }) {
       const permittedVisualTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
       if (!permittedVisualTypes.includes(file.type)) {
         return toast.error(
-          "Unsupported file format. Please upload PDF, PNG, or JPG files.",
+          "Invalid Format: Our HR systems only accept PDF, PNG, or JPG credentials.",
           { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
         );
       }
     }
 
     update({ [field]: file });
-    toast.success(`${file.name.substring(0, 15)}... attached successfully`, {
+    toast.success(`${file.name.substring(0, 15)}... securely attached to your portfolio.`, {
       icon: "📎",
       style: { background: "#000", color: "#fff", border: "1px solid #10b981" },
     });
@@ -59,7 +59,7 @@ export default function StepFour({ data, update, onPrev }) {
 
   const removeFile = (field) => {
     update({ [field]: null });
-    toast("File removed successfully", {
+    toast("Document removed from your application.", {
       icon: "🗑️",
       style: { background: "#000", color: "#a1a1aa", border: "1px solid #27272a" },
     });
@@ -68,14 +68,14 @@ export default function StepFour({ data, update, onPrev }) {
   const handleSubmit = async () => {
     if (!data.cvFile || !data.degreeFile || !data.idFile) {
       return toast.error(
-        "Please upload your CV, Degree Certificate, and Kebele ID to continue.",
+        "Application Incomplete: Please upload your CV, Degree, and Kebele ID to proceed.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
 
     if (!data.jobId) {
       return toast.error(
-        "Error: Job information is missing. Please restart your application.",
+        "Session Error: We lost connection to the specified position. Please restart your application.",
         { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
       );
     }
@@ -139,7 +139,7 @@ export default function StepFour({ data, update, onPrev }) {
         setShowSuccess(true);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Connection failed. Please check your internet and try again.";
+      const errorMsg = err.response?.data?.message || "Transmission Failed: Unable to connect to Sidama MESOB servers. Check your internet.";
       toast.error(errorMsg, {
         style: { background: "#000", color: "#fff", border: "1px solid #dc2626" },
       });

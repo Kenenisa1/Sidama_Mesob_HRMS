@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Users, Timer, Award } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 // 🔢 ANIMATED COUNTER ENGINE
 const AnimatedNumber = ({ value, suffix = "" }) => {
@@ -71,6 +72,7 @@ const StatCard = ({ icon: Icon, value, label, suffix, glowColor, borderHover }) 
 
 // 📊 MAIN LIVE DATABASE STATS SYSTEM
 const StatsBar = () => {
+  const { t } = useTranslation();
   // Initialize states with pristine safety values before API updates complete
   const [dbStats, setDbStats] = useState({
     activeApplicants: 0,
@@ -115,7 +117,7 @@ const StatsBar = () => {
 
   const metricsData = [
     { 
-      label: "Active System Applicants", 
+      label: t('stats.activeApps'), 
       value: dbStats.activeApplicants, 
       suffix: "",
       icon: Users, 
@@ -123,7 +125,7 @@ const StatsBar = () => {
       borderHover: "hover:border-emerald-500/20 shadow-[0_0_50px_rgba(16,185,129,0.02)]"
     },
     { 
-      label: "Open Job Positions", 
+      label: t('stats.openJobs'), 
       value: dbStats.openPositions, 
       suffix: "",
       icon: Timer, 
@@ -131,7 +133,7 @@ const StatsBar = () => {
       borderHover: "hover:border-rose-500/20 shadow-[0_0_50px_rgba(244,63,94,0.02)]"
     },
     { 
-      label: "Platform Success Rate", 
+      label: t('stats.successRate'), 
       value: dbStats.successRate, 
       suffix: "%",
       icon: Award, 

@@ -6,6 +6,7 @@ import {
   Search, Cpu, UserCheck, Leaf, 
   Users, Mail, Phone, MousePointer2 
 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 
 const FadeIn = ({ children, delay = 0 }) => (
   <motion.div
@@ -19,6 +20,7 @@ const FadeIn = ({ children, delay = 0 }) => (
 );
 
 const SMUCLanding = () => {
+  const { t } = useTranslation();
   const coreValues = [
     { id: 1, title: "Cultural Pride", desc: "We celebrate and preserve Sidama language, traditions, and identity in all our operations.", icon: <Heart className="text-emerald-500" /> },
     { id: 2, title: "Transparency", desc: "Every hiring decision is data-driven, merit-based, and fully accountable to the public.", icon: <Search className="text-emerald-500" /> },
@@ -45,7 +47,7 @@ const SMUCLanding = () => {
             <Shield size={48} className="text-emerald-400 fill-emerald-400/10" />
           </motion.div>
           <FadeIn>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">About SMUC</h1>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">{t('about.title')}</h1>
             <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
               The Sidama Mesob Unity Center is transforming how government serves the people of 
               Sidama through <span className="text-emerald-400">digital innovation</span> and cultural preservation.
@@ -60,7 +62,7 @@ const SMUCLanding = () => {
               <div className="bg-emerald-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Target className="text-emerald-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-4">Our Mission</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">{t('about.mission')}</h2>
               <p className="text-slate-400 leading-relaxed">
                 To build a modern, efficient, and culturally-rooted public service system that empowers 
                 Sidama citizens through organized benefit and digital transformation.
@@ -73,7 +75,7 @@ const SMUCLanding = () => {
               <div className="bg-orange-500/20 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Globe className="text-orange-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-4">Our Vision</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">{t('about.vision')}</h2>
               <p className="text-slate-400 leading-relaxed">
                 A Sidama where every qualified citizen has equal access to government opportunities, 
                 where cultural heritage meets digital excellence.
@@ -85,7 +87,7 @@ const SMUCLanding = () => {
         {/* Core Values */}
         <section className="mb-24 bg-[#051510]/60 p-10 rounded-[2.5rem] border border-white/5">
           <FadeIn>
-            <h2 className="text-3xl font-bold text-white mb-2">Core Values</h2>
+            <h2 className="text-3xl font-bold text-white mb-2">{t('about.coreValues')}</h2>
             <p className="text-slate-500 mb-12">The principles that guide our work every day</p>
           </FadeIn>
           

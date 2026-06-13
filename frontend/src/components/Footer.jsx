@@ -10,8 +10,10 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   // Mobile Dropdown States
@@ -39,8 +41,7 @@ const Footer = () => {
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-gray-400 max-w-sm">
-                Empowering communities through digital transformation,
-                organized services, and modern regional development.
+                {t('footer.desc')}
               </p>
             </div>
 
@@ -51,10 +52,10 @@ const Footer = () => {
 
               <div>
                 <p className="text-sm font-semibold text-emerald-400">
-                  Paperless Initiative
+                  {t('footer.paperless')}
                 </p>
                 <p className="text-xs text-gray-500">
-                  Fast & Fully Digital
+                  {t('footer.fastDigital')}
                 </p>
               </div>
             </div>
@@ -63,14 +64,14 @@ const Footer = () => {
           {/* Quick Links */}
           <div className="md:mx-auto">
             <h3 className="text-white font-semibold mb-4 text-base">
-              Quick Links
+              {t('footer.quickLinks')}
             </h3>
 
             <div className="flex flex-col gap-3 text-sm">
               {[
-                { name: "Help Center", path: "/help" },
-                { name: "Privacy Policy", path: "/privacy" },
-                { name: "Terms & Conditions", path: "/terms" },
+                { name: t('footer.help'), path: "/help" },
+                { name: t('footer.privacy'), path: "/privacy" },
+                { name: t('footer.terms'), path: "/terms" },
               ].map((item, index) => (
                 <Link
                   key={index}
@@ -90,13 +91,13 @@ const Footer = () => {
           {/* Contact */}
           <div className="md:text-right">
             <h3 className="text-white font-semibold mb-4 text-base">
-              Contact
+              {t('footer.contact')}
             </h3>
 
             <div className="space-y-3 text-sm">
               <div className="flex md:justify-end items-center gap-2">
                 <MapPin size={16} className="text-emerald-400" />
-                <span>Hawassa, Ethiopia</span>
+                <span>{t('footer.location')}</span>
               </div>
 
               <div className="flex md:justify-end items-center gap-2">
@@ -133,8 +134,7 @@ const Footer = () => {
             {openBrand && (
               <div className="px-4 pb-4 space-y-4">
                 <p className="text-sm leading-6 text-gray-400">
-                  Empowering communities through digital transformation,
-                  organized services, and modern regional development.
+                  {t('footer.desc')}
                 </p>
 
                 <div className="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-2xl">
@@ -144,11 +144,11 @@ const Footer = () => {
 
                   <div>
                     <p className="text-sm font-semibold text-emerald-400">
-                      Paperless Initiative
+                      {t('footer.paperless')}
                     </p>
 
                     <p className="text-xs text-gray-500">
-                      Fast & Fully Digital
+                      {t('footer.fastDigital')}
                     </p>
                   </div>
                 </div>
@@ -162,16 +162,16 @@ const Footer = () => {
               onClick={() => setOpenLinks(!openLinks)}
               className="w-full flex items-center justify-between px-4 py-4 text-white font-semibold"
             >
-              Quick Links
+              {t('footer.quickLinks')}
               {openLinks ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
 
             {openLinks && (
               <div className="px-4 pb-4 flex flex-col gap-3 text-sm ">
                 {[
-                  { name: "Help Center", path: "/help" },
-                  { name: "Privacy Policy", path: "/privacy" },
-                  { name: "Terms & Conditions", path: "/terms" },
+                  { name: t('footer.help'), path: "/help" },
+                  { name: t('footer.privacy'), path: "/privacy" },
+                  { name: t('footer.terms'), path: "/terms" },
                 ].map((item, index) => (
                   <Link
                     key={index}
@@ -192,7 +192,7 @@ const Footer = () => {
               onClick={() => setOpenContact(!openContact)}
               className="w-full flex items-center justify-between px-4 py-4 text-white font-semibold"
             >
-              Contact
+              {t('footer.contact')}
               {openContact ? (
                 <ChevronUp size={18} />
               ) : (
@@ -204,7 +204,7 @@ const Footer = () => {
               <div className="px-4 pb-4 space-y-3 text-sm">
                 <div className="flex items-center gap-2">
                   <MapPin size={16} className="text-emerald-400" />
-                  <span>Hawassa, Ethiopia</span>
+                  <span>{t('footer.location')}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ const Footer = () => {
             <Zap size={15} className="text-yellow-400 fill-yellow-400" />
 
             <span className="bg-gradient-to-r from-gray-200 to-gray-500 bg-clip-text text-transparent font-medium">
-              Building a Modern Sidama
+              {t('footer.building')}
             </span>
           </div>
         </div>

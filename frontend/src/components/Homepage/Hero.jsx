@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+  const { t } = useTranslation();
+
   // 🎬 Animation Stagger Configurations
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -60,7 +63,7 @@ const Hero = () => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          SMUC Digitization Initiative 2026
+          {t('hero.badge')}
         </motion.div>
 
         {/* CATCHING TITLE STRUCTURE */}
@@ -68,9 +71,9 @@ const Hero = () => {
           variants={itemVariants}
           className="text-3xl sm:text-5xl md:text-6xl lg:text-[68px] font-black text-white mb-6 tracking-tighter leading-[1.05] uppercase"
         >
-          Sidama MESOB <br className="hidden sm:inline" />
+          {t('hero.title1')} <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-red-500">
-            HUMAN RESOURCE MS
+            {t('hero.title2')}
           </span>
         </motion.h1>
 
@@ -79,7 +82,7 @@ const Hero = () => {
           variants={itemVariants}
           className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-10 px-2 sm:px-6 leading-relaxed font-medium"
         >
-          Welcome to the Sidama Mesob Unity Center portal. We are bridging public enterprise infrastructure with elite tech talents to accelerate operational transparency and human resource optimization.
+          {t('hero.subtitle')}
         </motion.p>
 
         {/* CALL TO ACTIONS GRID */}
@@ -89,13 +92,13 @@ const Hero = () => {
         >
           <Link to="/joblist" className="w-full sm:w-auto">
             <button className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-3 transition-all duration-200 shadow-[0_0_40px_rgba(16,185,129,0.15)] active:scale-[0.98]">
-              Explore Open Roles <ArrowRight size={16} />
+              {t('hero.viewRoles')} <ArrowRight size={16} />
             </button>
           </Link>
 
           <Link to="/about" className="w-full sm:w-auto">
             <button className="w-full sm:w-auto bg-zinc-950 hover:bg-zinc-900 text-zinc-300 hover:text-white px-8 py-4 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition-all duration-200 border border-zinc-800 hover:border-zinc-700">
-              Learn More
+              {t('nav.about')}
             </button>
           </Link>
         </motion.div>

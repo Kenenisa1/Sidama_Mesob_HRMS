@@ -18,8 +18,10 @@ import {
   Layers,
   FileText
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function JobList({ mode = "explore" }) {
+  const { t } = useTranslation();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -124,10 +126,10 @@ function JobList({ mode = "explore" }) {
               <div>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight uppercase text-zinc-500 flex items-center gap-3">
                   <Building2 className="text-emerald-500 w-8 h-8 sm:w-9 sm:h-9 shrink-0" /> 
-                  <span className="text-white">Sidama Mesob Vacancies</span>
+                  <span className="text-white">{t('jobs.vacancies')}</span>
                 </h1>
                 <p className="text-xs sm:text-sm text-emerald-500/90 font-mono tracking-wider mt-2 uppercase font-bold">
-                  የሲዳማ መሶብ የሰራተኞች ቅጥር ዲጂታል መድረክ // HAWASSA, ETHIOPIA
+                  {t('jobs.subtitle')}
                 </p>
               </div>
               
@@ -141,7 +143,7 @@ function JobList({ mode = "explore" }) {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="የስራ መደብ፣ መታወቂያ ቁጥር ወይም የተማሩበትን የትምህርት መስክ እዚህ ይፈልጉ..."
+                  placeholder={t('jobs.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-[#090d16] border-2 border-zinc-800 rounded-xl py-3.5 pl-12 pr-4 text-zinc-100 text-base font-medium focus:outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-600 shadow-inner"
@@ -155,7 +157,7 @@ function JobList({ mode = "explore" }) {
                   onChange={(e) => setSelectedDepartment(e.target.value)}
                   className="w-full bg-[#090d16] border-2 border-zinc-800 rounded-xl py-3.5 pl-12 pr-10 text-zinc-200 text-base font-bold focus:outline-none focus:border-emerald-500 transition-all cursor-pointer appearance-none"
                 >
-                  <option value="All">ሁሉንም የስራ ክፍሎች (All Departments)</option>
+                  <option value="All">{t('jobs.allDepts')}</option>
                   <option value="Information Technology">Information Technology (አይቲ)</option>
                   <option value="Human Resource Development Directorate">Human Resource (የሰው ኃይል)</option>
                   <option value="Planning & Budgeting">Planning & Budgeting (ዕቅድና በጀት)</option>
@@ -172,9 +174,9 @@ function JobList({ mode = "explore" }) {
           <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white uppercase flex items-center gap-2">
-                  ክፍት የስራ መደቦች <span className="text-emerald-500 text-sm font-mono normal-case tracking-normal">/ Newest Openings</span>
+                  {t('jobs.newest')}
               </h2>
-              <p className="text-xs text-zinc-500 font-mono mt-1">LATEST ANNOUNCEMENTS EXCLUDING EXPIRED REGISTRIES</p>
+              <p className="text-xs text-zinc-500 font-mono mt-1">{t('jobs.latestDesc')}</p>
             </div>
           </div>
         )}
@@ -182,11 +184,11 @@ function JobList({ mode = "explore" }) {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-28 space-y-4">
             <div className="w-9 h-9 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-bold">የስራ ማስታወቂያዎች በመጫን ላይ ናቸው...</p>
+            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-bold">{t('jobs.loading')}</p>
           </div>
         ) : filteredJobs.length === 0 ? (
           <div className="text-center py-24 bg-[#000000] border-2 border-dashed border-zinc-800 rounded-2xl">
-            <p className="text-base text-zinc-400 font-mono font-bold uppercase tracking-wider">ያስገቡትን መስፈርት የሚያሟላ ንቁ የስራ መደብ አልተገኘም።</p>
+            <p className="text-base text-zinc-400 font-mono font-bold uppercase tracking-wider">{t('jobs.noMatch')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6">
@@ -218,7 +220,7 @@ function JobList({ mode = "explore" }) {
                             ? "bg-rose-950/40 text-rose-400 border-rose-900" 
                             : "bg-emerald-950/60 text-emerald-400 border-emerald-800"
                         }`}>
-                          መለያ ቁጥር፦ {job.jobCode || "PENDING"}
+                          {t('jobs.jobCode')}: {job.jobCode || "PENDING"}
                         </span>
                         <span className="text-zinc-800 hidden sm:inline">•</span>
                         <span className="text-zinc-300 font-bold text-xs sm:text-sm bg-zinc-900/60 border border-zinc-800 px-2.5 py-1 rounded-md">{job.department}</span>
@@ -233,15 +235,15 @@ function JobList({ mode = "explore" }) {
                         )}
                         {isExpired ? (
                           <span className="text-xs font-mono bg-rose-500/10 text-rose-400 px-3 py-1 rounded-md border border-rose-500/20 uppercase tracking-widest font-black animate-pulse flex items-center gap-1.5">
-                            <XCircle size={12} /> ጊዜው አልፏል / Closed
+                            <XCircle size={12} /> {t('jobs.closed')}
                           </span>
                         ) : job.featuredOnHome ? (
                           <span className="text-xs font-mono bg-amber-500/10 text-amber-400 px-3 py-1 rounded-md border border-amber-500/20 uppercase tracking-widest font-black flex items-center gap-1.5">
-                            <CheckCircle2 size={12} className="text-amber-500" /> አስቸኳይ / High Priority
+                            <CheckCircle2 size={12} className="text-amber-500" /> {t('jobs.priority')}
                           </span>
                         ) : (
                           <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-md border border-emerald-500/20 uppercase tracking-widest font-black flex items-center gap-1.5">
-                            <CheckCircle2 size={12} /> ክፍት / Active
+                            <CheckCircle2 size={12} /> {t('jobs.active')}
                           </span>
                         )}
                       </div>
@@ -266,7 +268,7 @@ function JobList({ mode = "explore" }) {
                     {/* Metadata Specification Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-[#05070c] p-4 rounded-xl border border-zinc-900/80 shadow-inner">
                       <div className="space-y-1">
-                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">የመደብ ደረጃ / Rank Level</span>
+                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">{t('jobs.rank')}</span>
                         <div className="flex items-center gap-2 text-zinc-200">
                           <TrendingUp size={16} className="text-zinc-600 shrink-0" />
                           <span className="text-base font-black font-mono">{job.rankLevel || "Not Assigned"}</span>
@@ -274,7 +276,7 @@ function JobList({ mode = "explore" }) {
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">ወርሃዊ ደመወዝ / Monthly Salary</span>
+                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">{t('jobs.salary')}</span>
                         <div className={`flex items-center gap-2 ${isExpired ? "text-zinc-500" : "text-emerald-400"}`}>
                           <DollarSign size={16} className="text-zinc-600 shrink-0" />
                           <span className="text-lg font-black font-mono tracking-wide">
@@ -284,7 +286,7 @@ function JobList({ mode = "explore" }) {
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">የክፍት ቦታ ብዛት / Open Slots</span>
+                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">{t('jobs.slots')}</span>
                         <div className="flex items-center gap-2 text-zinc-200">
                           <Clock size={16} className="text-zinc-600 shrink-0" />
                           <span className="text-base font-black font-mono">
@@ -294,7 +296,7 @@ function JobList({ mode = "explore" }) {
                       </div>
 
                       <div className="space-y-1">
-                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">የስራ ቦታ / Working Location</span>
+                        <span className="text-[11px] font-mono text-zinc-500 uppercase block font-black">{t('jobs.location')}</span>
                         <div className="flex items-center gap-2 text-zinc-300">
                           <MapPin size={16} className="text-zinc-600 shrink-0" />
                           <span className="text-sm font-bold">{job.location || "ሀዋሳ / Hawassa"}</span>
@@ -308,7 +310,7 @@ function JobList({ mode = "explore" }) {
                         <div className="md:col-span-2 space-y-2">
                           <h3 className="text-xs uppercase font-black tracking-wider text-zinc-400 flex items-center gap-2">
                             <Layers size={15} className={isExpired ? "text-zinc-600" : "text-emerald-500"} /> 
-                            <span>የትምህርት ደረጃ / Education Level</span>
+                            <span>{t('jobs.education')}</span>
                           </h3>
                           <div className="bg-[#04060a] border border-zinc-900/60 rounded-xl p-3 h-[72px] flex items-center shadow-inner">
                             <span className="text-sm font-black text-zinc-200">{job.educationLevel}</span>
@@ -319,7 +321,7 @@ function JobList({ mode = "explore" }) {
                       <div className={`${job.educationLevel ? "md:col-span-3" : "md:col-span-5"} space-y-2`}>
                         <h3 className="text-xs uppercase font-black tracking-wider text-zinc-400 flex items-center gap-2">
                           <GraduationCap size={16} className={isExpired ? "text-zinc-600" : "text-emerald-500"} /> 
-                          <span>የሚያስፈልግ የትምህርት ዝግጅት / Eligible Fields</span>
+                          <span>{t('jobs.fields')}</span>
                         </h3>
                         <div className="bg-[#04060a] border border-zinc-900/60 rounded-xl p-3 min-h-[72px] flex items-center shadow-inner">
                           {renderFieldTags(job.eligibleFields)}
@@ -331,7 +333,7 @@ function JobList({ mode = "explore" }) {
                     {job.experienceRequirements && (
                       <div className="text-sm text-zinc-200 bg-[#04060a] p-4 rounded-xl border border-zinc-900/80 leading-relaxed font-sans shadow-inner">
                         <span className="font-black text-zinc-400 block uppercase font-mono tracking-wider mb-2 text-xs border-b border-zinc-900 pb-1 flex items-center gap-1.5">
-                          <Briefcase size={13} className="text-zinc-500" /> የስራ ልምድ እና መስፈርቶች / Experience Terms:
+                          <Briefcase size={13} className="text-zinc-500" /> {t('jobs.experience')}
                         </span>
                         <p className={`font-medium whitespace-pre-wrap text-xs sm:text-sm ${isExpired ? "text-zinc-500" : "text-zinc-300"}`}>
                           {job.experienceRequirements}
@@ -343,7 +345,7 @@ function JobList({ mode = "explore" }) {
                     {job.additionalNotes && (
                       <div className="text-sm text-zinc-200 bg-[#04060a]/40 p-4 rounded-xl border border-dashed border-zinc-900 leading-relaxed font-sans shadow-inner">
                         <span className="font-black text-zinc-500 block uppercase font-mono tracking-wider mb-1 text-xs flex items-center gap-1.5">
-                          <FileText size={13} /> ማስታወሻ / Additional Directives:
+                          <FileText size={13} /> {t('jobs.notes')}
                         </span>
                         <p className="font-medium text-zinc-400 text-xs whitespace-pre-wrap">{job.additionalNotes}</p>
                       </div>
@@ -353,7 +355,7 @@ function JobList({ mode = "explore" }) {
                   {/* Footer Interactive Actions Section */}
                   <div className="border-t-2 border-zinc-900 pt-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#020305] -mx-6 -mb-6 p-6 mt-2">
                     <div className="space-y-1">
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase block font-black">የማመልከቻ ማቅረቢያ ቀነ-ገደብ / Application Deadline</span>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase block font-black">{t('jobs.deadline')}</span>
                       <div className="flex flex-wrap items-center gap-2 text-sm font-mono text-zinc-400">
                         <Calendar size={15} className="shrink-0 text-rose-500" />
                         <span className={`text-base font-black ${isExpired ? "text-rose-600 line-through" : "text-rose-400"}`}>
@@ -376,7 +378,7 @@ function JobList({ mode = "explore" }) {
                             ? "bg-zinc-950/40 text-zinc-600 border-zinc-900" 
                             : "bg-amber-500/10 border-amber-500/30 text-amber-400"
                         }`}>
-                          ሲ.ኦ.ሲ (COC) ያስፈልጋል
+                          {t('jobs.coc')}
                         </span>
                       )}
 
@@ -386,7 +388,7 @@ function JobList({ mode = "explore" }) {
                           type="button"
                           className="w-full md:w-auto bg-rose-950/20 text-rose-500/30 border border-rose-900/30 font-black text-sm uppercase tracking-wider py-3.5 px-6 rounded-xl text-center cursor-not-allowed font-mono"
                         >
-                          [ምዝገባው ተዘግቷል]
+                          [{t('jobs.registrationClosed')}]
                         </button>
                       ) : (
                         <button 
@@ -394,7 +396,7 @@ function JobList({ mode = "explore" }) {
                           onClick={() => window.location.href = `/jobs/${job._id}`}
                           className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm uppercase tracking-wider py-3.5 px-6 rounded-xl transition-all text-center shadow-[0_4px_20px_rgba(16,185,129,0.15)] hover:scale-[1.02] cursor-pointer"
                         >
-                          ሙሉውን ይመልከቱ  / view detail
+                          {t('jobs.viewDetail')}
                         </button>
                       )}
                     </div>
@@ -412,7 +414,7 @@ function JobList({ mode = "explore" }) {
               onClick={() => window.location.href = "/joblist"}
               className="group bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs uppercase tracking-widest py-4 px-10 rounded-xl shadow-[0_4px_25px_rgba(16,185,129,0.2)] flex items-center gap-2 transition-all hover:scale-[1.01] cursor-pointer"
             >
-              <span>ሁሉንም የስራ ማስታወቂያዎች ይመልከቱ</span>
+              <span>{t('jobs.viewAll')}</span>
               <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

@@ -11,6 +11,7 @@ import {
   HelpCircle,
   UserCheck,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,16 +19,15 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  const [selectedLang, setSelectedLang] = useState({
-    code: "GB",
-    name: "English",
-  });
+  const { t, i18n } = useTranslation();
 
   const languages = [
-    { code: "GB", name: "English" },
-    { code: "ET", name: "Amharic" },
-    { code: "ET", name: "Sidama" },
+    { code: "en", display: "GB", name: "English" },
+    { code: "am", display: "ET", name: "Amharic" },
+    { code: "sid", display: "ET", name: "Sidama" },
   ];
+
+  const currentLang = languages.find(l => l.code === (i18n.language || '').split('-')[0]) || languages[0];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,10 +57,10 @@ const Navbar = () => {
   }, [location]);
 
   const navItems = [
-    { path: "/", text: "Home", icon: <Home size={18} /> },
-    { path: "/joblist", text: "Open Roles", icon: <Briefcase size={18} /> },
-    { path: "/about", text: "About", icon: <Info size={18} /> },
-    { path: "/help", text: "Help", icon: <HelpCircle size={18} /> },
+    { path: "/", text: t('nav.home'), icon: <Home size={18} /> },
+    { path: "/joblist", text: t('nav.openRoles'), icon: <Briefcase size={18} /> },
+    { path: "/about", text: t('nav.about'), icon: <Info size={18} /> },
+    { path: "/help", text: t('nav.help'), icon: <HelpCircle size={18} /> },
   ];
 
   return (
@@ -134,7 +134,7 @@ const Navbar = () => {
                 className="flex items-center gap-2.5 border border-zinc-800 bg-black/40 px-3.5 py-2 rounded-xl cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/30 transition-all text-sm font-bold select-none text-zinc-300 focus:outline-none min-w-[130px]"
               >
                 <Globe size={16} className="text-zinc-500" />
-                <span>{selectedLang.name}</span>
+                <span>{currentLang.name}</span>
                 <ChevronDown
                   size={14}
                   className={`text-zinc-500 transition-transform duration-200 ${isLangOpen ? "rotate-180 text-emerald-400" : ""}`}
@@ -147,12 +147,12 @@ const Navbar = () => {
                     <button
                       key={lang.name}
                       onClick={() => {
-                        setSelectedLang(lang);
+                        i18n.changeLanguage(lang.code);
                         setIsLangOpen(false);
                       }}
                       className="w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-emerald-600 hover:text-white transition-colors"
                     >
-                      {lang.code} — {lang.name}
+                      {lang.display} — {lang.name}
                     </button>
                   ))}
                 </div>
@@ -163,7 +163,7 @@ const Navbar = () => {
             <Link to="/joblist" className="focus:outline-none">
               <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl font-black uppercase tracking-wider text-[10px] transition-all shadow-[0_0_30px_rgba(16,185,129,0.15)] active:scale-[0.98]">
                 <UserCheck size={14} />
-                Apply Now
+                {t('nav.applyNow')}
               </button>
             </Link>
           </div>
@@ -219,7 +219,7 @@ const Navbar = () => {
             <Link to="/joblist" className="w-full shrink-0">
               <button className="flex items-center justify-center gap-3 bg-emerald-600 text-white p-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg active:scale-[0.98] transition-all w-full">
                 <UserCheck size={18} />
-                Apply Now
+                {t('nav.applyNow')}
               </button>
             </Link>
 
@@ -232,7 +232,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-3">
                   <Globe size={18} />
                   <span className="font-bold text-sm text-zinc-200">
-                    {selectedLang.name}
+                    {currentLang.name}
                   </span>
                 </div>
                 <ChevronDown
@@ -247,13 +247,13 @@ const Navbar = () => {
                     <button
                       key={lang.name}
                       onClick={() => {
-                        setSelectedLang(lang);
+                        i18n.changeLanguage(lang.code);
                         setIsLangOpen(false);
                         setIsMenuOpen(false);
                       }}
                       className="p-4 text-left text-sm font-semibold text-zinc-400 hover:text-white hover:bg-emerald-600/10 transition-colors"
                     >
-                      {lang.code} — {lang.name}
+                      {lang.display} — {lang.name}
                     </button>
                   ))}
                 </div>
