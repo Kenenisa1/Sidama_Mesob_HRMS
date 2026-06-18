@@ -113,7 +113,7 @@ function JobDetail() {
           {/* Heading Section */}
           <div className="border-b border-[var(--nav-border)] pb-6 space-y-4">
             <div className="flex flex-wrap gap-2 items-center">
-              <span className="bg-emerald-950/30 font-mono font-black text-[10px] text-emerald-400 uppercase tracking-widest px-3 py-1.5 rounded-xl border border-emerald-900/50">
+              <span className="bg-emerald-50 dark:bg-emerald-950/30 font-mono font-black text-[10px] text-emerald-700 dark:text-emerald-400 uppercase tracking-widest px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
                 CODE: {job.jobCode || "UNASSIGNED"}
               </span>
               <span className="bg-[var(--color-surface)] text-[10px] font-black uppercase tracking-widest text-[var(--color-text-secondary)] px-3 py-1.5 rounded-xl border border-[var(--nav-border)]/60">
@@ -133,12 +133,12 @@ function JobDetail() {
 
           {/* High-Contrast Grid Parameters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-[var(--surface-soft)] border border-zinc-900 rounded-2xl p-4 flex items-center gap-4">
-              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-zinc-800">
+            <div className="bg-[var(--surface-soft)] border border-gray-200 dark:border-zinc-900 rounded-2xl p-4 flex items-center gap-4 shadow-sm dark:shadow-none">
+              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-gray-200 dark:border-zinc-800 shadow-inner dark:shadow-none">
                 <TrendingUp size={18} />
               </div>
               <div>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase font-black block tracking-widest">
+                <span className="text-[9px] font-mono text-gray-500 dark:text-zinc-600 uppercase font-black block tracking-widest">
                   የመደብ ደረጃ / Rank Level
                 </span>
                 <span className="text-sm font-black text-[var(--color-text-primary)] font-mono uppercase">
@@ -147,15 +147,15 @@ function JobDetail() {
               </div>
             </div>
 
-            <div className="bg-[var(--surface-soft)] border border-zinc-900 rounded-2xl p-4 flex items-center gap-4">
-              <div className="p-3 bg-[var(--bg)] rounded-xl text-emerald-500 border border-[var(--nav-border)]">
+            <div className="bg-[var(--surface-soft)] border border-gray-200 dark:border-zinc-900 rounded-2xl p-4 flex items-center gap-4 shadow-sm dark:shadow-none">
+              <div className="p-3 bg-[var(--bg)] rounded-xl text-emerald-600 dark:text-emerald-500 border border-[var(--nav-border)] shadow-inner dark:shadow-none">
                 <DollarSign size={18} />
               </div>
               <div>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase font-black block tracking-widest">
+                <span className="text-[9px] font-mono text-gray-500 dark:text-zinc-600 uppercase font-black block tracking-widest">
                   ወርሃዊ ደመወዝ / Salary
                 </span>
-                <span className="text-base font-black text-emerald-400 font-mono">
+                <span className="text-base font-black text-emerald-600 dark:text-emerald-400 font-mono">
                   {job.salary
                     ? `${job.salary.toLocaleString()} ETB`
                     : "Civil Scale Appraised"}
@@ -163,12 +163,12 @@ function JobDetail() {
               </div>
             </div>
 
-            <div className="bg-[var(--surface-soft)] border border-zinc-900 rounded-2xl p-4 flex items-center gap-4">
-              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-zinc-800">
+            <div className="bg-[var(--surface-soft)] border border-gray-200 dark:border-zinc-900 rounded-2xl p-4 flex items-center gap-4 shadow-sm dark:shadow-none">
+              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-gray-200 dark:border-zinc-800 shadow-inner dark:shadow-none">
                 <Clock size={18} />
               </div>
               <div>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase font-black block tracking-widest">
+                <span className="text-[9px] font-mono text-gray-500 dark:text-zinc-600 uppercase font-black block tracking-widest">
                   የክፍት ቦታ ብዛት / Slots
                 </span>
                 <span className="text-sm font-black text-[var(--color-text-primary)]">
@@ -178,15 +178,15 @@ function JobDetail() {
               </div>
             </div>
 
-            <div className="bg-[var(--surface-soft)] border border-zinc-900 rounded-2xl p-4 flex items-center gap-4">
-              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-zinc-800">
+            <div className="bg-[var(--surface-soft)] border border-gray-200 dark:border-zinc-900 rounded-2xl p-4 flex items-center gap-4 shadow-sm dark:shadow-none">
+              <div className="p-3 bg-[var(--bg)] rounded-xl text-[var(--color-text-secondary)] border border-gray-200 dark:border-zinc-800 shadow-inner dark:shadow-none">
                 <MapPin size={18} />
               </div>
               <div>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase font-black block tracking-widest">
+                <span className="text-[9px] font-mono text-gray-500 dark:text-zinc-600 uppercase font-black block tracking-widest">
                   የስራ ቦታ / Location
                 </span>
-                <span className="text-sm font-bold text-zinc-400">
+                <span className="text-sm font-bold text-gray-600 dark:text-zinc-400">
                   {job.location || "ሀዋሳ / Hawassa"}
                 </span>
               </div>
@@ -195,11 +195,11 @@ function JobDetail() {
 
           {/* Educational Qualifications Requirements */}
           <div className="space-y-3">
-            <h3 className="text-[10px] uppercase font-black tracking-widest text-zinc-500 flex items-center gap-2 ml-1">
+            <h3 className="text-[10px] uppercase font-black tracking-widest text-gray-500 dark:text-zinc-500 flex items-center gap-2 ml-1">
               <GraduationCap size={15} className="text-emerald-500" />
               <span>የሚያስፈልግ የትምህርት ዝግጅት / Eligible Fields</span>
             </h3>
-            <div className="bg-[var(--surface-soft)] border border-zinc-900 rounded-2xl p-5">
+            <div className="bg-[var(--surface-soft)] border border-gray-200 dark:border-zinc-900 rounded-2xl p-5 shadow-inner dark:shadow-none">
               <p className="text-sm font-medium text-[var(--color-text-secondary)] whitespace-pre-line leading-relaxed">
                 {job.eligibleFields}
               </p>
@@ -209,12 +209,12 @@ function JobDetail() {
           {/* Experience Terms Conditions */}
           {job.experienceRequirements && (
             <div className="space-y-3">
-              <h3 className="text-[10px] uppercase font-black tracking-widest text-zinc-500 flex items-center gap-2 ml-1">
+              <h3 className="text-[10px] uppercase font-black tracking-widest text-gray-500 dark:text-zinc-500 flex items-center gap-2 ml-1">
                 <FileText size={15} className="text-emerald-500" />
                 <span>ተፈላጊ ችሎታ እና የስራ ልምድ / Experience Terms</span>
               </h3>
-              <div className="bg-[var(--color-surface)] border border-[var(--nav-border)] rounded-2xl p-5">
-                <p className="text-sm font-medium text-zinc-400 leading-relaxed whitespace-pre-line">
+              <div className="bg-[var(--color-surface)] border border-[var(--nav-border)] rounded-2xl p-5 shadow-inner dark:shadow-none">
+                <p className="text-sm font-medium text-gray-600 dark:text-zinc-400 leading-relaxed whitespace-pre-line">
                   {job.experienceRequirements}
                 </p>
               </div>
@@ -247,11 +247,11 @@ function JobDetail() {
           {/* Dynamic Action Trigger Zone */}
           <div className="border-t border-[var(--nav-border)] pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-[var(--color-surface)] -mx-6 -mb-6 p-6 sm:p-8 sm:-mx-10 sm:-mb-10 rounded-b-[2.3rem]">
             <div className="space-y-1 max-w-md">
-              <div className="flex items-center gap-1.5 text-[9px] font-mono font-black text-zinc-600 uppercase tracking-widest">
+              <div className="flex items-center gap-1.5 text-[9px] font-mono font-black text-gray-500 dark:text-zinc-600 uppercase tracking-widest">
                 <HelpCircle size={12} />
                 <span>ምዝገባ ከመጀመርዎ በፊት</span>
               </div>
-              <p className="text-[11px] text-zinc-500 leading-relaxed">
+              <p className="text-[11px] text-gray-500 dark:text-zinc-500 leading-relaxed">
                 እባክዎ የምስክር ወረቀቶችዎን (Degree, COC ሰርተፊኬት ካለዎት፣ እና የታደሰ መታወቂያ)
                 በፒዲኤፍ (PDF) ወይም በምስል ቅርጸት ያዘጋጁ።
               </p>

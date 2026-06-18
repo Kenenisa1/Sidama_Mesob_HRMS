@@ -136,8 +136,8 @@ function JobList({ mode = "explore" }) {
             <header className="border-b-2 border-[var(--nav-border)] pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight uppercase text-[var(--color-text-secondary)] flex items-center gap-3">
-                  <Building2 className="text-emerald-500 w-8 h-8 sm:w-9 sm:h-9 shrink-0" />
-                  <span className="text-[var(--color-text-primary)]">
+                  <Building2 className="text-white w-8 h-8 sm:w-9 sm:h-9 shrink-0" />
+                  <span className="text-white">
                     {t("jobs.vacancies")}
                   </span>
                 </h1>
@@ -231,8 +231,8 @@ function JobList({ mode = "explore" }) {
                   key={job._id}
                   className={`border-2 rounded-2xl p-6 sm:p-8 transition-all duration-200 group flex flex-col justify-between gap-6 relative overflow-hidden shadow-2xl ${
                     isExpired
-                      ? "border-rose-950 bg-[var(--color-surface)] hover:border-rose-900/80"
-                      : "bg-[var(--color-surface)] border-[var(--nav-border)] hover:border-zinc-700/90"
+                      ? "border-rose-200 dark:border-rose-950 bg-[var(--color-surface)] hover:border-rose-300 dark:hover:border-rose-900/80"
+                      : "bg-[var(--color-surface)] border-[var(--nav-border)] hover:border-emerald-200 dark:hover:border-zinc-700/90 hover:shadow-emerald-500/5 dark:hover:shadow-none"
                   }`}
                 >
                   {/* Decorative Accent Strip */}
@@ -251,8 +251,8 @@ function JobList({ mode = "explore" }) {
                         <span
                           className={`font-black px-3 py-1 rounded-md border text-xs sm:text-sm ${
                             isExpired
-                              ? "bg-rose-950/40 text-rose-400 border-rose-900"
-                              : "bg-emerald-950/60 text-emerald-400 border-emerald-800"
+                              ? "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900"
+                              : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
                           }`}
                         >
                           {t("jobs.jobCode")}: {job.jobCode || "PENDING"}
@@ -298,7 +298,7 @@ function JobList({ mode = "explore" }) {
                         className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors leading-tight uppercase ${
                           isExpired
                             ? "text-[var(--color-text-secondary)] line-through decoration-[var(--nav-border)]"
-                            : "text-[var(--color-text-primary)] group-hover:text-emerald-400"
+                            : "text-[var(--color-text-primary)] group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
                         }`}
                       >
                         {job.title}
@@ -359,7 +359,7 @@ function JobList({ mode = "explore" }) {
                         <div className="flex items-center gap-2 text-[var(--color-text-secondary)]">
                           <MapPin
                             size={16}
-                            className="text-zinc-600 shrink-0"
+                            className="text-[var(--color-text-secondary)] shrink-0"
                           />
                           <span className="text-sm font-bold">
                             {job.location || "ሀዋሳ / Hawassa"}
@@ -394,7 +394,7 @@ function JobList({ mode = "explore" }) {
                       <div
                         className={`${job.educationLevel ? "md:col-span-3" : "md:col-span-5"} space-y-2`}
                       >
-                        <h3 className="text-xs uppercase font-black tracking-wider text-zinc-400 flex items-center gap-2">
+                        <h3 className="text-xs uppercase font-black tracking-wider text-[var(--color-text-secondary)] flex items-center gap-2">
                           <GraduationCap
                             size={16}
                             className={
@@ -460,7 +460,7 @@ function JobList({ mode = "explore" }) {
                           className={`text-xs border px-2 py-0.5 rounded font-sans font-bold ${
                             isExpired
                               ? "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--nav-border)]"
-                              : "bg-rose-950/40 text-rose-400 border-rose-900"
+                              : "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900"
                           }`}
                         >
                           {getWindowDaysDisplay(job.rankLevel)}
@@ -485,7 +485,7 @@ function JobList({ mode = "explore" }) {
                         <button
                           disabled
                           type="button"
-                          className="w-full md:w-auto bg-rose-950/20 text-rose-500/30 border border-rose-900/30 font-black text-sm uppercase tracking-wider py-3.5 px-6 rounded-xl text-center cursor-not-allowed font-mono"
+                          className="w-full md:w-auto bg-rose-50 dark:bg-rose-950/20 text-rose-400 dark:text-rose-500/30 border border-rose-200 dark:border-rose-900/30 font-black text-sm uppercase tracking-wider py-3.5 px-6 rounded-xl text-center cursor-not-allowed font-mono"
                         >
                           [{t("jobs.registrationClosed")}]
                         </button>

@@ -245,7 +245,7 @@ const Application = () => {
   return (
     <div className="relative min-h-screen flex flex-col items-center py-12 px-4 md:px-8 overflow-x-hidden selection:bg-emerald-500/20 selection:text-emerald-400 bg-[var(--bg)] text-[var(--color-text-secondary)]">
       {/* Ambient Background */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-950/10 blur-[130px] z-0 pointer-events-none" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-emerald-500/10 dark:bg-emerald-950/10 blur-[130px] z-0 pointer-events-none" />
 
       <main className="relative z-10 w-full max-w-4xl">
         {/* Header */}
@@ -257,7 +257,7 @@ const Application = () => {
         >
           <motion.span
             variants={itemVariants}
-            className="text-[9px] font-mono font-black text-emerald-400 uppercase tracking-[0.3em] inline-block px-4 py-1.5 rounded-xl bg-emerald-950/30 border border-emerald-900/40"
+            className="text-[9px] font-mono font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.3em] inline-block px-4 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-900/40"
           >
             Secure Application Portal
           </motion.span>

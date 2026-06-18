@@ -118,7 +118,7 @@ const Navbar = () => {
                   px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 flex items-center gap-2 select-none
                   ${
                     isActive
-                      ? "text-emerald-400 bg-emerald-500/5 border border-emerald-500/10"
+                      ? "text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-500/5 border border-emerald-500/20 dark:border-emerald-500/10"
                       : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] border border-transparent"
                   }
                 `}
@@ -148,7 +148,7 @@ const Navbar = () => {
               </button>
 
               {isLangOpen && (
-                <div className="absolute right-0 mt-2 w-full bg-white/5 border border-[var(--nav-border)] rounded-xl shadow-2xl py-1.5 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+                <div className="absolute right-0 mt-2 w-full bg-white dark:bg-white/5 border border-[var(--nav-border)] rounded-xl shadow-[0_8px_30px_rgba(16,185,129,0.15)] py-1.5 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 z-50">
                   {languages.map((lang) => (
                     <button
                       key={lang.name}
@@ -156,7 +156,7 @@ const Navbar = () => {
                         i18n.changeLanguage(lang.code);
                         setIsLangOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] hover:bg-emerald-600 hover:text-[var(--color-text-primary)] transition-colors"
+                      className="w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-text-secondary)] hover:bg-emerald-50 dark:hover:bg-emerald-600 hover:text-emerald-700 dark:hover:text-[var(--color-text-primary)] transition-colors"
                     >
                       {lang.display} — {lang.name}
                     </button>
@@ -167,12 +167,12 @@ const Navbar = () => {
 
             <button
               onClick={toggleTheme}
-              className="flex items-center gap-2 border border-emerald-500/20 bg-[var(--surface-soft)] px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wide text-[var(--color-text-secondary)] hover:bg-emerald-500/10 transition-all"
+              className="flex items-center gap-2 border border-[var(--nav-border)] bg-[var(--surface-soft)] px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wide text-[var(--color-text-secondary)] hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all shadow-sm"
             >
               {theme === "dark" ? (
                 <Sun size={16} className="text-amber-300" />
               ) : (
-                <Moon size={16} className="text-sky-300" />
+                <Moon size={16} className="text-emerald-600" />
               )}
               {theme === "dark" ? "Light" : "Dark"}
             </button>
@@ -225,7 +225,7 @@ const Navbar = () => {
                   flex items-center gap-4 py-4 px-5 rounded-xl text-lg font-bold tracking-wide transition-all
                   ${
                     isActive
-                      ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
+                      ? "text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-500/10 border border-emerald-500/20"
                       : "text-[var(--color-text-secondary)] border border-transparent hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]/30"
                   }
                 `}
@@ -246,7 +246,7 @@ const Navbar = () => {
             </Link>
 
             {/* Mobile Languages List Wrapper Dropdown Block */}
-            <div className="flex flex-col bg-white/5 border border-[var(--nav-border)] rounded-xl mt-3 overflow-hidden shrink-0">
+            <div className="flex flex-col bg-white dark:bg-white/5 border border-[var(--nav-border)] rounded-xl mt-3 overflow-hidden shrink-0 shadow-sm">
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
                 className="flex items-center justify-between p-4 text-[var(--color-text-secondary)] focus:outline-none"
@@ -264,7 +264,7 @@ const Navbar = () => {
               </button>
 
               {isLangOpen && (
-                <div className="flex flex-col border-t border-[var(--nav-border)] bg-white/5">
+                <div className="flex flex-col border-t border-[var(--nav-border)] bg-[var(--color-surface)] dark:bg-white/5">
                   {languages.map((lang) => (
                     <button
                       key={lang.name}
@@ -273,7 +273,7 @@ const Navbar = () => {
                         setIsLangOpen(false);
                         setIsMenuOpen(false);
                       }}
-                      className="p-4 text-left text-sm font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-emerald-600/10 transition-colors"
+                      className="p-4 text-left text-sm font-semibold text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-[var(--color-text-primary)] hover:bg-emerald-50 dark:hover:bg-emerald-600/10 transition-colors"
                     >
                       {lang.display} — {lang.name}
                     </button>
@@ -289,7 +289,7 @@ const Navbar = () => {
               {theme === "dark" ? (
                 <Sun size={18} className="text-amber-200" />
               ) : (
-                <Moon size={18} className="text-sky-200" />
+                <Moon size={18} className="text-white" />
               )}
               {theme === "dark" ? "Light mode" : "Dark mode"}
             </button>
