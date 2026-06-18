@@ -1,16 +1,16 @@
-import React from 'react';
-import { Filter } from 'lucide-react';
+import React from "react";
+import { Filter } from "lucide-react";
 
-const RegistryFilters = ({ 
-  selectedWoreda, 
-  setSelectedWoreda, 
-  woredas, 
-  selectedFluency, 
-  setSelectedFluency, 
-  fluencyLevels, 
-  minCgpa, 
-  setMinCgpa, 
-  resetFilters 
+const RegistryFilters = ({
+  selectedWoreda,
+  setSelectedWoreda,
+  woredas,
+  selectedFluency,
+  setSelectedFluency,
+  fluencyLevels,
+  minCgpa,
+  setMinCgpa,
+  resetFilters,
 }) => {
   return (
     <aside className="bg-cardBg p-6 rounded-2xl border border-white/5 self-start shadow-xl backdrop-blur-md">
@@ -19,9 +19,13 @@ const RegistryFilters = ({
         <div className="p-1.5 bg-emerald-500/10 text-emeraldAccent border border-emerald-500/20 rounded-lg">
           <Filter size={16} />
         </div>
-        <h3 className="text-sm font-black text-white uppercase tracking-widest">Registry Filters</h3>
+        <h3 className="text-sm font-black text-white uppercase tracking-widest">
+          Registry Filters
+        </h3>
       </div>
-      <p className="text-zinc-500 text-[10px] font-mono uppercase tracking-wider mb-6">Refine position index</p>
+      <p className="text-zinc-500 text-[10px] font-mono uppercase tracking-wider mb-6">
+        Refine position index
+      </p>
 
       <div className="space-y-5">
         {/* Woreda Selector Context */}
@@ -34,9 +38,15 @@ const RegistryFilters = ({
             onChange={(e) => setSelectedWoreda(e.target.value)}
             className="w-full bg-darkBg border border-white/5 rounded-xl p-3 text-zinc-300 text-xs font-bold focus:outline-none focus:border-emeraldAccent/30 cursor-pointer transition-colors"
           >
-            <option value="" className="bg-[#050c1a]">All Woredas</option>
+            <option value="" className="bg-[var(--color-surface)]">
+              All Woredas
+            </option>
             {woredas.map((woreda) => (
-              <option key={woreda} value={woreda} className="bg-[#050c1a]">
+              <option
+                key={woreda}
+                value={woreda}
+                className="bg-[var(--color-surface)]"
+              >
                 {woreda}
               </option>
             ))}
@@ -53,9 +63,15 @@ const RegistryFilters = ({
             onChange={(e) => setSelectedFluency(e.target.value)}
             className="w-full bg-darkBg border border-white/5 rounded-xl p-3 text-zinc-300 text-xs font-bold focus:outline-none focus:border-emeraldAccent/30 cursor-pointer transition-colors"
           >
-            <option value="" className="bg-[#050c1a]">All Levels</option>
+            <option value="" className="bg-[var(--color-surface)]">
+              All Levels
+            </option>
             {fluencyLevels.map((level) => (
-              <option key={level} value={level} className="bg-[#050c1a]">
+              <option
+                key={level}
+                value={level}
+                className="bg-[var(--color-surface)]"
+              >
                 {level}
               </option>
             ))}

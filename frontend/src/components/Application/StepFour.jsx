@@ -10,7 +10,7 @@ import {
   ArrowRight,
   ShieldCheck,
   Loader2,
-  Info
+  Info,
 } from "lucide-react";
 
 export default function StepFour({ data, update, onPrev }) {
@@ -23,45 +23,116 @@ export default function StepFour({ data, update, onPrev }) {
   }, []);
 
   const handleFileChange = (e, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const selectedFiles = Array.from(e.target.files || []);
+    if (!selectedFiles.length) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      return toast.error(
-        `Sidama MESOB Portal: ${field.replace("File", "").toUpperCase()} exceeds the 5MB size limit. Please compress your file.`,
-        { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
-      );
-    }
+    const permittedVisualTypes = [
+      "application/pdf",
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+    ];
+    const maxSize = 5 * 1024 * 1024;
+    const sanitizedFiles = [];
 
-    if (field === "cvFile" && file.type !== "application/pdf") {
-      return toast.error(
-        "Sidama MESOB HR: For standardized review, your CV must be in PDF format.",
-        { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
-      );
-    }
-
-    if (field !== "cvFile") {
-      const permittedVisualTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"];
-      if (!permittedVisualTypes.includes(file.type)) {
-        return toast.error(
-          "Invalid Format: Our HR systems only accept PDF, PNG, or JPG credentials.",
-          { style: { background: "#000", color: "#fff", border: "1px solid #27272a" } }
+    for (const file of selectedFiles) {
+      if (file.size > maxSize) {
+        toast.error(
+          `SidaMOV Portal: ${file.name} exceeds the 5MB size limit. Please compress your file.`,
+          {
+            style: {
+              background: "#000",
+              color: "#fff",
+              border: "1px solid #27272a",
+            },
+          },
         );
+        continue;
       }
+
+      if (field === "cvFile" && file.type !== "application/pdf") {
+        toast.error(
+          "SidaMOV: For standardized review, your CV must be in PDF format.",
+          {
+            style: {
+              background: "#000",
+              color: "#fff",
+              border: "1px solid #dc2626",
+            },
+          },
+        );
+        continue;
+      }
+
+      if (field !== "cvFile") {
+        if (!permittedVisualTypes.includes(file.type)) {
+          toast.error(
+            "Invalid Format: Our HR systems only accept PDF, PNG, or JPG credentials.",
+            {
+              style: {
+                background: "#000",
+                color: "#fff",
+                border: "1px solid #27272a",
+              },
+            },
+          );
+          continue;
+        }
+      }
+
+      sanitizedFiles.push(file);
     }
 
+    if (!sanitizedFiles.length) return;
+
+    if (field === "certFiles") {
+      update({ certFiles: [...(data.certFiles || []), ...sanitizedFiles] });
+      toast.success(
+        `${sanitizedFiles.length} supplemental credential(s) securely attached.`,
+        {
+          icon: "📎",
+          style: {
+            background: "#000",
+            color: "#fff",
+            border: "1px solid #10b981",
+          },
+        },
+      );
+      return;
+    }
+
+    const file = sanitizedFiles[0];
     update({ [field]: file });
-    toast.success(`${file.name.substring(0, 15)}... securely attached to your portfolio.`, {
-      icon: "📎",
-      style: { background: "#000", color: "#fff", border: "1px solid #10b981" },
-    });
+    toast.success(
+      `${file.name.substring(0, 15)}... securely attached to your portfolio.`,
+      {
+        icon: "📎",
+        style: {
+          background: "#000",
+          color: "#fff",
+          border: "1px solid #10b981",
+        },
+      },
+    );
   };
 
-  const removeFile = (field) => {
-    update({ [field]: null });
+  const removeFile = (field, index = null) => {
+    if (field === "certFiles") {
+      const updatedFiles = (data.certFiles || []).filter(
+        (_, idx) => idx !== index,
+      );
+      update({ certFiles: updatedFiles });
+    } else {
+      update({ [field]: null });
+    }
+
     toast("Document removed from your application.", {
       icon: "🗑️",
-      style: { background: "#000", color: "#a1a1aa", border: "1px solid #27272a" },
+      style: {
+        background: "#000",
+        color: "#a1a1aa",
+        border: "1px solid #27272a",
+      },
     });
   };
 
@@ -69,14 +140,26 @@ export default function StepFour({ data, update, onPrev }) {
     if (!data.cvFile || !data.degreeFile || !data.idFile) {
       return toast.error(
         "Application Incomplete: Please upload your CV, Degree, and Kebele ID to proceed.",
-        { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
+        {
+          style: {
+            background: "#000",
+            color: "#fff",
+            border: "1px solid #dc2626",
+          },
+        },
       );
     }
 
     if (!data.jobId) {
       return toast.error(
         "Session Error: We lost connection to the specified position. Please restart your application.",
-        { style: { background: "#000", color: "#fff", border: "1px solid #dc2626" } }
+        {
+          style: {
+            background: "#000",
+            color: "#fff",
+            border: "1px solid #dc2626",
+          },
+        },
       );
     }
 
@@ -86,7 +169,9 @@ export default function StepFour({ data, update, onPrev }) {
     payload.append("cv", data.cvFile);
     payload.append("degreeCertificate", data.degreeFile);
     payload.append("nationalIdCopy", data.idFile);
-    if (data.certFile) payload.append("otherCert", data.certFile);
+    if (data.certFiles?.length) {
+      data.certFiles.forEach((file) => payload.append("otherCert", file));
+    }
 
     payload.append("jobId", data.jobId);
     payload.append("sidaamuAfoo", data.sidaamuAfoo || "BASIC");
@@ -113,7 +198,10 @@ export default function StepFour({ data, update, onPrev }) {
       fieldOfStudy: data.department || "",
       cgpa: parseFloat(data.cgpa) || 0.0,
       graduationYear: parseInt(data.gradYear) || new Date().getFullYear(),
-      experienceYears: Math.max(0, parseInt(data.experience || data.experienceYears || 0)),
+      experienceYears: Math.max(
+        0,
+        parseInt(data.experience || data.experienceYears || 0),
+      ),
       skills: [],
     };
 
@@ -131,17 +219,29 @@ export default function StepFour({ data, update, onPrev }) {
             "Content-Type": "multipart/form-data",
             Authorization: secureToken ? `Bearer ${secureToken}` : "",
           },
-        }
+        },
       );
 
-      if (response.data.success || response.status === 201 || response.status === 200) {
-        setTrackingId(response.data.application?.trackingId || "SMUC-GENERATED");
+      if (
+        response.data.success ||
+        response.status === 201 ||
+        response.status === 200
+      ) {
+        setTrackingId(
+          response.data.application?.trackingId || "SidaMOV-GENERATED",
+        );
         setShowSuccess(true);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || "Transmission Failed: Unable to connect to Sidama MESOB servers. Check your internet.";
+      const errorMsg =
+        err.response?.data?.message ||
+        "Transmission Failed: Unable to connect to SidaMOV servers. Check your internet.";
       toast.error(errorMsg, {
-        style: { background: "#000", color: "#fff", border: "1px solid #dc2626" },
+        style: {
+          background: "#000",
+          color: "#fff",
+          border: "1px solid #dc2626",
+        },
       });
     } finally {
       setIsSubmitting(false);
@@ -161,15 +261,16 @@ export default function StepFour({ data, update, onPrev }) {
             exit={{ opacity: 0, scale: 0.98 }}
             className="space-y-10"
           >
-            <header className="space-y-2 border-b border-zinc-900 pb-5">
-              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight">
+            <header className="space-y-2 border-b border-[var(--nav-border)] pb-5">
+              <h2 className="text-2xl md:text-3xl font-black text-[var(--color-text-primary)] uppercase tracking-tight">
                 Upload Documents
               </h2>
-              <p className="text-zinc-400 text-sm font-medium leading-relaxed max-w-2xl">
-                Please upload clear and readable copies of your documents. Make sure they match your application details.
+              <p className="text-[var(--color-text-secondary)] text-sm font-medium leading-relaxed max-w-2xl">
+                Please upload clear and readable copies of your documents. Make
+                sure they match your application details.
               </p>
-              <div className="text-[10px] text-zinc-600 font-mono tracking-wider uppercase pt-1">
-                Sidama MESOB HRMS Application Portal
+              <div className="text-[10px] text-[var(--color-text-secondary)] font-mono tracking-wider uppercase pt-1">
+                SidaMOV Application Portal
               </div>
             </header>
 
@@ -206,23 +307,28 @@ export default function StepFour({ data, update, onPrev }) {
               />
               <UploadBox
                 label="Supplemental Supporting Credentials"
-                description="Other optional certificates or recommendation letters."
-                file={data.certFile}
-                onFileSelect={(e) => handleFileChange(e, "certFile")}
-                onRemove={() => removeFile("certFile")}
+                description="Upload one or more optional certificates, recommendation letters, or supporting documents."
+                file={data.certFiles}
+                isMultiple
+                onFileSelect={(e) => handleFileChange(e, "certFiles")}
+                onRemove={removeFile}
                 acceptType=".pdf,image/png,image/jpeg,image/jpg"
-                infoNote="Optional. Accepts PDF or images up to 5MB."
+                infoNote="Optional. You can attach multiple files here, each up to 5MB."
               />
             </div>
 
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-zinc-950/40 border border-zinc-800/80 text-emerald-400">
-              <ShieldCheck size={18} className="text-emerald-500 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-[var(--color-surface)]/30 border border-[var(--nav-border)] text-emerald-400">
+              <ShieldCheck
+                size={18}
+                className="text-emerald-500 mt-0.5 shrink-0"
+              />
               <div className="space-y-0.5">
                 <p className="text-[10px] font-mono font-black uppercase tracking-[0.2em]">
                   Your Information is Secure
                 </p>
-                <p className="text-zinc-500 text-[11px]">
-                  All uploaded documents and information are safely stored and protected.
+                <p className="text-[var(--color-text-secondary)] text-[11px]">
+                  All uploaded documents and information are safely stored and
+                  protected.
                 </p>
               </div>
             </div>
@@ -232,7 +338,7 @@ export default function StepFour({ data, update, onPrev }) {
                 onClick={onPrev}
                 disabled={isSubmitting}
                 type="button"
-                className="flex-1 px-8 py-4 rounded-xl bg-zinc-950 text-zinc-400 font-black text-xs uppercase tracking-widest hover:text-white hover:bg-zinc-900 border border-zinc-900 transition-all cursor-pointer"
+                className="flex-1 px-8 py-4 rounded-xl bg-[var(--color-surface)] text-[var(--color-text-secondary)] font-black text-xs uppercase tracking-widest hover:text-[var(--color-text-primary)] hover:bg-[var(--nav-border)] border border-[var(--nav-border)] transition-all cursor-pointer"
               >
                 Back
               </button>
@@ -241,7 +347,7 @@ export default function StepFour({ data, update, onPrev }) {
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 type="button"
-                className="flex-[2] py-4 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-3 shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-[2] py-4 rounded-xl bg-emerald-600 text-[var(--color-text-primary)] font-black text-xs uppercase tracking-widest hover:bg-emerald-500 transition-all flex items-center justify-center gap-3 shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
@@ -268,21 +374,26 @@ function SuccessUI({ trackingId }) {
       animate={{ opacity: 1, scale: 1 }}
       className="text-center py-12 px-2 space-y-6"
     >
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-950 border border-emerald-500/30 mb-2 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-surface)] border border-emerald-500/30 mb-2 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
         <CheckCircle size={32} className="text-emerald-500" />
       </div>
 
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">
-          Application <span className="text-emerald-500">Submitted Successfully</span>
+        <h2 className="text-2xl md:text-3xl font-black text-[var(--color-text-primary)] tracking-tight uppercase">
+          Application{" "}
+          <span className="text-emerald-500">Submitted Successfully</span>
         </h2>
-        <p className="text-zinc-400 text-sm max-w-md mx-auto leading-relaxed">
-          Your application has been received successfully. Our HR team will review your documents and contact you soon.
+        <p className="text-[var(--color-text-secondary)] text-sm max-w-md mx-auto leading-relaxed">
+          Your application has been received successfully. Our HR team will
+          review your documents and contact you soon.
         </p>
-        
+
         {trackingId && (
-          <div className="mt-4 p-4 bg-zinc-950 border border-zinc-800 rounded-xl inline-block font-mono text-xs text-zinc-300">
-            APPLICATION ID: <span className="text-emerald-400 font-black tracking-wider ml-1">{trackingId}</span>
+          <div className="mt-4 p-4 bg-[var(--color-surface)] border border-[var(--nav-border)] rounded-xl inline-block font-mono text-xs text-[var(--color-text-secondary)]">
+            APPLICATION ID:{" "}
+            <span className="text-emerald-400 font-black tracking-wider ml-1">
+              {trackingId}
+            </span>
           </div>
         )}
       </div>
@@ -290,30 +401,45 @@ function SuccessUI({ trackingId }) {
   );
 }
 
-function UploadBox({ label, description, file, onFileSelect, onRemove, required, acceptType, infoNote }) {
+function UploadBox({
+  label,
+  description,
+  file,
+  isMultiple,
+  onFileSelect,
+  onRemove,
+  required,
+  acceptType,
+  infoNote,
+}) {
+  const hasFiles = Array.isArray(file) ? file.length > 0 : Boolean(file);
+
   return (
     <div className="space-y-3">
       <div className="space-y-1">
-        <label className="block text-xs font-bold text-zinc-200 uppercase tracking-wide">
+        <label className="block text-xs font-bold text-[var(--color-text-primary)] uppercase tracking-wide">
           {label} {required && <span className="text-emerald-500">*</span>}
         </label>
         {description && (
-          <p className="text-xs text-zinc-400 font-medium leading-normal">
+          <p className="text-xs text-[var(--color-text-secondary)] font-medium leading-normal">
             {description}
           </p>
         )}
       </div>
 
       <div
-        className={`relative h-40 rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center p-4
-        ${file ? "border-emerald-500/40 bg-zinc-950/40" : "border-zinc-800 bg-black hover:border-zinc-700 hover:bg-zinc-950/20 group"}`}
+        className={`relative min-h-[160px] rounded-2xl border border-dashed transition-all duration-300 flex flex-col items-center justify-center p-4
+        ${hasFiles ? "border-emerald-500/40 bg-[var(--color-surface)]/50" : "border-[var(--nav-border)] bg-[var(--color-surface)]/20 hover:border-emerald-500/30 hover:bg-[var(--color-surface)]/40 group"}`}
       >
-        {!file ? (
+        {!hasFiles ? (
           <>
-            <div className="w-12 h-12 rounded-xl bg-zinc-950 border border-zinc-900 flex items-center justify-center mb-3 group-hover:border-emerald-500/20 group-hover:text-emerald-400 transition-all">
-              <CloudUpload size={20} className="text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+            <div className="w-12 h-12 rounded-xl bg-[var(--color-surface)] border border-[var(--nav-border)] flex items-center justify-center mb-3 group-hover:border-emerald-500/20 group-hover:text-emerald-400 transition-all">
+              <CloudUpload
+                size={20}
+                className="text-[var(--color-text-secondary)] group-hover:text-emerald-400 transition-colors"
+              />
             </div>
-            <span className="text-xs font-bold text-zinc-400 group-hover:text-zinc-200 uppercase tracking-wider text-center transition-colors">
+            <span className="text-xs font-bold text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] uppercase tracking-wider text-center transition-colors">
               Drag or Click to Upload
             </span>
             <input
@@ -321,31 +447,74 @@ function UploadBox({ label, description, file, onFileSelect, onRemove, required,
               className="absolute inset-0 opacity-0 cursor-pointer z-30"
               onChange={onFileSelect}
               accept={acceptType}
+              multiple={isMultiple}
             />
           </>
         ) : (
-          <div className="flex flex-col items-center w-full animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-xl bg-emerald-950/30 border border-emerald-900/40 flex items-center justify-center mb-2 text-emerald-400">
-              <FileText size={20} />
+          <div className="w-full space-y-3">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <div className="w-12 h-12 rounded-xl bg-emerald-950/30 border border-emerald-900/40 flex items-center justify-center text-emerald-400">
+                  <FileText size={20} />
+                </div>
+                <span className="text-xs font-mono text-[var(--color-text-primary)] font-bold">
+                  Attached document
+                  {Array.isArray(file) && file.length > 1 ? "s" : ""}
+                </span>
+              </div>
+              {isMultiple && (
+                <label className="text-[11px] text-emerald-400 underline cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={onFileSelect}
+                    accept={acceptType}
+                    multiple
+                  />
+                  Add more files
+                </label>
+              )}
             </div>
-            <span className="text-xs font-mono text-zinc-200 truncate max-w-[240px] px-2 font-bold">
-              {file.name}
-            </span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove();
-              }}
-              type="button"
-              className="mt-3 p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-red-400 hover:bg-red-950/40 border border-zinc-800 transition-all cursor-pointer"
-            >
-              <Trash2 size={14} />
-            </button>
+
+            <div className="grid gap-2 w-full">
+              {Array.isArray(file) ? (
+                file.map((item, index) => (
+                  <div
+                    key={`${item.name}-${index}`}
+                    className="flex items-center justify-between gap-3 rounded-2xl bg-zinc-950/70 px-3 py-2 border border-zinc-800"
+                  >
+                    <span className="text-xs text-[var(--color-text-secondary)] truncate">
+                      {item.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onRemove("certFiles", index)}
+                      className="text-red-400 hover:text-red-300 text-[11px]"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-between gap-3 rounded-2xl bg-zinc-950/70 px-3 py-2 border border-zinc-800">
+                  <span className="text-xs text-zinc-200 truncate">
+                    {file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onRemove()}
+                    className="text-red-400 hover:text-red-300 text-[11px]"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
 
-      {infoNote && !file && (
+      {infoNote && !hasFiles && (
         <div className="flex items-start gap-1.5 px-1 text-zinc-500">
           <Info size={12} className="mt-0.5 shrink-0 text-zinc-600" />
           <p className="text-[11px] font-medium leading-normal italic">

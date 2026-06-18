@@ -79,7 +79,9 @@ app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.get("/", (req, res) => {
   res
     .status(200)
-    .json({ message: "Sidama Mesob Unity Center API is operational" });
+    .json({
+      message: "SidaMOV (Sidama Mesob Online Vacancy) API is operational",
+    });
 });
 
 // Your Routes

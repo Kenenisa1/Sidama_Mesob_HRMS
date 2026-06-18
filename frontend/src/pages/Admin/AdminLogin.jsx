@@ -141,7 +141,7 @@ const AdminLogin = () => {
           </form>
         </div>
         <p className="text-center mt-8 text-[9px] text-zinc-700 font-black uppercase tracking-widest">
-          Sidama MESOB HRMS Admin System
+          SidaMOV Admin System
         </p>
       </motion.div>
     </div>

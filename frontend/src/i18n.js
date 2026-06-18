@@ -1,6 +1,6 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 const resources = {
   en: {
@@ -10,26 +10,27 @@ const resources = {
         openRoles: "Open Roles",
         about: "About",
         help: "Help",
-        applyNow: "Apply Now"
+        applyNow: "Apply Now",
       },
       hero: {
-        badge: "Sidama Mesob HRMS Platform",
-        title1: "Shape the Future of",
-        title2: "Sidama Public Service",
-        subtitle: "A purely merit-based, fully transparent recruitment portal built for the people.",
+        badge: "SidaMOV Platform",
+        title1: "Sidama Mesob",
+        title2: "Online Vacancy",
+        subtitle:
+          "A purely merit-based, fully transparent recruitment portal built for the people.",
         viewRoles: "View Open Roles",
-        verify: "Verify Application"
+        verify: "Verify Application",
       },
       stats: {
         activeApps: "Active System Applicants",
         openJobs: "Open Job Positions",
-        successRate: "Platform Success Rate"
+        successRate: "Platform Success Rate",
       },
       about: {
-        title: "About SMUC",
+        title: "About SidaMOV",
         mission: "Our Mission",
         vision: "Our Vision",
-        coreValues: "Core Values"
+        coreValues: "Core Values",
       },
       footer: {
         desc: "Empowering communities through digital transformation, organized services, and modern regional development.",
@@ -41,10 +42,10 @@ const resources = {
         terms: "Terms & Conditions",
         contact: "Contact",
         location: "Hawassa, Ethiopia",
-        building: "Building a Modern Sidama"
+        building: "Building a Modern Sidama",
       },
       jobs: {
-        vacancies: "Sidama Mesob Vacancies",
+        vacancies: "SidaMOV Vacancies",
         subtitle: "Digital Recruitment Platform // HAWASSA, ETHIOPIA",
         searchPlaceholder: "Search by title, ID, or field of study...",
         allDepts: "All Departments",
@@ -68,19 +69,20 @@ const resources = {
         coc: "COC Required",
         registrationClosed: "Registration Closed",
         viewDetail: "View Detail",
-        viewAll: "View All Vacancies"
+        viewAll: "View All Vacancies",
       },
       help: {
         guidance: "Guidance & Support",
         howCanWe: "How Can We",
         helpYou: "Help You?",
-        subtitle: "Everything you need to know about the SMUC HR Portal recruitment process.",
+        subtitle:
+          "Everything you need to know about the SidaMOV recruitment portal.",
         forApplicants: "For Applicants",
         forAdmins: "For Administrators",
         jumpToGuide: "Jump to guide",
         direct: "Direct",
         support: "Support",
-        reachOut: "Reach out to the Sidama Mesob Unity Center HR team.",
+        reachOut: "Reach out to the SidaMOV team.",
         email: "Email",
         call: "Call",
         location: "Location",
@@ -89,15 +91,17 @@ const resources = {
         appGuide: "Applicant Guide",
         step1: "Step 1",
         step1Title: "Browse Available Positions",
-        step1Desc: "Navigate to the home page to view all available job openings at the Sidama Mesob Unity Center. Use the category filters to find roles that match your expertise.",
+        step1Desc:
+          "Navigate to the home page to view all available job openings at SidaMOV (Sidama Mesob Online Vacancy). Use the category filters to find roles that match your expertise.",
         step1Bullets: [
           "Review the featured position and job requirements carefully",
           "Check if you meet the minimum qualifications (CGPA, education level, residency)",
-          "Note the experience requirements and language proficiency needed"
+          "Note the experience requirements and language proficiency needed",
         ],
         step2: "Step 2",
         step2Title: "Prepare Required Documents",
-        step2Desc: "Before starting your application, gather all necessary documents in PDF format. Incomplete applications may be automatically disqualified by the system.",
+        step2Desc:
+          "Before starting your application, gather all necessary documents in PDF format. Incomplete applications may be automatically disqualified by the system.",
         docCV: "Curriculum Vitae (CV)",
         docCVDesc: "A clear, updated PDF of your professional history.",
         docDegree: "Degree Certificate",
@@ -106,30 +110,37 @@ const resources = {
         docIDDesc: "Your valid government digital identity card.",
         docExp: "Experience Letter",
         docExpDesc: "Proof of previous employment (if applicable).",
-        critical: "CRITICAL: All files must be under 5MB. We recommend using PDF compressors if your scans are too large.",
+        critical:
+          "CRITICAL: All files must be under 5MB. We recommend using PDF compressors if your scans are too large.",
         step3: "Step 3",
         step3Title: "Complete the Application Form",
-        step3Desc: "Fill out the 4-step registration form. Ensure your Woreda and Kebele information is accurate, as priority is given to regional residents of Sidama.",
+        step3Desc:
+          "Fill out the 4-step registration form. Ensure your Woreda and Kebele information is accurate, as priority is given to regional residents of Sidama.",
         step3Bullets: [
           "Double-check all information for accuracy before submitting",
           "You will receive a confirmation email shortly after submission",
-          "Keep your tracking ID for future reference"
+          "Keep your tracking ID for future reference",
         ],
         adminGuide: "Administrator Guide",
         adminOverview: "Dashboard Overview",
         adminOverviewDesc: "Internal tools for candidate lifecycle management.",
         kpiTitle: "KPI Intelligence",
-        kpiDesc: "Live tracking of total applicants, pending reviews, and department-wise recruitment progress.",
+        kpiDesc:
+          "Live tracking of total applicants, pending reviews, and department-wise recruitment progress.",
         filterTitle: "Smart Filtering",
-        filterDesc: "Instantly narrow down candidates by CGPA, language proficiency (Sidaamu Afoo), and regional origin.",
+        filterDesc:
+          "Instantly narrow down candidates by CGPA, language proficiency (Sidaamu Afoo), and regional origin.",
         searchTitle: "Global Search",
-        searchDesc: "Search the entire database by Applicant Name, Fayda ID, or Phone Number with sub-second latency.",
+        searchDesc:
+          "Search the entire database by Applicant Name, Fayda ID, or Phone Number with sub-second latency.",
         exportTitle: "Export & Reporting",
-        exportDesc: "Generate PDF/Excel reports for board meetings and offline review committees.",
+        exportDesc:
+          "Generate PDF/Excel reports for board meetings and offline review committees.",
         secTitle: "Security & Integrity",
-        secDesc: "Administrative actions are logged. Ensure you sign out after reviewing sensitive candidate data to maintain regional privacy standards."
-      }
-    }
+        secDesc:
+          "Administrative actions are logged. Ensure you sign out after reviewing sensitive candidate data to maintain regional privacy standards.",
+      },
+    },
   },
   am: {
     translation: {
@@ -138,26 +149,26 @@ const resources = {
         openRoles: "ክፍት የስራ መደቦች",
         about: "ስለ እኛ",
         help: "እገዛ",
-        applyNow: "አሁን ያመልክቱ"
+        applyNow: "አሁን ያመልክቱ",
       },
       hero: {
-        badge: "የሲዳማ መሶብ HRMS መድረክ",
+        badge: "የሲዳማ መሶብ መድረክ",
         title1: "የሲዳማ ህዝባዊ አገልግሎት",
         title2: "የወደፊት እጣ ፈንታዎን ይቅረፁ",
         subtitle: "በእውቀት ላይ የተመሰረተ፣ ሙሉ በሙሉ ግልጽ የሆነ የቅጥር መግቢያ ለህዝብ የተገነባ።",
         viewRoles: "ክፍት የስራ መደቦችን ይመልከቱ",
-        verify: "ማመልከቻ ያረጋግጡ"
+        verify: "ማመልከቻ ያረጋግጡ",
       },
       stats: {
         activeApps: "ንቁ አመልካቾች",
         openJobs: "ክፍት የስራ መደቦች",
-        successRate: "የስኬት መጠን"
+        successRate: "የስኬት መጠን",
       },
       about: {
         title: "ስለ SMUC",
         mission: "ተልዕኳችን",
         vision: "ራዕያችን",
-        coreValues: "ዋና እሴቶቻችን"
+        coreValues: "ዋና እሴቶቻችን",
       },
       footer: {
         desc: "በዲጂታል ቴክኖሎጂ፣ በተደራጀ አገልግሎትና በዘመናዊ የክልል ልማት ማህበረሰቡን ማብቃት።",
@@ -169,7 +180,7 @@ const resources = {
         terms: "ደንቦች እና ሁኔታዎች",
         contact: "አድራሻ",
         location: "ሀዋሳ፣ ኢትዮጵያ",
-        building: "ዘመናዊ ሲዳማን መገንባት"
+        building: "ዘመናዊ ሲዳማን መገንባት",
       },
       jobs: {
         vacancies: "የሲዳማ መሶብ ክፍት የስራ ቦታዎች",
@@ -196,7 +207,7 @@ const resources = {
         coc: "ሲ.ኦ.ሲ (COC) ያስፈልጋል",
         registrationClosed: "ምዝገባው ተዘግቷል",
         viewDetail: "ሙሉውን ይመልከቱ",
-        viewAll: "ሁሉንም የስራ ማስታወቂያዎች ይመልከቱ"
+        viewAll: "ሁሉንም የስራ ማስታወቂያዎች ይመልከቱ",
       },
       help: {
         guidance: "መመሪያ እና ድጋፍ",
@@ -217,15 +228,17 @@ const resources = {
         appGuide: "የአመልካች መመሪያ",
         step1: "ደረጃ 1",
         step1Title: "ክፍት የስራ ቦታዎችን ይፈልጉ",
-        step1Desc: "በሲዳማ መሶብ የሚገኙትን ሁሉንም ክፍት የስራ ቦታዎች ለማየት ወደ ዋናው ገጽ ይሂዱ። ለእርስዎ የሚስማሙትን ለማግኘት የማጣሪያ አማራጮችን ይጠቀሙ።",
+        step1Desc:
+          "በሲዳማ መሶብ የሚገኙትን ሁሉንም ክፍት የስራ ቦታዎች ለማየት ወደ ዋናው ገጽ ይሂዱ። ለእርስዎ የሚስማሙትን ለማግኘት የማጣሪያ አማራጮችን ይጠቀሙ።",
         step1Bullets: [
           "የስራ መደቡን እና መስፈርቶቹን በጥንቃቄ ያንብቡ",
           "ዝቅተኛውን መስፈርት ማሟላትዎን ያረጋግጡ (CGPA፣ የትምህርት ደረጃ፣ የመኖሪያ ቦታ)",
-          "የስራ ልምድ እና የቋንቋ ችሎታ መስፈርቶችን ልብ ይበሉ"
+          "የስራ ልምድ እና የቋንቋ ችሎታ መስፈርቶችን ልብ ይበሉ",
         ],
         step2: "ደረጃ 2",
         step2Title: "አስፈላጊ ሰነዶችን ያዘጋጁ",
-        step2Desc: "ማመልከቻዎን ከመጀመርዎ በፊት ሁሉንም አስፈላጊ ሰነዶች በፒዲኤፍ (PDF) ቅርጸት ያዘጋጁ። ያልተሟሉ ማመልከቻዎች በሲስተሙ ውድቅ ሊደረጉ ይችላሉ።",
+        step2Desc:
+          "ማመልከቻዎን ከመጀመርዎ በፊት ሁሉንም አስፈላጊ ሰነዶች በፒዲኤፍ (PDF) ቅርጸት ያዘጋጁ። ያልተሟሉ ማመልከቻዎች በሲስተሙ ውድቅ ሊደረጉ ይችላሉ።",
         docCV: "የግል ማህደር (CV)",
         docCVDesc: "የስራ ታሪክዎን የሚያሳይ ግልጽ ፒዲኤፍ (PDF)።",
         docDegree: "የዲግሪ ማስረጃ",
@@ -234,14 +247,16 @@ const resources = {
         docIDDesc: "ህጋዊ የሆነ የመንግስት መታወቂያ ካርድዎ።",
         docExp: "የስራ ልምድ ማስረጃ",
         docExpDesc: "የቀድሞ ስራዎን የሚያረጋግጥ ማስረጃ (ካለ)።",
-        critical: "ማስጠንቀቂያ፡ ሁሉም ፋይሎች ከ5 ሜጋ ባይት (5MB) በታች መሆን አለባቸው። ሰነዶችዎ ትልቅ ከሆኑ የፒዲኤፍ (PDF) ማሳነሻ ይጠቀሙ።",
+        critical:
+          "ማስጠንቀቂያ፡ ሁሉም ፋይሎች ከ5 ሜጋ ባይት (5MB) በታች መሆን አለባቸው። ሰነዶችዎ ትልቅ ከሆኑ የፒዲኤፍ (PDF) ማሳነሻ ይጠቀሙ።",
         step3: "ደረጃ 3",
         step3Title: "የማመልከቻ ቅጹን ይሙሉ",
-        step3Desc: "ባለ 4-ደረጃ የምዝገባ ቅጹን ይሙሉ:: የክልሉ ነዋሪዎች ቅድሚያ ስለሚሰጣቸው ወረዳዎ እና ቀበሌዎ ትክክል መሆናቸውን ያረጋግጡ::",
+        step3Desc:
+          "ባለ 4-ደረጃ የምዝገባ ቅጹን ይሙሉ:: የክልሉ ነዋሪዎች ቅድሚያ ስለሚሰጣቸው ወረዳዎ እና ቀበሌዎ ትክክል መሆናቸውን ያረጋግጡ::",
         step3Bullets: [
           "ከማስገባትዎ በፊት ሁሉም መረጃዎች ትክክል መሆናቸውን ደግመው ያረጋግጡ",
           "ካስገቡ በኋላ በቅርብ ጊዜ የማረጋገጫ ኢሜል ይደርስዎታል",
-          "ለወደፊት ክትትል የመከታተያ መለያዎን (Tracking ID) ይያዙ"
+          "ለወደፊት ክትትል የመከታተያ መለያዎን (Tracking ID) ይያዙ",
         ],
         adminGuide: "የአስተዳዳሪ መመሪያ",
         adminOverview: "የዳሽቦርድ አጠቃላይ እይታ",
@@ -249,15 +264,18 @@ const resources = {
         kpiTitle: "ዋና የአፈፃፀም ጠቋሚዎች (KPI)",
         kpiDesc: "የአመልካቾች ጠቅላላ ብዛት፣ በመገምገም ላይ ያሉ፣ እና የቅጥር ሂደቱን በቀጥታ መከታተያ።",
         filterTitle: "ዘመናዊ ማጣሪያ",
-        filterDesc: "በCGPA፣ በቋንቋ ችሎታ (ሲዳሙ አፎ) እና በመኖሪያ አካባቢ አመልካቾችን በፍጥነት ማጣራት።",
+        filterDesc:
+          "በCGPA፣ በቋንቋ ችሎታ (ሲዳሙ አፎ) እና በመኖሪያ አካባቢ አመልካቾችን በፍጥነት ማጣራት።",
         searchTitle: "አጠቃላይ ፍለጋ",
         searchDesc: "በአመልካች ስም፣ ፋይዳ መታወቂያ ወይም ስልክ ቁጥር መላውን ቋት በፍጥነት ይፈልጉ።",
         exportTitle: "ሪፖርት ማውጣት",
-        exportDesc: "ለቦርድ ስብሰባዎች እና ለግምገማ ኮሚቴዎች የፒዲኤፍ (PDF) ወይም ኤክሴል ሪፖርቶችን ያዘጋጁ።",
+        exportDesc:
+          "ለቦርድ ስብሰባዎች እና ለግምገማ ኮሚቴዎች የፒዲኤፍ (PDF) ወይም ኤክሴል ሪፖርቶችን ያዘጋጁ።",
         secTitle: "ደህንነት እና ሚስጥራዊነት",
-        secDesc: "የአስተዳዳሪ ተግባራት ይመዘገባሉ። የአመልካቾችን ሚስጥራዊነት ለመጠበቅ መረጃዎችን ከመረመሩ በኋላ መውጣትዎን (Sign out) ያረጋግጡ።"
-      }
-    }
+        secDesc:
+          "የአስተዳዳሪ ተግባራት ይመዘገባሉ። የአመልካቾችን ሚስጥራዊነት ለመጠበቅ መረጃዎችን ከመረመሩ በኋላ መውጣትዎን (Sign out) ያረጋግጡ።",
+      },
+    },
   },
   sid: {
     translation: {
@@ -266,26 +284,27 @@ const resources = {
         openRoles: "Fano Looso",
         about: "Ninketa",
         help: "Kaa'lo",
-        applyNow: "Xaawo Sokki"
+        applyNow: "Xaawo Sokki",
       },
       hero: {
         badge: "Sidaamu Mesob HRMS Pilaatfoorme",
         title1: "Sidaamu Dagoomu Ooso",
         title2: "Albaanni Qara",
-        subtitle: "Xallaho xawisa dandeessanno, halaale uyino looso hasi'raano uyino poortaale.",
+        subtitle:
+          "Xallaho xawisa dandeessanno, halaale uyino looso hasi'raano uyino poortaale.",
         viewRoles: "Fano Looso La'i",
-        verify: "Sokka Kakkali"
+        verify: "Sokka Kakkali",
       },
       stats: {
         activeApps: "Hasi'raano",
         openJobs: "Fano Looso",
-        successRate: "Kaa'lo Xawisa"
+        successRate: "Kaa'lo Xawisa",
       },
       about: {
         title: "SMUC Ninketa",
         mission: "Halaale Ninketa",
         vision: "Albaanni Ninketa",
-        coreValues: "Qara Hasiissanno"
+        coreValues: "Qara Hasiissanno",
       },
       footer: {
         desc: "Dijitaalu oosomanni, looso biddishshanni, Sidaama dagooma irkisa.",
@@ -297,11 +316,12 @@ const resources = {
         terms: "Seera",
         contact: "Xaadooshshe",
         location: "Hawaasa, Itoophiya",
-        building: "Haaro Sidaama Minanna"
+        building: "Haaro Sidaama Minanna",
       },
       jobs: {
         vacancies: "Sidaamu Mesob Fano Looso",
-        subtitle: "Dijitaalu Loosu Hasi'raano Pilaatfoorme // HAWAASA, ITOOPHIYA",
+        subtitle:
+          "Dijitaalu Loosu Hasi'raano Pilaatfoorme // HAWAASA, ITOOPHIYA",
         searchPlaceholder: "Looso, Koodde, woy rosu gari hasi'ri...",
         allDepts: "Baala Biddishsha",
         newest: "Haaro Fano Looso",
@@ -324,7 +344,7 @@ const resources = {
         coc: "COC Hasiissanno",
         registrationClosed: "Borreessama Cufantino",
         viewDetail: "Baala La'i",
-        viewAll: "Baala Fano Looso La'i"
+        viewAll: "Baala Fano Looso La'i",
       },
       help: {
         guidance: "Biddishsha & Kaa'lo",
@@ -345,15 +365,17 @@ const resources = {
         appGuide: "Hasi'raanohu Biddishsha",
         step1: "Biddishsha 1",
         step1Title: "Fano Looso La'i",
-        step1Desc: "Sidaamu Mesob giddo noo fano looso la'ate umo guma la'i. Ate rosoho gariti looso la'ate hasi'rate kifile horoonsi'ri.",
+        step1Desc:
+          "Sidaamu Mesob giddo noo fano looso la'ate umo guma la'i. Ate rosoho gariti looso la'ate hasi'rate kifile horoonsi'ri.",
         step1Bullets: [
           "Loosu kaimanna hasiisannore la'i",
           "CGPA, rosu deerranna bayicho garinni hasiisannore wonshittoro la'i",
-          "Loosu yananna afuu deerra wodanaho wori"
+          "Loosu yananna afuu deerra wodanaho wori",
         ],
         step2: "Biddishsha 2",
         step2Title: "Hasiissanno Waraqata Qixxeessi",
-        step2Desc: "Borreessama hanaffara albaanni baala waraqata PDF wori. Gudissinokki waraqati siistemete giddenni fushshannohe.",
+        step2Desc:
+          "Borreessama hanaffara albaanni baala waraqata PDF wori. Gudissinokki waraqati siistemete giddenni fushshannohe.",
         docCV: "Gudisino Waraqata (CV)",
         docCVDesc: "Ate loosu kaimanna biddishsha (PDF).",
         docDegree: "Roso Gudisinote Waraqata",
@@ -362,31 +384,37 @@ const resources = {
         docIDDesc: "Ate fayidate waraqata.",
         docExp: "Loosu Yana Waraqata",
         docExpDesc: "Albaanni loosino looso leellishanno waraqata.",
-        critical: "QARA HASIISSANNO: Baalu waraqati 5MB woro ikkanno. Lowo ikkirono PDF ajishanno soka horoonsi'ri.",
+        critical:
+          "QARA HASIISSANNO: Baalu waraqati 5MB woro ikkanno. Lowo ikkirono PDF ajishanno soka horoonsi'ri.",
         step3: "Biddishsha 3",
         step3Title: "Borreessamate Kifile Gudi",
-        step3Desc: "Shoole kifile gudisatenni borreessi. Woredanna Kebele gara ikkasi la'i, Sidaamu oosohura qara magawo uyinannita qaagi.",
+        step3Desc:
+          "Shoole kifile gudisatenni borreessi. Woredanna Kebele gara ikkasi la'i, Sidaamu oosohura qara magawo uyinannita qaagi.",
         step3Bullets: [
           "Sokkara albaanni baala qaale garinni sokkittoro la'i",
           "Sokkita albaanni E-mail sokka afattotto",
-          "Ate koodde albaanni hasiissannohe"
+          "Ate koodde albaanni hasiissannohe",
         ],
         adminGuide: "Biddishshaanoho Biddishsha",
         adminOverview: "Umo Kifile",
         adminOverviewDesc: "Hasi'raano gudisatenni eessate biddishsha.",
         kpiTitle: "Loosu Kaimanna (KPI)",
-        kpiDesc: "Baala hasi'raano kiiro, gatino looso, nna loosu kaimanna la'i.",
+        kpiDesc:
+          "Baala hasi'raano kiiro, gatino looso, nna loosu kaimanna la'i.",
         filterTitle: "Gara Hasi'raano",
-        filterDesc: "CGPA, afuu (Sidaamu Afoo) nna bayichunni hasi'raano fushshi.",
+        filterDesc:
+          "CGPA, afuu (Sidaamu Afoo) nna bayichunni hasi'raano fushshi.",
         searchTitle: "Baala Hasi'ri",
-        searchDesc: "Hasi'raanohu su'minni, Fayda ID nna silkeni xaawo afate hasi'ri.",
+        searchDesc:
+          "Hasi'raanohu su'minni, Fayda ID nna silkeni xaawo afate hasi'ri.",
         exportTitle: "Ripoorte Fushshi",
         exportDesc: "Bordeho nna biddishshaho PDF/Excel ripoorte fushshi.",
         secTitle: "Misiire nna Halaale",
-        secDesc: "Biddishshaanohu looso gidinni borreessinanni. Hasi'raanota misiire agarate looso gudittokki Sign Out yite fula qaagi."
-      }
-    }
-  }
+        secDesc:
+          "Biddishshaanohu looso gidinni borreessinanni. Hasi'raanota misiire agarate looso gudittokki Sign Out yite fula qaagi.",
+      },
+    },
+  },
 };
 
 i18n
@@ -394,10 +422,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    fallbackLng: "en",
     interpolation: {
-      escapeValue: false // React already escapes values
-    }
+      escapeValue: false, // React already escapes values
+    },
   });
 
 export default i18n;

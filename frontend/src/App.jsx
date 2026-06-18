@@ -1,6 +1,13 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom"; // ✅ Added Navigate
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom"; // ✅ Added Navigate
 import { Toaster } from "react-hot-toast";
+import ThemeContext from "./context/ThemeContext";
 
 // Public Pages
 import Home from "./pages/Home";
@@ -13,13 +20,13 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 // Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import JobList from "./components/JobList";
+import JobList from "./components/admin/JobList";
 
 // Admin System Components & Pages
-import AdminNavbar from "./components/admin/AdminNavbar"; 
+import AdminNavbar from "./components/admin/AdminNavbar";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminPortal from "./pages/admin/AdminPortal";
-import CreateJob from "./pages/admin/CreateJob"; 
+import CreateJob from "./pages/admin/CreateJob";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 
@@ -27,17 +34,14 @@ const AppContent = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-
   const isAdminRootPath = currentPath.startsWith("/admin");
   const isLoginPage = currentPath === "/admin/login";
-  
+
   const shouldRenderAdminNavbar = isAdminRootPath && !isLoginPage;
   const shouldRenderPublicNavbar = !isAdminRootPath;
 
   return (
-    <div className="pt-[73px] lg:pt-[80px] min-h-screen flex flex-col bg-[#010409] text-white selection:bg-emerald-500/30">
-      
-
+    <div className="pt-[73px] lg:pt-[80px] min-h-screen flex flex-col bg-[var(--bg)] text-[var(--color-text-primary)] selection:bg-emerald-500/30 transition-colors duration-300">
       {shouldRenderPublicNavbar && <Navbar />}
       {shouldRenderAdminNavbar && <AdminNavbar />}
 
@@ -52,10 +56,10 @@ const AppContent = () => {
           <Route path="/joblist" element={<JobList />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          
+
           {/* Job Vacancy Routes */}
           <Route path="/jobs/:id" element={<JobDetail />} />
-          <Route path="/apply/:id" element={<Application />} /> 
+          <Route path="/apply/:id" element={<Application />} />
           <Route path="/jobs/:id/apply" element={<Application />} />
 
           {/* =========================================================
@@ -64,9 +68,9 @@ const AppContent = () => {
           <Route path="/admin/login" element={<AdminLogin />} />
 
           {/* Redirect /admin to /admin/login for unauthenticated users */}
-          <Route 
-            path="/admin" 
-            element={<Navigate to="/admin/login" replace />} 
+          <Route
+            path="/admin"
+            element={<Navigate to="/admin/login" replace />}
           />
 
           <Route
@@ -91,9 +95,16 @@ const AppContent = () => {
             path="*"
             element={
               <div className="flex flex-col items-center justify-center py-32 text-center space-y-4">
-                <span className="text-emerald-500 font-mono text-xs tracking-widest uppercase font-black bg-emerald-950/30 border border-emerald-900/50 px-3 py-1.5 rounded-lg">Error 404</span>
-                <h2 className="text-xl font-black uppercase text-zinc-300">ገጹ አልተገኘም / Path Not Found</h2>
-                <p className="text-zinc-500 text-sm max-w-xs">The requested navigation gateway does not exist within the system index configuration.</p>
+                <span className="text-emerald-500 font-mono text-xs tracking-widest uppercase font-black bg-emerald-950/30 border border-emerald-900/50 px-3 py-1.5 rounded-lg">
+                  Error 404
+                </span>
+                <h2 className="text-xl font-black uppercase text-zinc-300">
+                  ገጹ አልተገኘም / Path Not Found
+                </h2>
+                <p className="text-[var(--color-text-secondary)] text-sm max-w-xs">
+                  The requested navigation gateway does not exist within the
+                  system index configuration.
+                </p>
               </div>
             }
           />
@@ -112,7 +123,11 @@ const ScrollToTop = () => {
       const timer = setTimeout(() => {
         const element = document.getElementById(hash.replace("#", ""));
         if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
         }
       }, 100);
       return () => clearTimeout(timer);
@@ -124,31 +139,63 @@ const ScrollToTop = () => {
 };
 
 const App = () => {
+  const [theme, setTheme] = useState("dark");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("site-theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+    } else {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      setTheme(prefersDark ? "dark" : "light");
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("theme-light", theme === "light");
+    document.documentElement.classList.toggle("theme-dark", theme === "dark");
+    localStorage.setItem("site-theme", theme);
+  }, [theme]);
+
   return (
-    <Router>
-      <ScrollToTop />
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          icon: null,
-          style: {
-            background: "#000000",
-            color: "#fff",
-            border: "1px solid #27272a",
-            padding: "16px 24px",
-            borderRadius: "1rem",
-            fontSize: "12px",
-            fontWeight: "bold",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.7)",
-          },
-          success: { style: { border: "1px solid rgba(16, 185, 129, 0.3)", background: "#040905" } },
-          error: { style: { border: "1px solid rgba(239, 68, 68, 0.3)", background: "#0c0505" } },
-        }}
-      />
-      <AppContent />
-    </Router>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <Router>
+        <ScrollToTop />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            icon: null,
+            style: {
+              background: "#000000",
+              color: "#fff",
+              border: "1px solid #27272a",
+              padding: "16px 24px",
+              borderRadius: "1rem",
+              fontSize: "12px",
+              fontWeight: "bold",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.7)",
+            },
+            success: {
+              style: {
+                border: "1px solid rgba(16, 185, 129, 0.3)",
+                background: "#040905",
+              },
+            },
+            error: {
+              style: {
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                background: "#0c0505",
+              },
+            },
+          }}
+        />
+        <AppContent />
+      </Router>
+    </ThemeContext.Provider>
   );
 };
 

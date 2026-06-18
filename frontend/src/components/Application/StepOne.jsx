@@ -1,97 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, Fingerprint, User, UserCheck } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Mail, Phone, Fingerprint, User, UserCheck } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function StepOne({ data, update, onNext }) {
   const [errors, setErrors] = useState({});
 
   // Synchronize fullName whenever identity parts update
   useEffect(() => {
-    const full = `${data.firstName || ''} ${data.middleName || ''} ${data.lastName || ''}`
-      .replace(/\s+/g, ' ')
-      .trim();
+    const full =
+      `${data.firstName || ""} ${data.middleName || ""} ${data.lastName || ""}`
+        .replace(/\s+/g, " ")
+        .trim();
     if (data.fullName !== full) {
       update({ fullName: full });
     }
   }, [data.firstName, data.middleName, data.lastName, data.fullName, update]);
 
   const handleNameChange = (field, value) => {
-    const stringOnly = value.replace(/[0-9]/g, '');
+    const stringOnly = value.replace(/[0-9]/g, "");
     if (value !== stringOnly) {
-      toast.error("Names cannot contain numbers", { id: 'name-error', duration: 1000 });
+      toast.error("Names cannot contain numbers", {
+        id: "name-error",
+        duration: 1000,
+      });
     }
     update({ [field]: stringOnly });
   };
 
   const handleNumberChange = (field, value, maxLength) => {
     // Keep digits only
-    const numbersOnly = value.replace(/\D/g, '');
+    const numbersOnly = value.replace(/\D/g, "");
     update({ [field]: numbersOnly.slice(0, maxLength) });
   };
 
   const validate = () => {
     let newErrors = {};
-    
+
     if (!data.firstName?.trim()) newErrors.firstName = "Required";
     if (!data.middleName?.trim()) newErrors.middleName = "Required";
     if (!data.lastName?.trim()) newErrors.lastName = "Required";
     if (!data.gender) newErrors.gender = "Required";
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.email || !emailRegex.test(data.email)) {
       newErrors.email = "Invalid email";
     }
-    
+
     // Validates 10-digit standard (09/07) or stripped digits for 2519/2517
     const phoneRegex = /^(09|07|2519|2517)\d{8}$/;
-    if (!data.phone || !phoneRegex.test(data.phone.replace(/\s/g, ''))) {
+    if (!data.phone || !phoneRegex.test(data.phone.replace(/\s/g, ""))) {
       newErrors.phone = "Enter valid Ethio phone (09.../07...)";
     }
-    
+
     if (!data.faydaId || data.faydaId.length !== 16) {
       newErrors.faydaId = "16 digits required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8"
     >
       <div>
-        <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight">Personal Information</h2>
-        <p className="text-zinc-500 text-xs md:text-sm mt-1 font-medium">Please enter your personal details below.</p>
+        <h2 className="text-xl md:text-2xl font-black text-[var(--color-text-primary)] uppercase tracking-tight">
+          Personal Information
+        </h2>
+        <p className="text-[var(--color-text-secondary)] text-xs md:text-sm mt-1 font-medium">
+          Please enter your personal details below.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InputWrapper label="First Name" error={errors.firstName} icon={<User size={16}/>}>
-          <input 
-            className={`w-full bg-black/40 border ${errors.firstName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.firstName || ''}
-            onChange={(e) => handleNameChange('firstName', e.target.value)}
+        <InputWrapper
+          label="First Name"
+          error={errors.firstName}
+          icon={<User size={16} />}
+        >
+          <input
+            className={`w-full bg-[var(--color-surface)] border ${errors.firstName ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.firstName || ""}
+            onChange={(e) => handleNameChange("firstName", e.target.value)}
             placeholder="First Name"
           />
         </InputWrapper>
 
-        <InputWrapper label="Middle Name" error={errors.middleName} icon={<User size={16}/>}>
-          <input 
-            className={`w-full bg-black/40 border ${errors.middleName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.middleName || ''}
-            onChange={(e) => handleNameChange('middleName', e.target.value)}
+        <InputWrapper
+          label="Middle Name"
+          error={errors.middleName}
+          icon={<User size={16} />}
+        >
+          <input
+            className={`w-full bg-[var(--color-surface)] border ${errors.middleName ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.middleName || ""}
+            onChange={(e) => handleNameChange("middleName", e.target.value)}
             placeholder="Father's Name"
           />
         </InputWrapper>
 
-        <InputWrapper label="Last Name" error={errors.lastName} icon={<UserCheck size={16}/>}>
-          <input 
-            className={`w-full bg-black/40 border ${errors.lastName ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.lastName || ''}
-            onChange={(e) => handleNameChange('lastName', e.target.value)}
+        <InputWrapper
+          label="Last Name"
+          error={errors.lastName}
+          icon={<UserCheck size={16} />}
+        >
+          <input
+            className={`w-full bg-[var(--color-surface)] border ${errors.lastName ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.lastName || ""}
+            onChange={(e) => handleNameChange("lastName", e.target.value)}
             placeholder="Grandfather's Name"
           />
         </InputWrapper>
@@ -99,17 +119,19 @@ export default function StepOne({ data, update, onNext }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-2">
-          <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">Legal Gender</label>
-          <div className="flex gap-2 p-1 bg-black/20 border border-zinc-800 rounded-2xl h-[58px]">
-            {['Male', 'Female'].map((option) => (
+          <label className="block text-[10px] font-black text-[var(--color-text-secondary)] uppercase tracking-widest ml-1">
+            Legal Gender
+          </label>
+          <div className="flex gap-2 p-1 bg-[var(--color-surface)]/50 border border-[var(--nav-border)] rounded-2xl h-[58px]">
+            {["Male", "Female"].map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => update({ gender: option })}
                 className={`flex-1 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
-                  data.gender === option 
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' 
-                    : 'text-zinc-600 hover:bg-white/5'
+                  data.gender === option
+                    ? "bg-emerald-600 text-white shadow-lg shadow-emerald-900/20"
+                    : "text-[var(--color-text-secondary)] hover:bg-white/5"
                 }`}
               >
                 {option}
@@ -118,43 +140,59 @@ export default function StepOne({ data, update, onNext }) {
           </div>
         </div>
 
-        <InputWrapper label="Fayda Number (16-Digit)" error={errors.faydaId} icon={<Fingerprint size={16}/>}>
-          <input 
+        <InputWrapper
+          label="Fayda Number (16-Digit)"
+          error={errors.faydaId}
+          icon={<Fingerprint size={16} />}
+        >
+          <input
             type="text"
             inputMode="numeric"
-            className={`w-full bg-black/40 border font-mono ${errors.faydaId ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.faydaId || ''}
-            onChange={(e) => handleNumberChange('faydaId', e.target.value, 16)}
+            className={`w-full bg-[var(--color-surface)] border font-mono ${errors.faydaId ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.faydaId || ""}
+            onChange={(e) => handleNumberChange("faydaId", e.target.value, 16)}
             placeholder="0000000000000000"
           />
         </InputWrapper>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <InputWrapper label="Work Email" error={errors.email} icon={<Mail size={16}/>}>
-          <input 
+        <InputWrapper
+          label="Work Email"
+          error={errors.email}
+          icon={<Mail size={16} />}
+        >
+          <input
             type="email"
-            className={`w-full bg-black/40 border ${errors.email ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.email || ''}
+            className={`w-full bg-[var(--color-surface)] border ${errors.email ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.email || ""}
             onChange={(e) => update({ email: e.target.value.toLowerCase() })}
             placeholder="example@domain.com"
           />
         </InputWrapper>
 
-        <InputWrapper label="Phone Number" error={errors.phone} icon={<Phone size={16}/>}>
-          <input 
+        <InputWrapper
+          label="Phone Number"
+          error={errors.phone}
+          icon={<Phone size={16} />}
+        >
+          <input
             type="tel"
-            className={`w-full bg-black/40 border ${errors.phone ? 'border-red-500/50' : 'border-zinc-800'} rounded-2xl py-4 pl-12 pr-5 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all`}
-            value={data.phone || ''}
-            onChange={(e) => handleNumberChange('phone', e.target.value, 12)}
+            className={`w-full bg-[var(--color-surface)] border ${errors.phone ? "border-red-500/50" : "border-[var(--nav-border)]"} rounded-2xl py-4 pl-12 pr-5 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-emerald-500/50 transition-all`}
+            value={data.phone || ""}
+            onChange={(e) => handleNumberChange("phone", e.target.value, 12)}
             placeholder="0911223344"
           />
         </InputWrapper>
       </div>
 
-      <button 
-        onClick={() => validate() ? onNext() : toast.error("Please fill in all required fields correctly")}
-        className="group relative w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all active:scale-[0.98]"
+      <button
+        onClick={() =>
+          validate()
+            ? onNext()
+            : toast.error("Please fill in all required fields correctly")
+        }
+        className="group relative w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-[var(--color-text-primary)] font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all active:scale-[0.98]"
       >
         Continue to Residency
       </button>
@@ -167,11 +205,21 @@ export function InputWrapper({ label, error, icon, children }) {
   return (
     <div className="space-y-2 relative w-full">
       <div className="flex justify-between items-center px-1">
-        <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest">{label}</label>
-        {error && <span className="text-[10px] font-bold text-red-500 uppercase">{error}</span>}
+        <label className="block text-[10px] font-black text-[var(--color-text-secondary)] uppercase tracking-widest">
+          {label}
+        </label>
+        {error && (
+          <span className="text-[10px] font-bold text-red-500 uppercase">
+            {error}
+          </span>
+        )}
       </div>
       <div className="relative flex items-center">
-        {icon && <div className="absolute left-4 text-zinc-600 z-10 pointer-events-none">{icon}</div>}
+        {icon && (
+          <div className="absolute left-4 text-[var(--color-text-secondary)] z-10 pointer-events-none">
+            {icon}
+          </div>
+        )}
         {children}
       </div>
     </div>

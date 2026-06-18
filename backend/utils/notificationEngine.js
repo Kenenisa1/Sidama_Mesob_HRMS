@@ -1,5 +1,5 @@
 /**
- * Asynchronous Notification Dispatcher for Sidama MESOB HRMS
+ * Asynchronous Notification Dispatcher for SidaMOV (Sidama Mesob Online Vacancy)
  * Broadcaster system for regional community updates
  */
 export const dispatchJobNotification = async (jobDetails) => {
@@ -13,6 +13,9 @@ export const dispatchJobNotification = async (jobDetails) => {
     // In production, your email/SMS gateway logic goes here safely.
     return true;
   } catch (error) {
-    console.error("Critical error tracing notification system event dispatcher:", error);
+    console.error(
+      "Critical error tracing notification system event dispatcher:",
+      error,
+    );
   }
 };
