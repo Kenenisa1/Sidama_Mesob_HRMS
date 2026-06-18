@@ -19,7 +19,6 @@ import ThemeContext from "../context/ThemeContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const { theme, setTheme } = useContext(ThemeContext);
   const location = useLocation();
 
@@ -35,13 +34,7 @@ const Navbar = () => {
     languages.find((l) => l.code === (i18n.language || "").split("-")[0]) ||
     languages[0];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
 
   // Prevent background page body from scrolling when full-screen mobile menu is open
   useEffect(() => {

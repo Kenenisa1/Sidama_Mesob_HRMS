@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function DeleteJobModal({ job, onClose, onDeleteConfirm }) {
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Prevent background scrolling
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
 
   const handleDeleteSubmit = async () => {
     setIsDeleting(true);
@@ -11,7 +20,7 @@ function DeleteJobModal({ job, onClose, onDeleteConfirm }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999] animate-[fadeIn_0.2s_ease-out]">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden">
         {/* Header with Icon */}
         <div className="bg-red-50 border-b border-red-100 px-6 py-4 flex items-center gap-3">

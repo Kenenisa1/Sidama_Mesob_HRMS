@@ -24,9 +24,9 @@ import JobList from "./components/admin/JobList";
 
 // Admin System Components & Pages
 import AdminNavbar from "./components/admin/AdminNavbar";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminPortal from "./pages/admin/AdminPortal";
-import CreateJob from "./pages/admin/CreateJob";
+import AdminLogin from "./pages/Admin/AdminLogin";
+import AdminPortal from "./pages/Admin/AdminPortal";
+import CreateJob from "./pages/Admin/CreateJob";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 
@@ -139,19 +139,13 @@ const ScrollToTop = () => {
 };
 
 const App = () => {
-  const [theme, setTheme] = useState("dark");
-
-  useEffect(() => {
+  const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("site-theme");
     if (savedTheme === "light" || savedTheme === "dark") {
-      setTheme(savedTheme);
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
-      setTheme(prefersDark ? "dark" : "light");
+      return savedTheme;
     }
-  }, []);
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("theme-light", theme === "light");
@@ -165,30 +159,33 @@ const App = () => {
         <ScrollToTop />
         <Toaster
           position="top-right"
+          containerStyle={{ zIndex: 999999 }}
           toastOptions={{
             icon: null,
             style: {
-              background: "#000000",
-              color: "#fff",
-              border: "1px solid #27272a",
+              background: "#ffffff",
+              color: "#111827",
+              border: "1px solid #e5e7eb",
               padding: "16px 24px",
               borderRadius: "1rem",
               fontSize: "12px",
               fontWeight: "bold",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.7)",
+              boxShadow: "0 20px 40px rgba(16, 185, 129, 0.08)",
             },
             success: {
               style: {
-                border: "1px solid rgba(16, 185, 129, 0.3)",
-                background: "#040905",
+                border: "1px solid rgba(16, 185, 129, 0.4)",
+                background: "#f0fdf4",
+                color: "#065f46",
               },
             },
             error: {
               style: {
-                border: "1px solid rgba(239, 68, 68, 0.3)",
-                background: "#0c0505",
+                border: "1px solid rgba(239, 68, 68, 0.4)",
+                background: "#fef2f2",
+                color: "#991b1b",
               },
             },
           }}

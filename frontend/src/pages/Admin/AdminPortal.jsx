@@ -19,20 +19,20 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // StatCard Component
 const StatCard = ({ title, value, subtext, icon: Icon, isTrend }) => (
-  <div className="bg-cardBg border border-white/5 p-6 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 hover:border-white/10">
+  <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-[0_8px_30px_rgba(16,185,129,0.12)] transition-all duration-300 hover:border-oled-green/40 hover:-translate-y-1">
     <div className="flex justify-between items-start mb-4">
-      <h3 className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">
+      <h3 className="text-gray-500 text-[11px] font-extrabold uppercase tracking-widest">
         {title}
       </h3>
-      <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/5 flex items-center justify-center text-emeraldAccent">
-        <Icon size={15} />
+      <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-oled-green">
+        <Icon size={18} />
       </div>
     </div>
-    <h2 className="text-3xl font-black text-white tracking-tight mb-1">
+    <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-2">
       {value}
     </h2>
     <p
-      className={`text-[10px] font-mono uppercase tracking-wider ${isTrend ? "text-emeraldAccent font-bold" : "text-zinc-500"}`}
+      className={`text-[11px] font-mono uppercase tracking-wider ${isTrend ? "text-oled-green font-bold" : "text-gray-500 font-semibold"}`}
     >
       {subtext}
     </p>
@@ -48,8 +48,7 @@ function AdminPortal() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedWoreda, setSelectedWoreda] = useState("");
-  const [selectedFluency, setSelectedFluency] = useState("");
+  const [minExperience, setMinExperience] = useState(0);
   const [minCgpa, setMinCgpa] = useState(2);
 
   // Modal states
@@ -109,6 +108,19 @@ function AdminPortal() {
     fetchApplications();
     verifyDatabasePipeline(true);
   }, []);
+
+  const handleGlobalRefresh = async () => {
+    setIsTestingSync(true);
+    try {
+      await fetchApplications();
+      await verifyDatabasePipeline(true);
+      toast.success("Refreshed successfully");
+    } catch (error) {
+      toast.error("Failed to refresh some modules");
+    } finally {
+      setIsTestingSync(false);
+    }
+  };
 
   // View application details
   const handleViewApplication = async (app) => {
@@ -190,29 +202,6 @@ function AdminPortal() {
   };
 
   // Computed values
-  const woredas = useMemo(() => {
-    return [
-      ...new Set(
-        applications.map((app) => app.residency?.woreda).filter(Boolean),
-      ),
-    ].sort();
-  }, [applications]);
-
-  const fluencyLevels = useMemo(() => {
-    return [
-      ...new Set(
-        applications
-          .map(
-            (app) =>
-              app.education?.sidaamuAfooProficiency ||
-              app.education?.sidaamuAfoo ||
-              app.sidaamuAfoo,
-          )
-          .filter(Boolean),
-      ),
-    ].sort();
-  }, [applications]);
-
   const filteredApplications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
     return applications.filter((app) => {
@@ -222,23 +211,17 @@ function AdminPortal() {
       const fullName = `${first} ${middle} ${last}`.toLowerCase();
 
       const nationalId = app.personalInfo?.faydaId?.toLowerCase() || "";
-      const woreda = app.residency?.woreda || "";
-      const fluency =
-        app.education?.sidaamuAfooProficiency ||
-        app.education?.sidaamuAfoo ||
-        app.sidaamuAfoo ||
-        "";
       const cgpa = Number(app.education?.cgpa || 0);
+      const exp = Number(app.experience || app.education?.experience || 0);
 
       const matchesSearch =
         !query || fullName.includes(query) || nationalId.includes(query);
-      const matchesWoreda = !selectedWoreda || woreda === selectedWoreda;
-      const matchesFluency = !selectedFluency || fluency === selectedFluency;
+      const matchesExperience = exp >= Number(minExperience);
       const matchesCgpa = cgpa >= Number(minCgpa);
 
-      return matchesSearch && matchesWoreda && matchesFluency && matchesCgpa;
+      return matchesSearch && matchesExperience && matchesCgpa;
     });
-  }, [applications, minCgpa, searchTerm, selectedFluency, selectedWoreda]);
+  }, [applications, minCgpa, searchTerm, minExperience]);
 
   const fluentCount = useMemo(() => {
     return applications.filter((app) => {
@@ -257,8 +240,7 @@ function AdminPortal() {
 
   const resetFilters = () => {
     setSearchTerm("");
-    setSelectedWoreda("");
-    setSelectedFluency("");
+    setMinExperience(0);
     setMinCgpa(2);
   };
 
@@ -268,12 +250,7 @@ function AdminPortal() {
     const rows = filteredApplications.map((app) => ({
       Name: `${app.personalInfo?.firstName || ""} ${app.personalInfo?.middleName || ""} ${app.personalInfo?.lastName || ""}`.trim(),
       "National ID": app.personalInfo?.faydaId || "",
-      Woreda: app.residency?.woreda || "",
-      "Sidaamu Afoo Fluency":
-        app.education?.sidaamuAfooProficiency ||
-        app.education?.sidaamuAfoo ||
-        app.sidaamuAfoo ||
-        "",
+      "Years of Experience": app.experience || app.education?.experience || 0,
       CGPA: app.education?.cgpa ?? "",
       Status: app.status || "Pending",
     }));
@@ -298,25 +275,33 @@ function AdminPortal() {
   };
 
   return (
-    <div className="min-h-screen bg-darkBg p-6 md:p-12 relative antialiased selection:bg-emeraldAccent selection:text-black">
-      {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-white/5 pb-6">
-        <div>
-          <h1 className="text-2xl font-black text-white tracking-tight uppercase">
+    <div className="min-h-screen bg-[#f8faf9] px-6 py-4 md:px-12 md:py-8 relative antialiased selection:bg-oled-green/20 selection:text-gray-900 overflow-hidden">
+      {/* Dynamic Animated Background */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-oled-green/10 blur-[120px] mix-blend-multiply animate-[pulse_8s_ease-in-out_infinite]" />
+        <div className="absolute top-[20%] -right-[10%] w-[40vw] h-[60vw] rounded-full bg-emerald-300/10 blur-[100px] mix-blend-multiply animate-[pulse_10s_ease-in-out_infinite_alternate]" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[60vw] h-[40vw] rounded-full bg-green-200/20 blur-[120px] mix-blend-multiply animate-[pulse_12s_ease-in-out_infinite_alternate-reverse]" />
+      </div>
+
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-gradient-to-r from-[#031d10] via-oled-dark to-oled-green p-6 md:p-8 rounded-3xl shadow-[0_15px_40px_rgba(16,185,129,0.2)]">
+          <div>
+            <h1 className="text-3xl font-black text-emerald-50 tracking-tight uppercase drop-shadow-sm">
             Admin Dashboard
           </h1>
-          <div className="flex items-center gap-3 mt-1 text-xs font-medium">
-            <p className="text-zinc-400">
+          <div className="flex items-center gap-3 mt-2 text-sm font-bold text-emerald-200/80">
+            <p className="text-emerald-200">
               SidaMOV (Sidama Mesob Online Vacancy)
             </p>
-            <span className="text-zinc-700">&bull;</span>
+            <span className="text-emerald-500/50">&bull;</span>
             <button
-              onClick={() => verifyDatabasePipeline(false)}
-              className="uppercase font-mono tracking-wider text-zinc-500 hover:text-emeraldAccent flex items-center gap-1.5 transition-colors group"
+              onClick={handleGlobalRefresh}
+              className="uppercase font-mono tracking-widest text-emerald-100 hover:text-white flex items-center gap-1.5 transition-all group hover:drop-shadow-[0_0_12px_rgba(16,185,129,0.8)] bg-emerald-900/30 hover:bg-emerald-800/40 px-3 py-1.5 rounded-lg border border-emerald-500/20 shadow-sm backdrop-blur-md"
             >
               <RefreshCw
-                size={10}
-                className={`group-hover:rotate-180 transition-transform duration-500 ${isTestingSync ? "animate-spin text-emeraldAccent" : ""}`}
+                size={14}
+                className={`group-hover:rotate-180 transition-transform duration-500 ${isTestingSync ? "animate-spin text-emerald-300" : "text-emerald-400"}`}
               />
               Refresh Data
             </button>
@@ -324,39 +309,32 @@ function AdminPortal() {
         </div>
 
         {/* Tab navigation */}
-        <div className="flex bg-zinc-950 p-1 rounded-xl border border-white/5 self-stretch md:self-auto">
+        <div className="flex bg-emerald-950/40 backdrop-blur-md p-1.5 rounded-xl border border-emerald-500/20 shadow-sm self-stretch md:self-auto">
           <button
             onClick={() => setActiveTab("applicants")}
-            className={`flex-1 md:flex-initial px-4 py-2 font-bold uppercase tracking-wider text-[10px] rounded-lg transition-all flex items-center justify-center gap-2
-              ${activeTab === "applicants" ? "bg-zinc-900 text-emeraldAccent border border-white/5 shadow-md" : "text-zinc-400 hover:text-zinc-200"}`}
+            className={`flex-1 md:flex-initial px-5 py-2.5 font-extrabold uppercase tracking-widest text-[11px] rounded-lg transition-all flex items-center justify-center gap-2
+              ${activeTab === "applicants" ? "bg-emerald-400 text-[#031d10] shadow-[0_4px_15px_rgba(52,211,153,0.3)]" : "text-emerald-200 hover:text-white hover:bg-emerald-800/50"}`}
           >
-            <Users size={12} /> Applicants
+            <Users size={14} /> Applicants
           </button>
           <button
             onClick={() => setActiveTab("vacancies")}
-            className={`flex-1 md:flex-initial px-4 py-2 font-bold uppercase tracking-wider text-[10px] rounded-lg transition-all flex items-center justify-center gap-2
-              ${activeTab === "vacancies" ? "bg-zinc-900 text-emeraldAccent border border-white/5 shadow-md" : "text-zinc-400 hover:text-zinc-200"}`}
+            className={`flex-1 md:flex-initial px-5 py-2.5 font-extrabold uppercase tracking-widest text-[11px] rounded-lg transition-all flex items-center justify-center gap-2
+              ${activeTab === "vacancies" ? "bg-emerald-400 text-[#031d10] shadow-[0_4px_15px_rgba(52,211,153,0.3)]" : "text-emerald-200 hover:text-white hover:bg-emerald-800/50"}`}
           >
-            <Briefcase size={12} /> Manage Jobs
+            <Briefcase size={14} /> Manage Jobs
           </button>
         </div>
       </header>
 
       {/* Statistics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <StatCard
           title="Total Applicants"
           value={isLoading ? "..." : applications.length}
           subtext={error ? "Offline" : "Total applications received"}
           icon={Users}
           isTrend={!error}
-        />
-        <StatCard
-          title="Sidaamu Afoo Fluent"
-          value={isLoading ? "..." : fluentCount}
-          subtext={`${fluentPercent}% fluent applicants`}
-          icon={MessageCircle}
-          isTrend={false}
         />
         <StatCard
           title="Active Jobs"
@@ -371,44 +349,40 @@ function AdminPortal() {
       {activeTab === "applicants" ? (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 animate-in fade-in duration-200">
           <RegistryFilters
-            selectedWoreda={selectedWoreda}
-            setSelectedWoreda={setSelectedWoreda}
-            woredas={woredas}
-            selectedFluency={selectedFluency}
-            setSelectedFluency={setSelectedFluency}
-            fluencyLevels={fluencyLevels}
+            minExperience={minExperience}
+            setMinExperience={setMinExperience}
             minCgpa={minCgpa}
             setMinCgpa={setMinCgpa}
             resetFilters={resetFilters}
           />
 
-          <div className="lg:col-span-3 bg-cardBg p-6 md:p-8 rounded-2xl border border-white/5 shadow-xl">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div className="lg:col-span-3 bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <div>
-                <h3 className="text-lg font-extrabold text-white">
+                <h3 className="text-xl font-black text-oled-dark tracking-tight">
                   Applicants List
                 </h3>
-                <p className="text-zinc-500 text-xs font-mono mt-0.5">
+                <p className="text-gray-500 text-sm font-mono mt-1 font-semibold">
                   Showing {filteredApplications.length} applicants
                 </p>
               </div>
               <button
                 onClick={exportToExcel}
                 disabled={filteredApplications.length === 0}
-                className="flex items-center gap-2 bg-white hover:bg-zinc-100 disabled:opacity-40 text-emerald-950 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md active:scale-95 w-full sm:w-auto justify-center"
+                className="flex items-center gap-2 bg-white hover:bg-oled-green/5 border border-gray-200 hover:border-oled-green/40 disabled:opacity-40 text-gray-700 hover:text-oled-dark px-5 py-3 rounded-xl font-extrabold text-xs uppercase tracking-widest transition-all shadow-sm hover:shadow-[0_4px_20px_rgba(16,185,129,0.15)] active:scale-95 w-full sm:w-auto justify-center"
               >
-                <FileText size={15} /> Save Report (.CSV)
+                <FileText size={16} className="text-oled-green" /> Save Report (.CSV)
               </button>
             </div>
 
-            <div className="relative mb-6">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 w-4 h-4" />
+            <div className="relative mb-8">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by Name or Kebele ID..."
-                className="w-full bg-darkBg border border-white/5 rounded-xl py-3 pl-11 pr-4 text-xs text-white focus:outline-none focus:border-emeraldAccent/30 placeholder:text-zinc-600 transition-colors"
+                className="w-full bg-white border border-gray-300 rounded-xl py-3.5 pl-12 pr-4 text-sm font-bold text-gray-900 focus:outline-none focus:border-oled-green focus:ring-1 focus:ring-oled-green placeholder:text-gray-400 transition-colors shadow-sm"
               />
             </div>
 
@@ -421,23 +395,22 @@ function AdminPortal() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="text-zinc-500 text-[10px] font-mono uppercase tracking-widest border-b border-white/5">
+                  <tr className="text-gray-500 text-[11px] font-extrabold font-mono uppercase tracking-widest border-b border-gray-200">
                     <th className="pb-4 pl-4">
                       <input
                         type="checkbox"
-                        className="accent-emeraldAccent w-4 h-4 rounded bg-darkBg border-white/10"
+                        className="accent-oled-green w-4 h-4 rounded border-gray-300"
                       />
                     </th>
-                    <th className="pb-4 font-bold">Candidate Name</th>
-                    <th className="pb-4 font-bold">Kebele ID</th>
-                    <th className="pb-4 font-bold">Woreda</th>
-                    <th className="pb-4 font-bold">Sidaamu Afoo</th>
-                    <th className="pb-4 font-bold">CGPA</th>
-                    <th className="pb-4 font-bold">Status</th>
-                    <th className="pb-4 font-bold text-right pr-4">Actions</th>
+                    <th className="pb-4">Candidate Name</th>
+                    <th className="pb-4">Kebele ID</th>
+                    <th className="pb-4">Experience</th>
+                    <th className="pb-4">CGPA</th>
+                    <th className="pb-4">Status</th>
+                    <th className="pb-4 text-right pr-4">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.02]">
+                <tbody className="divide-y divide-gray-100">
                   {isLoading ? (
                     <tr>
                       <td
@@ -477,7 +450,7 @@ function AdminPortal() {
           {/* Job Vacancies View */}
           <VacancyControlTab
             jobsList={jobsList}
-            onRefreshJobs={() => verifyDatabasePipeline(false)}
+            onRefreshJobs={handleGlobalRefresh}
             onUpdateJobStatus={handleUpdateJobSpecs}
             onDeleteJob={handleDeleteJobRecord}
           />
@@ -494,6 +467,7 @@ function AdminPortal() {
           error={detailsError}
         />
       )}
+      </div>
     </div>
   );
 }

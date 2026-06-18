@@ -252,48 +252,48 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
       </div>
 
       {/* BACKDROP FORM WINDOW */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 selection:bg-emerald-500/20 animate-[fadeIn_0.2s_ease-out]">
-        <div className="w-full max-w-3xl my-auto bg-[#030712] border border-zinc-800/80 rounded-2xl shadow-[0_0_80px_-20px_rgba(16,185,129,0.1)] overflow-hidden flex flex-col max-h-[95vh]">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 selection:bg-oled-green/20 animate-[fadeIn_0.2s_ease-out]">
+        <div className="w-full max-w-3xl my-auto bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[95vh]">
           
           {/* Top Decorative Border Accent Strip */}
-          <div className="h-1 w-full bg-gradient-to-r from-emerald-600 via-indigo-500 to-blue-500 shrink-0" />
+          <div className="h-1.5 w-full bg-oled-green shrink-0" />
 
           {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-[#050914] shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 shrink-0">
             <div>
-              <h2 className="text-sm font-black tracking-widest uppercase text-zinc-100 flex items-center gap-2 font-mono">
-                <Briefcase className="text-emerald-500 w-4 h-4" /> Modify Vacancy Structure
+              <h2 className="text-base font-black tracking-tight uppercase text-gray-900 flex items-center gap-2 font-mono">
+                <Briefcase className="text-oled-green w-5 h-5" /> Modify Vacancy Structure
               </h2>
-              <p className="text-[9px] text-zinc-400 font-mono tracking-wider mt-0.5 uppercase">
+              <p className="text-[10px] text-gray-500 font-mono tracking-widest mt-1 font-bold uppercase">
                 SYSTEM PORTAL INTERFACE // REGISTRY CONFIG
               </p>
             </div>
             <button 
               type="button"
               onClick={onClose}
-              className="text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-950/80 border border-zinc-900 transition-colors cursor-pointer"
+              className="text-gray-400 hover:text-gray-900 p-2 rounded-xl bg-white border border-gray-200 hover:border-gray-300 transition-colors shadow-sm cursor-pointer"
             >
-              <X size={14} className="stroke-[2.5]" />
+              <X size={16} className="stroke-[2.5]" />
             </button>
           </div>
 
           {/* Dynamic Content Switching Layer */}
           {isLoading ? (
-            <div className="py-24 px-6 flex flex-col items-center justify-center gap-4 font-mono text-[10px] text-zinc-500 tracking-widest text-center flex-1 bg-[#030712]">
-              <Loader2 size={18} className="animate-spin text-emerald-400" />
+            <div className="py-24 px-6 flex flex-col items-center justify-center gap-4 font-mono text-[11px] font-bold text-gray-500 tracking-widest text-center flex-1 bg-white">
+              <Loader2 size={24} className="animate-spin text-oled-green" />
               SYNCHRONIZING SECURE REWRITE STREAM WITH HAWASSA PULSE CLOUD...
             </div>
           ) : (
             <>
               {/* Form Input View Body Container */}
-              <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-gradient-to-b from-[#030712] to-[#010409] custom-scrollbar">
-                <form id="modal-edit-vacancy-form" onSubmit={handleSubmit} className="space-y-5">
+              <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-white custom-scrollbar">
+                <form id="modal-edit-vacancy-form" onSubmit={handleSubmit} className="space-y-6">
                   
                   {/* Row 1: Title & Job Code */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Briefcase size={12} className="text-emerald-500" /> Vacancy Position Title
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Briefcase size={14} className="text-oled-green" /> Vacancy Position Title
                       </label>
                       <input
                         type="text"
@@ -301,14 +301,14 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                         value={formData.title}
                         onChange={handleChange}
                         placeholder="e.g., የሲስተም አድሚኒስትሬተር IV"
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs transition-all placeholder:text-zinc-600 outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-3 px-4 text-gray-900 text-sm font-bold transition-all placeholder:text-gray-400 outline-none shadow-sm"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Hash size={12} className="text-emerald-500" /> Registry Serial Code (jobCode)
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Hash size={14} className="text-oled-green" /> Registry Serial Code (jobCode)
                       </label>
                       <input
                         type="text"
@@ -316,23 +316,23 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                         value={formData.jobCode}
                         onChange={handleChange}
                         placeholder="e.g., ሲዳ/መሶብ-1.2.18-012"
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-3 px-4 text-gray-900 text-sm font-bold font-mono transition-all placeholder:text-gray-400 outline-none shadow-sm"
                         required
                       />
                     </div>
                   </div>
 
                   {/* Row 2: Department, Civil Rank, and Salary */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Building2 size={12} className="text-emerald-500" /> Department
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Building2 size={14} className="text-oled-green" /> Department
                       </label>
                       <select
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all cursor-pointer outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold transition-all cursor-pointer outline-none shadow-sm"
                       >
                         <option value="Information Technology">Information Technology</option>
                         <option value="Human Resource Development Directorate">Human Resource Directorate</option>
@@ -343,14 +343,14 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                     </div>
 
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <TrendingUp size={12} className="text-emerald-500" /> Civil Service Rank
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <TrendingUp size={14} className="text-oled-green" /> Civil Service Rank
                       </label>
                       <select
                         name="rankLevel"
                         value={formData.rankLevel.startsWith("Level ") ? formData.rankLevel : `Level ${formData.rankLevel}`}
                         onChange={handleChange}
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all font-mono cursor-pointer outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold transition-all font-mono cursor-pointer outline-none shadow-sm"
                       >
                         <option value="Level XIV">Level XIV</option>
                         <option value="Level XIII">Level XIII</option>
@@ -364,8 +364,8 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                     </div>
 
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <DollarSign size={12} className="text-emerald-500" /> Monthly Salary (ETB)
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <DollarSign size={14} className="text-oled-green" /> Monthly Salary (ETB)
                       </label>
                       <input
                         type="number"
@@ -373,45 +373,45 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                         value={formData.salary}
                         onChange={handleChange}
                         placeholder="e.g., 19464"
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold font-mono transition-all placeholder:text-gray-400 outline-none shadow-sm"
                         required
                       />
                     </div>
                   </div>
 
                   {/* Row 3: Location, Employment Type & CGPA */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <MapPin size={12} className="text-emerald-500" /> Working Location
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <MapPin size={14} className="text-oled-green" /> Working Location
                       </label>
                       <input
                         type="text"
                         name="location"
                         value={formData.location}
                         onChange={handleChange}
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold transition-all outline-none shadow-sm"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Briefcase size={12} className="text-emerald-500" /> Employment Category
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Briefcase size={14} className="text-oled-green" /> Employment Category
                       </label>
                       <input
                         type="text"
                         name="employmentType"
                         value={formData.employmentType}
                         onChange={handleChange}
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold transition-all outline-none shadow-sm"
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Award size={12} className="text-emerald-500" /> Required CGPA Threshold
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Award size={14} className="text-oled-green" /> Required CGPA Threshold
                       </label>
                       <input
                         type="number"
@@ -421,17 +421,17 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                         name="cgpa"
                         value={formData.cgpa}
                         onChange={handleChange}
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all outline-none"
+                        className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold font-mono transition-all outline-none shadow-sm"
                         required
                       />
                     </div>
                   </div>
 
                   {/* Row 4: Open Positions Allocation Counter & Filing Window Info */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-zinc-950/40 border border-zinc-900 rounded-xl">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-5 bg-gray-50 border border-gray-200 rounded-xl">
                     <div>
-                      <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <Users size={12} className="text-emerald-500" /> Allocated Open Positions
+                      <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <Users size={14} className="text-oled-green" /> Allocated Open Positions
                       </label>
                       <input
                         type="number"
@@ -439,18 +439,18 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                         value={formData.positions}
                         onChange={handleChange}
                         min="1"
-                        className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2 text-zinc-100 text-xs font-mono transition-all outline-none"
+                        className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-3 text-gray-900 text-sm font-bold font-mono transition-all outline-none shadow-sm"
                         required
                       />
                     </div>
 
                     <div>
-                      <div className="text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <CalendarClock size={13} className="text-indigo-400" /> Calculated Filing Window
+                      <div className="text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <CalendarClock size={15} className="text-oled-green" /> Calculated Filing Window
                       </div>
-                      <div className="bg-[#010409] border border-zinc-800 p-2 rounded-xl text-zinc-200 font-mono text-[11px] flex items-center justify-between h-[38px]">
-                        <span className="text-zinc-500 text-[10px] font-sans font-bold">SYSTEM TERM:</span>
-                        <span className={`font-black uppercase tracking-wide ${isHighRank ? "text-indigo-400" : "text-amber-400"}`}>
+                      <div className="bg-white border border-gray-300 p-3 rounded-xl text-gray-900 font-mono text-xs font-bold flex items-center justify-between h-[46px] shadow-sm">
+                        <span className="text-gray-500 text-[11px] font-sans font-extrabold uppercase tracking-wider">SYSTEM TERM:</span>
+                        <span className={`font-black uppercase tracking-wide ${isHighRank ? "text-oled-dark" : "text-gray-600"}`}>
                           {activeWindowDays} Operational Days
                         </span>
                       </div>
@@ -459,81 +459,81 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
 
                   {/* Row 5: Detailed Description Input */}
                   <div>
-                    <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <FileText size={13} className="text-emerald-500" /> Comprehensive Job Description
+                    <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <FileText size={15} className="text-oled-green" /> Comprehensive Job Description
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
                       rows="3"
-                      className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all outline-none resize-none"
+                      className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-3 px-4 text-gray-900 text-sm font-bold leading-relaxed transition-all outline-none resize-none shadow-sm"
                       required
                     />
                   </div>
 
                   {/* Row 6: Educational Background Qualification Textarea */}
                   <div>
-                    <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <GraduationCap size={14} className="text-emerald-500" /> Educational Qualifications & Fields
+                    <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <GraduationCap size={16} className="text-oled-green" /> Educational Qualifications & Fields
                     </label>
                     <textarea
                       name="eligibleFields"
                       value={formData.eligibleFields}
                       onChange={handleChange}
                       rows="2"
-                      className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all outline-none resize-none"
+                      className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-3 px-4 text-gray-900 text-sm font-bold leading-relaxed transition-all outline-none resize-none shadow-sm"
                       required
                     />
                   </div>
 
                   {/* Row 7: Experience Requirements */}
                   <div>
-                    <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                      <FileText size={13} className="text-emerald-500" /> Experience Terms & Specific Requirements (ተገላጊ ችሎታ)
+                    <label className="block text-gray-700 text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <FileText size={15} className="text-oled-green" /> Experience Terms & Specific Requirements (ተገላጊ ችሎታ)
                     </label>
                     <textarea
                       name="experienceRequirements"
                       value={formData.experienceRequirements}
                       onChange={handleChange}
                       rows="2"
-                      className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all outline-none resize-none"
+                      className="w-full bg-gray-50 border border-gray-300 focus:bg-white focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-3 px-4 text-gray-900 text-sm font-bold leading-relaxed transition-all outline-none resize-none shadow-sm"
                       required
                     />
                   </div>
 
                   {/* Switch Component Grid Layout for COC Rules */}
-                  <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl flex flex-wrap items-center justify-between gap-3">
-                    <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wide">
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex flex-wrap items-center justify-between gap-3 shadow-sm">
+                    <span className="text-[11px] font-extrabold text-gray-700 uppercase tracking-widest">
                       Requires Active COC Qualification Certification
                     </span>
                     <button 
                       type="button" 
                       onClick={() => handleToggle("requiresCOC")}
-                      className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer shrink-0 ${formData.requiresCOC ? "bg-emerald-500" : "bg-zinc-800"}`}
+                      className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer shrink-0 ${formData.requiresCOC ? "bg-oled-green" : "bg-gray-300"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 shadow-sm ${formData.requiresCOC ? "translate-x-4" : "translate-x-0"}`} />
+                      <div className={`w-5 h-5 rounded-full bg-white transition-transform duration-200 shadow-sm ${formData.requiresCOC ? "translate-x-5" : "translate-x-0"}`} />
                     </button>
                   </div>
 
                   {/* Language Selection Grid System */}
-                  <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl">
-                    <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 flex items-center gap-1.5 mb-2.5">
-                      <Globe size={13} className="text-emerald-500/70" /> Language Fluency Requirements Matrix
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+                    <div className="text-[11px] uppercase font-extrabold tracking-widest text-gray-500 flex items-center gap-2 mb-3">
+                      <Globe size={15} className="text-oled-green" /> Language Fluency Requirements Matrix
                     </div>
-                    <div className="flex flex-wrap gap-5 text-[11px] font-mono font-bold">
+                    <div className="flex flex-wrap gap-6 text-xs font-mono font-bold">
                       {[
                         { id: "sidama", label: "SIDAAMU AFOO" },
                         { id: "amharic", label: "AMHARIC REQUIRED" },
                         { id: "english", label: "ENGLISH FLUID" },
                       ].map((lang) => (
-                        <label key={lang.id} className="flex items-center gap-2 cursor-pointer group select-none text-zinc-400 hover:text-zinc-200 transition-colors">
+                        <label key={lang.id} className="flex items-center gap-2.5 cursor-pointer group select-none text-gray-700 hover:text-oled-dark transition-colors">
                           <input 
                             type="checkbox" 
                             name={lang.id} 
                             checked={formData[lang.id]} 
                             onChange={handleChange} 
-                            className="accent-emerald-500 w-3.5 h-3.5" 
+                            className="accent-oled-green w-4 h-4 rounded border-gray-300" 
                           />
                           <span>{lang.label}</span>
                         </label>
@@ -542,16 +542,16 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                   </div>
 
                   {/* Pin Announcement Switch Row */}
-                  <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl flex items-center justify-between gap-3">
-                    <span className="text-[11px] font-bold text-zinc-300 uppercase tracking-wide">
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between gap-3 shadow-sm">
+                    <span className="text-[11px] font-extrabold text-gray-700 uppercase tracking-widest">
                       Pin announcement to primary homepage highlights carousel grid
                     </span>
                     <button 
                       type="button" 
                       onClick={() => handleToggle("featuredOnHome")}
-                      className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer shrink-0 ${formData.featuredOnHome ? "bg-emerald-500" : "bg-zinc-800"}`}
+                      className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer shrink-0 ${formData.featuredOnHome ? "bg-oled-green" : "bg-gray-300"}`}
                     >
-                      <div className={`w-4 h-4 rounded-full bg-white transition-transform duration-200 shadow-sm ${formData.featuredOnHome ? "translate-x-4" : "translate-x-0"}`} />
+                      <div className={`w-5 h-5 rounded-full bg-white transition-transform duration-200 shadow-sm ${formData.featuredOnHome ? "translate-x-5" : "translate-x-0"}`} />
                     </button>
                   </div>
 
@@ -559,12 +559,12 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
               </div>
 
               {/* Action Toolbar Sticky Footer Panel */}
-              <div className="px-6 py-4 bg-[#050914] border-t border-zinc-900 flex justify-end gap-3 shrink-0">
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3 shrink-0">
                 <button
                   type="button"
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-bold text-[10px] uppercase font-mono tracking-widest px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-40"
+                  className="bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-extrabold text-xs uppercase font-mono tracking-widest px-5 py-3 rounded-xl transition-colors cursor-pointer disabled:opacity-40 shadow-sm"
                 >
                   Cancel
                 </button>
@@ -572,11 +572,11 @@ function EditJobModal({ jobId, onClose, onUpdateSuccess }) {
                   type="submit"
                   form="modal-edit-vacancy-form"
                   disabled={isSubmitting}
-                  className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-900 text-white font-black text-[10px] uppercase tracking-widest px-5 py-2.5 rounded-xl transition-all border border-emerald-500/20 shadow-[0_4px_20px_rgba(16,185,129,0.15)] flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                  className="bg-oled-green hover:bg-oled-dark disabled:bg-gray-300 text-white font-black text-xs uppercase tracking-widest px-6 py-3 rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 size={12} className="animate-spin text-zinc-400" /> Rewriting...
+                      <Loader2 size={16} className="animate-spin text-white/70" /> Rewriting...
                     </>
                   ) : (
                     "Apply Changes"

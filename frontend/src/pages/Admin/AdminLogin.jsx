@@ -49,9 +49,9 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020c17] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-oled-green/5 blur-[120px]" />
       </div>
 
       <motion.div
@@ -59,15 +59,15 @@ const AdminLogin = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-[#050c1a]/60 border border-zinc-800/50 backdrop-blur-2xl p-8 md:p-12 rounded-[3rem] shadow-2xl">
+        <div className="bg-white border border-gray-200 p-8 md:p-12 rounded-[3rem] shadow-xl">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-oled-green/10 border border-oled-light/30 text-oled-dark mb-6">
               <ShieldCheck size={32} />
             </div>
-            <h1 className="text-3xl font-black text-white uppercase tracking-tighter">
+            <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
               Admin Portal
             </h1>
-            <p className="text-zinc-500 text-xs font-black uppercase tracking-[0.2em] mt-2">
+            <p className="text-gray-500 text-xs font-black uppercase tracking-[0.2em] mt-2">
               Authorized Personnel Only
             </p>
           </div>
@@ -75,19 +75,19 @@ const AdminLogin = () => {
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">
                 Email Address
               </label>
               <div className="relative">
                 <UserCircle
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
                   size={20}
                 />
                 <input
                   type="email"
                   required
                   autoComplete="username"
-                  className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all"
+                  className="w-full bg-white border border-gray-300 rounded-2xl py-4 pl-12 pr-4 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-oled-green focus:ring-1 focus:ring-oled-green transition-all shadow-sm"
                   placeholder="admin@smuc.com"
                   onChange={(e) =>
                     setCredentials({ ...credentials, email: e.target.value })
@@ -98,19 +98,19 @@ const AdminLogin = () => {
 
             {/* Password Field with Toggle */}
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">
                 Password
               </label>
               <div className="relative">
                 <Lock
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
                   size={20}
                 />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   autoComplete="current-password"
-                  className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-4 pl-12 pr-12 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all"
+                  className="w-full bg-white border border-gray-300 rounded-2xl py-4 pl-12 pr-12 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-oled-green focus:ring-1 focus:ring-oled-green transition-all shadow-sm"
                   placeholder="••••••••"
                   onChange={(e) =>
                     setCredentials({ ...credentials, password: e.target.value })
@@ -119,7 +119,7 @@ const AdminLogin = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-emerald-500 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-oled-dark transition-colors"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -128,7 +128,7 @@ const AdminLogin = () => {
 
             <button
               disabled={isLoading}
-              className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
+              className="w-full py-5 bg-oled-green hover:bg-oled-dark text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -140,7 +140,7 @@ const AdminLogin = () => {
             </button>
           </form>
         </div>
-        <p className="text-center mt-8 text-[9px] text-zinc-700 font-black uppercase tracking-widest">
+        <p className="text-center mt-8 text-[9px] text-gray-500 font-black uppercase tracking-widest">
           SidaMOV Admin System
         </p>
       </motion.div>

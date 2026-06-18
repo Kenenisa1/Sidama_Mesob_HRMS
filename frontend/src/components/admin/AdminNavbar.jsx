@@ -27,14 +27,16 @@ const AdminNavbar = ({ adminName, onLogout }) => {
     // Setup the visual theme for your toast alerts
     const toastOptions = {
       style: {
-        background: '#111111',
-        color: '#ffffff',
-        border: '1px solid #222222',
+        background: '#ffffff',
+        color: '#111827',
+        border: '1px solid #e5e7eb',
         fontSize: '13px',
-        borderRadius: '8px'
+        fontWeight: 'bold',
+        borderRadius: '8px',
+        boxShadow: '0 10px 25px rgba(16, 185, 129, 0.08)'
       },
       iconTheme: {
-        primary: '#0070f3',
+        primary: '#10B981',
         secondary: '#ffffff',
       },
     };
@@ -90,51 +92,44 @@ const AdminNavbar = ({ adminName, onLogout }) => {
   };
 
   return (
-    <nav className="w-full bg-[#000000] border-b border-[#111111] px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-      <div className="flex items-center gap-2.5">
-        <div className="bg-[#0070f3]/10 p-2 rounded-lg border border-[#0070f3]/20">
-          <Shield className="w-5 h-5 text-[#0070f3]" />
+    <nav className="fixed top-0 left-0 right-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 px-6 py-4 flex items-center justify-between z-[9999] shadow-[0_4px_20px_rgba(16,185,129,0.08)]">
+      <div className="flex items-center gap-3">
+        <div className="bg-oled-green/10 p-2.5 rounded-xl border border-oled-green/20 shadow-sm">
+          <Shield className="w-6 h-6 text-oled-green" />
         </div>
         <div>
-          <span className="text-sm font-bold text-white tracking-tight block">
+          <span className="text-base font-extrabold bg-gradient-to-r from-oled-dark to-oled-green bg-clip-text text-transparent tracking-tight block">
             MESOB HRMS
           </span>
-          <span className="text-[10px] text-gray-500 font-medium block uppercase tracking-wider -mt-0.5">
+          <span className="text-[11px] text-gray-500 font-bold block uppercase tracking-widest mt-0.5">
             Administrative Core
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <button className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-[#050505] border border-transparent hover:border-[#1a1a1a] transition-all relative">
-          <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#0070f3] rounded-full" />
-        </button>
-
-        <div className="h-6 w-px bg-[#111111]" />
-
+      <div className="flex items-center gap-5">
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex flex-col items-end">
-            <span className="text-xs font-semibold text-white">
+            <span className="text-sm font-bold text-gray-900">
               {adminName || 'System Admin'}
             </span>
-            <span className="text-[9px] text-gray-500 font-medium uppercase tracking-wider">
+            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
               Root Authority
             </span>
           </div>
           
-          <div className="w-8 h-8 rounded-lg bg-[#111111] border border-[#222222] flex items-center justify-center text-gray-400">
-            <User className="w-4 h-4" />
+          <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-600 shadow-sm">
+            <User className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="h-6 w-px bg-[#111111]" />
+        <div className="h-8 w-px bg-gray-200" />
 
         <button
           onClick={handleLogoutClick}
-          className="flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-[#ff3333] bg-[#050505] hover:bg-[#ff3333]/10 border border-[#1a1a1a] hover:border-[#ff3333]/30 px-3 py-2 rounded-lg transition-all duration-200"
+          className="flex items-center gap-2 text-sm font-bold text-gray-600 hover:text-rose-600 bg-white hover:bg-rose-50 border border-gray-200 hover:border-rose-200 px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Logout</span>
         </button>
       </div>

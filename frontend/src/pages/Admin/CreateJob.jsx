@@ -203,33 +203,33 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
       </div>
 
       {/* Main Modal */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 selection:bg-emerald-500/20 animate-[fadeIn_0.2s_ease-out]">
-        <div className="w-full max-w-3xl my-auto bg-[#030712] border border-zinc-800/80 rounded-2xl shadow-[0_0_80px_-20px_rgba(16,185,129,0.1)] overflow-hidden flex flex-col max-h-[95vh]">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 selection:bg-oled-green/20 animate-[fadeIn_0.2s_ease-out]">
+        <div className="w-full max-w-3xl my-auto bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
           {/* Decorative border */}
-          <div className="h-1 w-full bg-gradient-to-r from-emerald-600 via-indigo-500 to-blue-500 shrink-0" />
+          <div className="h-1 w-full bg-gradient-to-r from-oled-green via-green-400 to-oled-light shrink-0" />
 
           {/* Modal Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-900 bg-[#050914] shrink-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50 shrink-0">
             <div>
-              <h2 className="text-sm font-black tracking-widest uppercase text-zinc-100 flex items-center gap-2 font-mono">
-                <Briefcase className="text-emerald-500 w-4 h-4" /> Create New
+              <h2 className="text-sm font-bold tracking-wider uppercase text-gray-900 flex items-center gap-2">
+                <Briefcase className="text-oled-green w-4 h-4" /> Create New
                 Job Vacancy
               </h2>
-              <p className="text-[9px] text-zinc-400 font-mono tracking-wider mt-0.5 uppercase">
+              <p className="text-xs text-gray-500 font-medium tracking-wider mt-0.5 uppercase">
                 SidaMOV (Sidama Mesob Online Vacancy)
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="text-zinc-400 hover:text-white p-2 rounded-xl bg-zinc-950/80 border border-zinc-900 transition-colors cursor-pointer"
+              className="text-gray-400 hover:text-gray-900 p-2 rounded-xl bg-white border border-gray-200 transition-colors cursor-pointer shadow-sm"
             >
-              <X size={14} className="stroke-[2.5]" />
+              <X size={16} className="stroke-[2.5]" />
             </button>
           </div>
 
           {/* Form content */}
-          <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-gradient-to-b from-[#030712] to-[#010409] custom-scrollbar">
+          <div className="p-6 md:p-8 space-y-6 overflow-y-auto overscroll-contain flex-1 bg-white custom-scrollbar">
             <form
               id="modal-vacancy-form"
               onSubmit={handleSubmit}
@@ -238,8 +238,8 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               {/* Row 1: Position Title & Job Code */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Briefcase size={12} className="text-emerald-500" /> Job
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Briefcase size={14} className="text-oled-green" /> Job
                     Title
                   </label>
                   <input
@@ -248,14 +248,14 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="e.g., የሲስተም አድሚኒስትሬተር IV"
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs transition-all placeholder:text-zinc-600 outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-2.5 px-4 text-gray-900 text-sm transition-all placeholder:text-gray-400 outline-none shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Hash size={12} className="text-emerald-500" /> Job Code
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Hash size={14} className="text-oled-green" /> Job Code
                   </label>
                   <input
                     type="text"
@@ -263,7 +263,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     value={formData.jobCode}
                     onChange={handleChange}
                     placeholder="e.g., ሲዳ/መሶብ-1.2.18-012"
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2.5 px-4 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-2.5 px-4 text-gray-900 text-sm font-mono transition-all placeholder:text-gray-400 outline-none shadow-sm"
                     required
                   />
                 </div>
@@ -272,15 +272,15 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               {/* Row 2: Department, Civil Rank, and Salary */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Building2 size={12} className="text-emerald-500" />{" "}
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Building2 size={14} className="text-oled-green" />{" "}
                     Department
                   </label>
                   <select
                     name="department"
                     value={formData.department}
                     onChange={handleChange}
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all cursor-pointer outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm transition-all cursor-pointer outline-none shadow-sm"
                   >
                     <option value="Information Technology">
                       Information Technology
@@ -299,15 +299,15 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <TrendingUp size={12} className="text-emerald-500" /> Job
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <TrendingUp size={14} className="text-oled-green" /> Job
                     Level / Rank
                   </label>
                   <select
                     name="rankLevel"
                     value={formData.rankLevel}
                     onChange={handleChange}
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-200 text-xs transition-all font-mono cursor-pointer outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm transition-all font-mono cursor-pointer outline-none shadow-sm"
                   >
                     <option value="Level XIV">Level XIV</option>
                     <option value="Level XIII">Level XIII</option>
@@ -321,8 +321,8 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <DollarSign size={12} className="text-emerald-500" />{" "}
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <DollarSign size={14} className="text-oled-green" />{" "}
                     Monthly Salary (ETB)
                   </label>
                   <input
@@ -331,7 +331,7 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     value={formData.salary}
                     onChange={handleChange}
                     placeholder="e.g., 19464"
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all placeholder:text-zinc-600 outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm font-mono transition-all placeholder:text-gray-400 outline-none shadow-sm"
                     required
                   />
                 </div>
@@ -340,8 +340,8 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               {/* Row 3: Location, Employment Type & CGPA */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <MapPin size={12} className="text-emerald-500" /> Work
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <MapPin size={14} className="text-oled-green" /> Work
                     Location
                   </label>
                   <input
@@ -349,14 +349,14 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm transition-all outline-none shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Briefcase size={12} className="text-emerald-500" />{" "}
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Briefcase size={14} className="text-oled-green" />{" "}
                     Employment Category
                   </label>
                   <input
@@ -364,14 +364,14 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     name="employmentType"
                     value={formData.employmentType}
                     onChange={handleChange}
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm transition-all outline-none shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Award size={12} className="text-emerald-500" /> Minimum
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Award size={14} className="text-oled-green" /> Minimum
                     CGPA Required
                   </label>
                   <input
@@ -382,17 +382,17 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     name="cgpa"
                     value={formData.cgpa}
                     onChange={handleChange}
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2.5 text-zinc-100 text-xs font-mono transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2.5 text-gray-900 text-sm font-mono transition-all outline-none shadow-sm"
                     required
                   />
                 </div>
               </div>
 
               {/* Row 4: Positions Allocated & Window Timeline Counter */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-zinc-950/40 border border-zinc-900 rounded-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 border border-gray-200 rounded-xl">
                 <div>
-                  <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Users size={12} className="text-emerald-500" /> Number of
+                  <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Users size={14} className="text-oled-green" /> Number of
                     Positions
                   </label>
                   <input
@@ -401,22 +401,22 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     value={formData.positions}
                     onChange={handleChange}
                     min="1"
-                    className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl p-2 text-zinc-100 text-xs font-mono transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl p-2 text-gray-900 text-sm font-mono transition-all outline-none shadow-sm"
                     required
                   />
                 </div>
 
                 <div>
-                  <div className="text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <CalendarClock size={13} className="text-indigo-400" />{" "}
+                  <div className="text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <CalendarClock size={15} className="text-blue-500" />{" "}
                     Application Window
                   </div>
-                  <div className="bg-[#010409] border border-zinc-800 p-2 rounded-xl text-zinc-200 font-mono text-[11px] flex items-center justify-between h-[38px]">
-                    <span className="text-zinc-500 text-[10px] font-sans font-bold">
+                  <div className="bg-white border border-gray-300 p-2 rounded-xl text-gray-900 font-mono text-sm flex items-center justify-between h-[38px] shadow-sm">
+                    <span className="text-gray-500 text-xs font-sans font-bold">
                       DURATION:
                     </span>
                     <span
-                      className={`font-black uppercase tracking-wide ${isHighRank ? "text-indigo-400" : "text-amber-400"}`}
+                      className={`font-black uppercase tracking-wide ${isHighRank ? "text-blue-600" : "text-amber-600"}`}
                     >
                       {activeWindowDays} Days
                     </span>
@@ -426,8 +426,8 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
 
               {/* Row 5: Detailed Job Description */}
               <div>
-                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileText size={13} className="text-emerald-500" /> Job
+                <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FileText size={14} className="text-oled-green" /> Job
                   Description
                 </label>
                 <textarea
@@ -436,15 +436,15 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                   onChange={handleChange}
                   rows="3"
                   placeholder="Provide a detailed description of the job responsibilities..."
-                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-2 px-3 text-gray-900 text-sm leading-relaxed transition-all placeholder:text-gray-400 outline-none resize-none shadow-sm"
                   required
                 />
               </div>
 
               {/* Row 6: Educational Backgrounds */}
               <div>
-                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <GraduationCap size={14} className="text-emerald-500" />{" "}
+                <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <GraduationCap size={15} className="text-oled-green" />{" "}
                   Required Education & Fields
                 </label>
                 <textarea
@@ -453,15 +453,15 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                   onChange={handleChange}
                   rows="2"
                   placeholder="e.g., ኮምፒዉተር ሳይንስ፤ ሶፍትወር ኢንጂነሪንግ፤ ኢንፎርሜሽን ቴክኖሎጂ..."
-                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-2 px-3 text-gray-900 text-sm leading-relaxed transition-all placeholder:text-gray-400 outline-none resize-none shadow-sm"
                   required
                 />
               </div>
 
               {/* Row 7: Experience */}
               <div>
-                <label className="block text-zinc-300 text-[11px] font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileText size={13} className="text-emerald-500" /> Experience
+                <label className="block text-gray-700 text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FileText size={14} className="text-oled-green" /> Experience
                   Terms & Specific Requirements (ተገላጊ ችሎታ)
                 </label>
                 <textarea
@@ -470,13 +470,13 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                   onChange={handleChange}
                   rows="2"
                   placeholder="e.g., 6 አመት የስራ ልምድ በዳታ ቤዝ..."
-                  className="w-full bg-[#010409] border border-zinc-800 focus:border-emerald-500 rounded-xl py-2 px-3 text-zinc-100 text-xs leading-relaxed transition-all placeholder:text-zinc-700 outline-none resize-none"
+                  className="w-full bg-white border border-gray-300 focus:border-oled-green focus:ring-1 focus:ring-oled-green rounded-xl py-2 px-3 text-gray-900 text-sm leading-relaxed transition-all placeholder:text-gray-400 outline-none resize-none shadow-sm"
                   required
                 />
               </div>
 
               {/* COC Certificate Toggle */}
-              <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl flex flex-wrap items-center justify-between gap-3">
+              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                   <input
                     type="checkbox"
@@ -484,55 +484,55 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
                     id="modalRequiresCOC"
                     checked={formData.requiresCOC}
                     onChange={handleChange}
-                    className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
+                    className="accent-oled-green w-4 h-4 cursor-pointer"
                   />
                   <label
                     htmlFor="modalRequiresCOC"
-                    className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide"
+                    className="text-xs font-bold text-gray-700 cursor-pointer select-none uppercase tracking-wide"
                   >
                     Requires COC Certification
                   </label>
                 </div>
-                <div className="text-[9px] text-zinc-400 font-mono flex items-center gap-1 bg-zinc-900/60 px-2 py-1 rounded border border-zinc-800/60">
-                  <ShieldAlert size={11} className="text-indigo-400" /> Level
+                <div className="text-xs text-gray-500 font-mono flex items-center gap-1 bg-white px-2 py-1 rounded border border-gray-200">
+                  <ShieldAlert size={14} className="text-blue-500" /> Level
                   VII jobs do not require COC.
                 </div>
               </div>
 
               {/* Language Selection Matrix */}
-              <div className="p-3 bg-zinc-950/40 border border-zinc-900 rounded-xl">
-                <div className="text-[9px] uppercase font-black tracking-widest text-zinc-400 flex items-center gap-1.5 mb-2.5">
-                  <Globe size={13} className="text-emerald-500/70" /> Required
+              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl">
+                <div className="text-xs uppercase font-bold tracking-widest text-gray-500 flex items-center gap-1.5 mb-2.5">
+                  <Globe size={15} className="text-oled-green/70" /> Required
                   Languages
                 </div>
-                <div className="flex flex-wrap gap-5 text-[11px] font-mono">
-                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                <div className="flex flex-wrap gap-5 text-sm font-mono">
+                  <label className="flex items-center gap-2 cursor-pointer text-gray-700 select-none">
                     <input
                       type="checkbox"
                       name="sidama"
                       checked={formData.sidama}
                       onChange={handleChange}
-                      className="accent-emerald-500 w-3.5 h-3.5"
+                      className="accent-oled-green w-4 h-4"
                     />
                     SIDAMU AFOO
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                  <label className="flex items-center gap-2 cursor-pointer text-gray-700 select-none">
                     <input
                       type="checkbox"
                       name="amharic"
                       checked={formData.amharic}
                       onChange={handleChange}
-                      className="accent-emerald-500 w-3.5 h-3.5"
+                      className="accent-oled-green w-4 h-4"
                     />
                     AMHARIC
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-zinc-300 select-none">
+                  <label className="flex items-center gap-2 cursor-pointer text-gray-700 select-none">
                     <input
                       type="checkbox"
                       name="english"
                       checked={formData.english}
                       onChange={handleChange}
-                      className="accent-emerald-500 w-3.5 h-3.5"
+                      className="accent-oled-green w-4 h-4"
                     />
                     ENGLISH
                   </label>
@@ -540,18 +540,18 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               </div>
 
               {/* Homepage feature option */}
-              <div className="flex items-center gap-2.5 py-1.5 border-t border-b border-zinc-900">
+              <div className="flex items-center gap-2.5 py-1.5 border-t border-b border-gray-200">
                 <input
                   type="checkbox"
                   name="featuredOnHome"
                   id="modalFeaturedOnHome"
                   checked={formData.featuredOnHome}
                   onChange={handleChange}
-                  className="accent-emerald-500 w-3.5 h-3.5 cursor-pointer"
+                  className="accent-oled-green w-4 h-4 cursor-pointer"
                 />
                 <label
                   htmlFor="modalFeaturedOnHome"
-                  className="text-[11px] font-bold text-zinc-300 cursor-pointer select-none uppercase tracking-wide"
+                  className="text-xs font-bold text-gray-700 cursor-pointer select-none uppercase tracking-wide"
                 >
                   Show this job on the homepage
                 </label>
@@ -560,12 +560,12 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
           </div>
 
           {/* Modal Footer */}
-          <div className="px-6 py-4 bg-[#050914] border-t border-zinc-900 flex justify-end gap-3 shrink-0">
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3 shrink-0">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white font-bold text-[10px] uppercase font-mono tracking-widest px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-40"
+              className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-600 hover:text-gray-900 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-colors cursor-pointer disabled:opacity-40 shadow-sm"
             >
               Cancel
             </button>
@@ -573,11 +573,11 @@ function CreateJobModal({ onClose, onCreationSuccess }) {
               type="submit"
               form="modal-vacancy-form"
               disabled={isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-900 text-white font-black text-[10px] uppercase tracking-widest px-5 py-2.5 rounded-xl transition-all border border-emerald-500/20 shadow-[0_4px_20px_rgba(16,185,129,0.15)] flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+              className="bg-oled-green hover:bg-oled-dark disabled:bg-gray-300 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 size={12} className="animate-spin text-zinc-400" />{" "}
+                  <Loader2 size={14} className="animate-spin text-white/70" />{" "}
                   Publishing...
                 </>
               ) : (
